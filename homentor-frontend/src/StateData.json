@@ -1,0 +1,84 @@
+{
+    "Madhya Pradesh": [
+      "Indore",
+      "Bhopal",
+      "Jabalpur",
+      "Gwalior",
+      "Ujjain",
+      "Sagar",
+      "Dewas",
+      "Satna",
+      "Ratlam",
+      "Rewa",
+      "Burhanpur",
+      "Khandwa",
+      "Bhind",
+      "Chhindwara",
+      "Guna",
+      "Vidisha",
+      "Shivpuri",
+      "Katni",
+      "Damoh",
+      "Hoshangabad",
+      "Sehore",
+      "Mandsaur",
+      "Neemuch",
+      "Singrauli",
+      "Seoni",
+      "Datia",
+      "Morena",
+      "Itarsi",
+      "Betul"
+    ],
+    "Maharashtra": [
+      "Mumbai",
+      "Pune",
+      "Nagpur",
+      "Nashik",
+      "Aurangabad"
+    ],
+    "Rajasthan": [
+      "Jaipur",
+      "Udaipur",
+      "Kota",
+      "Ajmer",
+      "Bikaner"
+    ],
+    "Uttar Pradesh": [
+      "Lucknow",
+      "Kanpur",
+      "Varanasi",
+      "Agra",
+      "Noida"
+    ],
+    "Gujarat": [
+      "Ahmedabad",
+      "Surat",
+      "Vadodara",
+      "Rajkot",
+      "Bhavnagar"
+    ],
+    "Chhattisgarh": [
+      "Raipur",
+      "Bhilai",
+      "Bilaspur",
+      "Korba",
+      "Durg"
+    ],
+    "Delhi": [
+      "New Delhi"
+    ],
+    "Telangana": [
+      "Hyderabad",
+      "Warangal",
+      "Nizamabad",
+      "Karimnagar"
+    ],
+    "Karnataka": [
+      "Bengaluru",
+      "Mysore",
+      "Mangalore",
+      "Hubli",
+      "Belgaum"
+    ]
+  }

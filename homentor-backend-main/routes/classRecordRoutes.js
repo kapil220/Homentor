@@ -1,0 +1,86 @@
+const express = require("express");
+const router = express.Router();
+const ClassRecord = require("../models/ClassRecord");
+const ClassBooking = require("../models/ClassBooking");
+const logMentorActivity = require("../utils/logMentorActivity");
+
+// GET all classRecords
+router.get("/", async (req, res) => {
+  try {
+    const classRecords = await ClassRecord.find()
+    res.status(200).json({ data: classRecords });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/class-booking/:id", async (req, res) => {
+  try {
+    const classRecords = await ClassRecord.find({
+        classBooking : req.params.id
+    }).populate("mentor", "fullName")
+    res.status(200).json({ data: classRecords });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  try {
+    const classRecords = await ClassRecord.findByIdAndUpdate(req.params.id, req.body)
+    res.status(200).json({ data: classRecords });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/", async (req, res) => {
+  try {
+    console.log(req.body);
+
+    // 1️⃣ Save class record first
+    const classRecord = new ClassRecord(req.body);
+    await classRecord.save();
+
+    // 2️⃣ Fetch ClassBooking
+    let classBooking = await ClassBooking.findOne({
+      _id: classRecord.classBooking
+    });
+
+    if (!classBooking) {
+      return res.status(404).json({ message: "Class Booking not found" });
+    }
+
+    // Ensure progress exists (old bookings may have null or undefined)
+    if (!classBooking.progress) {
+      classBooking.progress = 0;
+    }
+
+    // 3️⃣ Convert duration "H:MM" → total minutes
+    const durationStr = req.body.duration;   // example "1:10"
+    let [hours, minutes] = durationStr.split(":").map(Number);
+    const totalMinutes = hours * 60 + minutes;
+
+    // 4️⃣ Add the minutes to progress
+    classBooking.progress += totalMinutes;
+
+    // 5️⃣ Push class record
+    classBooking.classesRecord.push(classRecord._id);
+    classBooking.status = "running"
+
+    // 6️⃣ Save booking
+    await classBooking.save();
+
+    await logMentorActivity(classRecord.mentor, "Attendance Marked");
+
+    res.status(200).json({ data: classRecord });
+
+  } catch (error) {
+    console.error("Error saving class record:", error);
+    res.status(500).json({ message: error.message || "Something went wrong" });
+  }
+});
+
+
+
+module.exports = router

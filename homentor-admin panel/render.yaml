@@ -1,0 +1,14 @@
+staticPublishPath: dist
+services:
+  - type: web
+    name: homentor-frontend
+    env: static
+    staticPublishPath: dist
+    buildCommand: npm run build
+    branch: main
+    repo: https://github.com/PradhumnRaghuwanshi/homentor-admin.git
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

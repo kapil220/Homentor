@@ -1,0 +1,61 @@
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
+import { Calendar, DollarSign, Settings, PhoneCall, LogOut } from 'lucide-react';
+import NoBookingCard from '@/comp/NoBookingCard';
+import axios from 'axios';
+import ClassCard from '@/comp/ClassCard';
+import { useNavigate } from 'react-router-dom';
+import Navbar from '@/components/Navbar';
+import AllBookingsPage from './AllBookingsPage';
+
+const MentorBookingsPage = () => {
+  const mentorNumber = localStorage.getItem("mentor");
+  const [mentorData, setMentorData] = useState(null);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getMentorDetail = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.post(
+        `https://homentor-backend.onrender.com/api/mentor/login-check`,
+        { phone: mentorNumber }
+      );
+      console.log(response.data.data)
+      setMentorData(response.data.data);
+
+      const res = await axios.get(
+        `https://homentor-backend.onrender.com/api/class-bookings/mentor-bookings/${response.data.data._id}`
+      );
+      console.log(res.data.data)
+      setBookings(res.data.data);
+      setLoading(false)
+
+    } catch (error) {
+      console.error("Failed to fetch student", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMentorDetail();
+  }, []);
+
+  const navigate = useNavigate();
+
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <Navbar></Navbar>
+      <div className="container mx-auto px-4 py-8 mt-[8vh]">
+        {!mentorData ? <p>Loading...</p> :
+          <AllBookingsPage userData={mentorData} userType="mentor" userId={mentorData._id}></AllBookingsPage>}
+      </div>
+    </div>
+  );
+};
+
+export default MentorBookingsPage;
