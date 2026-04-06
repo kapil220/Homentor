@@ -11,7 +11,7 @@ export default function ClassInfoCardMentor({ classBooking }) {
   const handleMentorCheck = async (checked) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/class-bookings/${classBooking._id}/mentor-complete`
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${classBooking._id}/mentor-complete`
       );
 
       // If success, update UI tick

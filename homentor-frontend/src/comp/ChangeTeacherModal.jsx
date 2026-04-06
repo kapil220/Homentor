@@ -42,7 +42,7 @@ const ChangeTeacherModal = ({
         }
 
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/mentor/batch`,
+          `${import.meta.env.VITE_API_BASE_URL}/mentor/batch`,
           { ids: allTeacherIds }
         );
 
@@ -63,7 +63,7 @@ const ChangeTeacherModal = ({
     }
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/api/class-bookings/${booking._id}/change-teacher`,
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${booking._id}/change-teacher`,
         {
           newTeacherId: selectedTeacher._id,
           newTeacherPrice:
@@ -79,7 +79,7 @@ const ChangeTeacherModal = ({
   const userNumber = localStorage.getItem("usernumber");
   const initiateExotelCall = () => {
       axios
-        .post(`${import.meta.env.VITE_API_URL}/api/exotel/call/initiate`, {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
           parentPhone: `0${userNumber}`,
           mentorId: selectedTeacher._id,
           mentorPhone: selectedTeacher.phone,

@@ -30,7 +30,7 @@ export default function AllBookingsPage({ userType, userData , userId }) {
           : `/api/class-bookings/mentor/${userId}`;
 
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}${url}`
+        `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${url}`
       );
       console.log("bookings", res.data.data)
       setBookings(res.data.data);

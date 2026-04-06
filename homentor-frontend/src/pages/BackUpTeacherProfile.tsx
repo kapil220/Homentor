@@ -173,13 +173,13 @@ const BackUpTeacherProfile = () => {
   };
   const [callingNo, setCallingNo] = useState("");
   const getAdminData = () => {
-    axios.get(`${import.meta.env.VITE_API_URL}/api/admin`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
       setCallingNo(res.data.data[0].callingNo);
     });
   };
   const sendCallRequest = () => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}/api/mentor-call`, {
+      .post(`${import.meta.env.VITE_API_BASE_URL}/mentor-call`, {
         name: mentorData?.fullName,
         phone: mentorData?.phone,
       })
@@ -190,7 +190,7 @@ const BackUpTeacherProfile = () => {
   const handleConfirm = () => {
     const bookingId = localStorage.getItem("booking_id")
     axios.post(
-      `${import.meta.env.VITE_API_URL}/api/class-bookings/${bookingId}/change-teacher`,
+      `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${bookingId}/change-teacher`,
       {
         newTeacherId: mentorData._id,
         newTeacherPrice: mentorData.teachingModes?.homeTuition?.monthlyPrice

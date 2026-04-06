@@ -21,7 +21,7 @@ const PaymentSuccessful = () => {
 
   const getPaymentDetails = async () => {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/payment/verify-order/${orderId}`
+      `${import.meta.env.VITE_API_BASE_URL}/payment/verify-order/${orderId}`
     );
     const getOrderResponse = response.data;
     setOrderDetail(response.data[0]);

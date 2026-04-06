@@ -29,13 +29,13 @@ const MentorDashboard = () => {
   const getStudentDetail = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/users/login-check`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/login-check`,
         { phone: studentNumber }
       );
       setStudentDetail(response.data.data);
 
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/class-bookings/student/${response.data.data._id}`
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/student/${response.data.data._id}`
       );
       setBookings(res.data.data);
 
@@ -60,7 +60,7 @@ const MentorDashboard = () => {
   const handleSaveAddress = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/users/${studentDetail._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/${studentDetail._id}`,
         { address }
       );
       setShowAddressModal(false);

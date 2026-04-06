@@ -348,7 +348,7 @@ const TutorRegistrationForm = () => {
     }
     setIsLoading(true);
     axios
-      .post(`${import.meta.env.VITE_API_URL}/api/mentor`, mentorData)
+      .post(`${import.meta.env.VITE_API_BASE_URL}/mentor`, mentorData)
       .then((res) => {
         console.log("Form submitted:", mentorData);
         setShowThankYouModal(true); // ✅ Show thank-you modal
@@ -620,7 +620,7 @@ const TutorRegistrationForm = () => {
 
   console.log(mentorData);
   const fetchDegrees = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/degrees`);
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/degrees`);
     setCollegeMatrix({ degrees: res.data.data });
   };
   useEffect(()=>{fetchDegrees()}, [])
