@@ -1,12 +1,8 @@
 node_modules/
 .env
 .env.*
-.env.production
-.env.development
 dist/
 dist.zip
 build/
 .DS_Store
 *.log
-bun.lockb
-package-lock.json
