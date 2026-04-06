@@ -11,7 +11,7 @@ export default function AdminMarginRules() {
   const fetchRules = async () => {
     try {
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/margin-rule/margin-rules"
+        `${import.meta.env.VITE_API_BASE_URL}/margin-rule/margin-rules`
       );
       setRules(res.data.data || []);
     } catch (err) {
@@ -32,7 +32,7 @@ export default function AdminMarginRules() {
     setLoading(true);
     try {
       await axios.post(
-        "https://homentor-backend.onrender.com/api/margin-rule/margin-rules",
+        `${import.meta.env.VITE_API_BASE_URL}/margin-rule/margin-rules`,
         form
       );
       setForm({ min: "", max: "", margin: "" });
@@ -49,7 +49,7 @@ export default function AdminMarginRules() {
 
     try {
       await axios.delete(
-        `https://homentor-backend.onrender.com/api/margin-rule/margin-rules/${id}`
+        `${import.meta.env.VITE_API_BASE_URL}/margin-rule/margin-rules/${id}`
       );
       fetchRules();
     } catch (err) {
@@ -63,7 +63,7 @@ export default function AdminMarginRules() {
     setApplying(true);
     try {
       await axios.post(
-        "https://homentor-backend.onrender.com/api/margin-rule/apply-margins"
+        `${import.meta.env.VITE_API_BASE_URL}/margin-rule/apply-margins`
       );
       alert("Margins applied successfully!");
     } catch (err) {

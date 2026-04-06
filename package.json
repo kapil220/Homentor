@@ -1,0 +1,12 @@
+{
+  "name": "homentor-monorepo",
+  "version": "1.0.0",
+  "description": "Unified runner for Homentor project",
+  "scripts": {
+    "start": "bash start-all.sh",
+    "install-all": "npm install --prefix homentor-backend-main && npm install --prefix homentor-frontend && npm install --prefix \"homentor-admin panel\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

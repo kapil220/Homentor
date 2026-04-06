@@ -10,7 +10,7 @@ export default function AdminMentorLeadsPage() {
 
   const fetchLeads = async () => {
     const { data } = await axios.get(
-      "https://homentor-backend.onrender.com/api/mentor-leads"
+      `${import.meta.env.VITE_API_BASE_URL}/mentor-leads`
     );
     setLeads(data);
   };

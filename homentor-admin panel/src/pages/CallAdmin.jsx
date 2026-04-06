@@ -28,7 +28,7 @@ const AdminCallLogs = () => {
     try {
       setLoading(true);
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/call-logs"
+        `${import.meta.env.VITE_API_BASE_URL}/call-logs`
       );
       setCalls(res.data.logs || []);
     } catch (err) {
@@ -44,7 +44,7 @@ const AdminCallLogs = () => {
       setSyncing(true);
 
       await axios.post(
-        "https://homentor-backend.onrender.com/api/exotel/sync-call-logs"
+        `${import.meta.env.VITE_API_BASE_URL}/exotel/sync-call-logs`
       );
 
       // After sync, reload DB data

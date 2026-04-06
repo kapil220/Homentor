@@ -52,7 +52,7 @@ export function ParentLeadsTable({ leads, refresh, setLeads }) {
 
   const saveNote = () => {
     axios.put(
-      `https://homentor-backend.onrender.com/api/parent-leads/${editingId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/parent-leads/${editingId}`,
       { lastActive: new Date(), lastActivityText: note }
     ).then((res)=>{
       refresh();

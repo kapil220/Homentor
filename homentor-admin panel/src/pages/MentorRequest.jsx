@@ -8,7 +8,7 @@ const MentorRequest = () => {
   useEffect(() => {
     const markViewed = async () => {
       await fetch(
-        "https://homentor-backend.onrender.com/api/mentor/mark-viewed",
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/mark-viewed`,
         { method: "PUT" }
       );
     };
@@ -22,7 +22,7 @@ const MentorRequest = () => {
   const [mentorList, setMentorList] = useState([]);
   const getMentorData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/mentor/pending-mentors")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor/pending-mentors`)
       .then((res) => {
         setMentorList(res.data.data.reverse());
       });
@@ -31,7 +31,7 @@ const MentorRequest = () => {
   const [rejectedMentorList, setRejectedMentorList] = useState([]);
   const getRejectedMentorData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/mentor/rejected-mentors")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor/rejected-mentors`)
       .then((res) => {
         setRejectedMentorList(res.data.data.reverse());
       });
@@ -39,7 +39,7 @@ const MentorRequest = () => {
 
   const handleStatus = (mentorId, status) => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`, {
         status: status,
       })
       .then((res) => {
@@ -58,7 +58,7 @@ const MentorRequest = () => {
     // 🔄 Make an API call here to save `editData`
     axios
       .put(
-        `https://homentor-backend.onrender.com/api/mentor/${selectedMentor._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/${selectedMentor._id}`,
         selectedMentor
       )
       .then((res) => {

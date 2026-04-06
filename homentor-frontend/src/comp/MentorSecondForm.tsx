@@ -84,11 +84,11 @@ export default function MentorSecondForm({mentorId, phone}) {
         
         try {
           await axios.put(
-            `https://homentor-backend.onrender.com/api/mentor/${mentorId}`,
+            `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`,
             formData
           );
           await axios.post(
-            `https://homentor-backend.onrender.com/api/mentor-leads/second-form`,
+            `${import.meta.env.VITE_API_BASE_URL}/mentor-leads/second-form`,
             {phone : phone}
           );
           alert("Mentor updated successfully!");

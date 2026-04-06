@@ -112,7 +112,7 @@ const AdminLocationSelector = ({ onLocationSelect, onMentorSort }) => {
   const getNearbyMentors = async () => {
     try {
       const response = await axios.get(
-        "https://homentor-backend.onrender.com/api/mentor/nearby-mentors",
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/nearby-mentors`,
         {
           params: {
             lat: coords.lat,

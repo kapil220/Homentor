@@ -7,7 +7,7 @@ export default function DemoControlPanel() {
   const updateAllDemoType = async (type) => {
     try {
       setLoading(true);
-      await axios.put(`https://homentor-backend.onrender.com/api/mentor/demoType/${type}`);
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/mentor/demoType/${type}`);
       alert(
         `All mentors switched to ${
           type === "free" ? "Free Demo" : "₹99 Demo"

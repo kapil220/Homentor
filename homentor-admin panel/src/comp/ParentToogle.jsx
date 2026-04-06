@@ -14,7 +14,7 @@ export default function ParentToogle({
     try {
       setLoading(true);
       await axios.put(
-        `https://homentor-backend.onrender.com/api/parent-leads/${leadId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/parent-leads/${leadId}`,
         { [field]: !value, lastActivityText: "Interview Link Send", lastActive : new Date() }
       );
       console.log("Updated successfully");  

@@ -21,7 +21,7 @@ const BackupTeacherModal = ({ mentor, mentorList, onClose, getMentorData }) => {
 
   const saveBackupMentors = () => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`, {
         backupTeachers: selectedBackups,
       })
       .then(() => {

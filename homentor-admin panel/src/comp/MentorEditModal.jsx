@@ -37,7 +37,7 @@ const MentorEditModal = ({
   const handleUpdate = () => {
     axios
       .put(
-        `https://homentor-backend.onrender.com/api/mentor/${selectedMentor._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/${selectedMentor._id}`,
         selectedMentor,
       )
       .then((res) => {

@@ -20,14 +20,14 @@ const MentorBookingsPage = () => {
     setLoading(true)
     try {
       const response = await axios.post(
-        `https://homentor-backend.onrender.com/api/mentor/login-check`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/login-check`,
         { phone: mentorNumber }
       );
       console.log(response.data.data)
       setMentorData(response.data.data);
 
       const res = await axios.get(
-        `https://homentor-backend.onrender.com/api/class-bookings/mentor-bookings/${response.data.data._id}`
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/mentor-bookings/${response.data.data._id}`
       );
       console.log(res.data.data)
       setBookings(res.data.data);

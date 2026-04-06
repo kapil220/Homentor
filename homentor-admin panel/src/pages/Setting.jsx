@@ -12,7 +12,7 @@ const Setting = () => {
   const [adminData, setAdminData] = useState([]);
   const getAdminData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/admin")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/admin`)
       .then((res) => {
         setAdminData(res.data.data[0]);
         setCallingNo(res.data.data[0].callingNo)
@@ -23,7 +23,7 @@ const Setting = () => {
   const postNumber = () => {
     try {
       axios
-        .put(`https://homentor-backend.onrender.com/api/admin/${adminData._id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/admin/${adminData._id}`, {
           callingNo: callingNo,
         })
         .then(() => {

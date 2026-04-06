@@ -311,12 +311,12 @@ export default function AdminLeadForm({
     e.preventDefault();
     if (isEditMode) {
       await axios.put(
-        `https://homentor-backend.onrender.com/api/mentor-leads/${editingId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor-leads/${editingId}`,
         form
       );
     } else {
       await axios.post(
-        "https://homentor-backend.onrender.com/api/mentor-leads",
+        `${import.meta.env.VITE_API_BASE_URL}/mentor-leads`,
         form
       );
     }

@@ -29,7 +29,7 @@ export default function EditMentorForm({ mentorData, onClose, onSave }) {
     e.preventDefault();
     try {
       await axios.put(
-        `https://homentor-backend.onrender.com/api/mentor/${mentorData._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorData._id}`,
         formData
       );
       alert("Mentor updated successfully!");

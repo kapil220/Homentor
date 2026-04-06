@@ -12,7 +12,7 @@ export default function AdminParentLeadsPage() {
 
   const fetchLeads = async () => {
     const { data } = await axios.get(
-      "https://homentor-backend.onrender.com/api/parent-leads"
+      `${import.meta.env.VITE_API_BASE_URL}/parent-leads`
     );
     setLeads(data);
   };

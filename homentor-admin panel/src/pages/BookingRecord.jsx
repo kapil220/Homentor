@@ -33,7 +33,7 @@ const BookingRecord = () => {
       setLoading(true);
  
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/class-bookings/booking-record",
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/booking-record`,
         {
           params: filters,
         }

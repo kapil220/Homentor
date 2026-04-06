@@ -11,7 +11,7 @@ const DisclaimerManager = () => {
   const fetchDisclaimers = async () => {
     try {
       const res = await axios.get(
-        `https://homentor-backend.onrender.com/api/disclaimer/${forUser}`
+        `${import.meta.env.VITE_API_BASE_URL}/disclaimer/${forUser}`
       );
       console.log(res.data.data)
       setDisclaimers(res.data.data || []);
@@ -35,13 +35,13 @@ const DisclaimerManager = () => {
     try {
       if (editingId) {
        const res =  await axios.put(
-          `https://homentor-backend.onrender.com/api/disclaimer/${editingId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/disclaimer/${editingId}`,
           { content: content, audience: forUser }
         );
       } else {
       
       const res =  await axios.post(
-          "https://homentor-backend.onrender.com/api/disclaimer",
+          `${import.meta.env.VITE_API_BASE_URL}/disclaimer`,
           { content: content, audience: forUser }
         );
         console.log(res.data)
@@ -69,7 +69,7 @@ const DisclaimerManager = () => {
 
     try {
       await axios.delete(
-        `https://homentor-backend.onrender.com/api/disclaimer/${id}`
+        `${import.meta.env.VITE_API_BASE_URL}/disclaimer/${id}`
       );
       fetchDisclaimers();
     } catch (err) {

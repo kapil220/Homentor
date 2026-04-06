@@ -58,7 +58,7 @@ const MentorLeadFilter = ({ onMentorSort, setSortBy }) => {
     const getNearbyMentors = async () => {
         try {
             const response = await axios.get(
-                "https://homentor-backend.onrender.com/api/mentor-leads/sorted-mentor-leads",
+                `${import.meta.env.VITE_API_BASE_URL}/mentor-leads/sorted-mentor-leads`,
                 {
                     params: {
                         lat: coords.lat,

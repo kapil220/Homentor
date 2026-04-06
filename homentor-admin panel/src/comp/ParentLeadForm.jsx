@@ -124,12 +124,12 @@ export default function ParentLeadForm({
       e.preventDefault();
       if (isEditMode) {
         await axios.put(
-          `https://homentor-backend.onrender.com/api/parent-leads/${editingId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/parent-leads/${editingId}`,
           form
         );
       } else {
         await axios.post(
-          "https://homentor-backend.onrender.com/api/parent-leads",
+          `${import.meta.env.VITE_API_BASE_URL}/parent-leads`,
           form
         );
       }

@@ -241,7 +241,7 @@ const Mentors = () => {
     try {
       console.log("Fetching mentors...");
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/mentor/visible-mentors",
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/visible-mentors`,
         { params }
       );
       console.log("API Response:", res.data);
@@ -270,7 +270,7 @@ const Mentors = () => {
     try {
       console.log("Fetching mentors...");
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/mentor/gold-mentor"
+        `${import.meta.env.VITE_API_BASE_URL}/mentor/gold-mentor`
       );
       console.log("Gold Mentors", res.data.data)
 

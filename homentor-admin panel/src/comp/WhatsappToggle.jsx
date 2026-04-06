@@ -15,7 +15,7 @@ export default function WhatsappToggle({
       setLoading(true);
 
       await axios.put(
-        `https://homentor-backend.onrender.com/api/mentor-leads/${leadId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/mentor-leads/${leadId}`,
         { whatsappAdded: !value }
       );
 

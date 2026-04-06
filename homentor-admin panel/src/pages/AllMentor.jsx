@@ -24,7 +24,7 @@ const AllMentor = () => {
   const [mentorList, setMentorList] = useState([]);
   const getMentorData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/mentor/approved-mentors")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor/approved-mentors`)
       .then((res) => {
         setMentorList(res.data.data.reverse());
       });
@@ -32,7 +32,7 @@ const AllMentor = () => {
 
   const handleAdminRanking = (mentorId, rank) => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`, {
         adminRanking: rank,
       })
       .then((res) => {
@@ -47,7 +47,7 @@ const AllMentor = () => {
   const [isModified, setIsModified] = useState(false);
   const handleSave = (mentor) => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`, {
         teachingModes: {
           homeTuition: {
             monthlyPrice: price,
@@ -72,7 +72,7 @@ const AllMentor = () => {
   const handleToggle = (mentor) => {
     try {
       axios
-        .put(`https://homentor-backend.onrender.com/api/mentor/${mentor._id}`, {
+        .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`, {
           showOnWebsite: !mentor.showOnWebsite,
         })
         .then(() => {
@@ -88,7 +88,7 @@ const AllMentor = () => {
 
   const handleStatus = (mentorId, status) => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor/${mentorId}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`, {
         status: status,
       })
       .then((res) => {
@@ -252,7 +252,7 @@ const AllMentor = () => {
                         onChange={(e) => {
                           axios
                             .put(
-                              `https://homentor-backend.onrender.com/api/mentor/${mentor._id}`,
+                              `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`,
                               { category: e.target.value }
                             )
                             .then((res) => { getMentorData(); console.log(res.data) }).catch((err) => console.log(err));

@@ -13,7 +13,7 @@ const ParentsPage = () => {
 
   const fetchParents = async () => {
     const res = await axios.get(
-      "https://homentor-backend.onrender.com/api/users"
+      `${import.meta.env.VITE_API_BASE_URL}/users`
     );
     setParents(res.data.data || []);
   };

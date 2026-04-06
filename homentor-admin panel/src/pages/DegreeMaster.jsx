@@ -3,7 +3,7 @@ import axios from "axios";
 import AdminLayout from "../comp/AdminLayout";
 import { Pencil, Trash2, X } from "lucide-react";
 
-const API = "https://homentor-backend.onrender.com/api/degrees";
+const API = `${import.meta.env.VITE_API_BASE_URL}/degrees`;
 
 export default function DegreeMaster() {
   const [degrees, setDegrees] = useState([]);

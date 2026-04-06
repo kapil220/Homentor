@@ -27,14 +27,14 @@ export default function AdminDashboard() {
   const [activeBookingList, setActiveBookingList] = useState([])
   const getMentorData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/mentor")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor`)
       .then((res) => {
         setMentorList(res.data.data);
       });
   };
   const getBookingData = () => {
     axios
-      .get("https://homentor-backend.onrender.com/api/class-bookings")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/class-bookings`)
       .then((res) => {
         setBookingList(res.data.data);
         const allBookings = res.data.data

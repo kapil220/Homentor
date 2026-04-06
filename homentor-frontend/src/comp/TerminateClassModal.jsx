@@ -26,7 +26,7 @@ const TerminateClassModal = ({ open, onClose, booking, onTerminate }) => {
   const refundableAmount = Math.max(price - usedAmount, 0);
 
   const handleTerminate = async() => {
-    axios.post(`https://homentor-backend.onrender.com/api/class-bookings/${booking._id}/terminate`, {
+    axios.post(`${import.meta.env.VITE_API_BASE_URL}/class-bookings/${booking._id}/terminate`, {
       bookingId: booking._id,
       reason,
       refundableAmount: refundableAmount.toFixed(0)

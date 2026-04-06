@@ -35,13 +35,13 @@ export default function DirectBookingForm() {
   };
 
   useEffect(() => {
-    axios.get("https://homentor-backend.onrender.com/api/mentor/approved-mentors").then((res) => setMentors(res.data.data));
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/mentor/approved-mentors`).then((res) => setMentors(res.data.data));
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://homentor-backend.onrender.com/api/class-bookings/manual-booking", formData);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/class-bookings/manual-booking`, formData);
       alert("Class booked successfully!");
       setFormData({
         parentId: "",

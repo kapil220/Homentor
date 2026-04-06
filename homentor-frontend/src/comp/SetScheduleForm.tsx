@@ -23,7 +23,7 @@ export default function ScheduleModal({classBooking, getBookings}) {
     console.log("Form submitted:", formData);
     try {
           const response = await axios.put(
-            `https://homentor-backend.onrender.com/api/class-bookings/booking/${classBooking?._id}`,
+            `${import.meta.env.VITE_API_BASE_URL}/class-bookings/booking/${classBooking?._id}`,
             {
               ...formData
             }

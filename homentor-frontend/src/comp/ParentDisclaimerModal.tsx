@@ -18,7 +18,7 @@ const ParentDisclaimerModal = ({
 
     setLoading(true);
     axios
-      .get(`https://homentor-backend.onrender.com/api/disclaimer/${audience}`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/disclaimer/${audience}`)
       .then((res) => setDisclaimers(res.data.data || []))
       .finally(() => setLoading(false));
   }, [open]);
@@ -31,7 +31,7 @@ const ParentDisclaimerModal = ({
     setSaving(true);
     try {
       await axios.put(
-        "https://homentor-backend.onrender.com/api/users/accept-disclaimer/" +
+        `${import.meta.env.VITE_API_BASE_URL}/users/accept-disclaimer/` +
           userId,
         { disclaimers: disclaimers }
       );

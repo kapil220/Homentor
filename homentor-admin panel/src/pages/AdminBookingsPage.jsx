@@ -17,7 +17,7 @@ export default function AdminBookingsPage() {
   useEffect(() => {
   const markViewed = async () => {
     await fetch(
-      "https://homentor-backend.onrender.com/api/class-bookings/mark-viewed",
+      `${import.meta.env.VITE_API_BASE_URL}/class-bookings/mark-viewed`,
       { method: "PUT" }
     );
   };
@@ -28,7 +28,7 @@ export default function AdminBookingsPage() {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(
-        "https://homentor-backend.onrender.com/api/class-bookings/booking-record"
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/booking-record`
       );
       setBookings(response.data.data.filter((i) => i.adminApproved == false));
     } catch (err) {
@@ -43,7 +43,7 @@ export default function AdminBookingsPage() {
 
     try {
       await axios.delete(
-        `https://homentor-backend.onrender.com/api/class-bookings/${id}`
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${id}`
       );
       setBookings(bookings.filter((b) => b._id !== id));
     } catch (err) {
@@ -56,7 +56,7 @@ export default function AdminBookingsPage() {
   const handleAdminApprove = async (id, checked) => {
     try {
       const res = await axios.post(
-        `https://homentor-backend.onrender.com/api/class-bookings/${id}/admin-approve`,
+        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${id}/admin-approve`,
         { approved: checked }
       );
       fetchBookings();

@@ -59,7 +59,7 @@ export default function AdminSidebar() {
   const fetchCounts = async () => {
     try {
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/admin"
+        `${import.meta.env.VITE_API_BASE_URL}/admin`
       );
       console.log(res.data)
       setCounts(res.data);

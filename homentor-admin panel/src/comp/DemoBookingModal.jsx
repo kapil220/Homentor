@@ -9,7 +9,7 @@ const DemoBookingModal = ({ mentor, onClose, getMentorData }) => {
 
   const handleBook = async () => {
     try {
-      await axios.post("https://homentor-backend.onrender.com/api/demo-booking", {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/demo-booking`, {
         mentorId: mentor._id,
         parentPhone,
         studentName,

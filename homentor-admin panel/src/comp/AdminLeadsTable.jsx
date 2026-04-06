@@ -184,7 +184,7 @@ export function AdminLeadsTable({ leads, refresh, setLeads }) {
 
   const handleLinkSend = (leadId) => {
     axios
-      .put(`https://homentor-backend.onrender.com/api/mentor-leads/${leadId}`, {
+      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor-leads/${leadId}`, {
         linkSend: true,
         staus: "link_send",
       })
@@ -197,7 +197,7 @@ export function AdminLeadsTable({ leads, refresh, setLeads }) {
   const handleDelete = (leadId) => {
     axios
       .delete(
-        `https://homentor-backend.onrender.com/api/mentor-leads/${leadId}`
+        `${import.meta.env.VITE_API_BASE_URL}/mentor-leads/${leadId}`
       )
       .then(() => refresh());
   };

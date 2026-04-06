@@ -79,7 +79,7 @@ const SelectedMentors = () => {
     const fetchMentors = async () => {
       try {
         const res = await axios.get(
-          `https://homentor-backend.onrender.com/api/mentor/selected-mentors?id=${ids.join(",")}`
+          `${import.meta.env.VITE_API_BASE_URL}/mentor/selected-mentors?id=${ids.join(",")}`
         );
         console.log(res.data.mentors)
         setFilteredMentors(res.data.mentors);
@@ -169,7 +169,7 @@ const SelectedMentors = () => {
     try {
       console.log("Fetching mentors...");
       const res = await axios.get(
-        "https://homentor-backend.onrender.com/api/mentor"
+        `${import.meta.env.VITE_API_BASE_URL}/mentor`
       );
       console.log("API Response:", res.data);
 
