@@ -216,13 +216,13 @@ const MentorDetails = () => {
   };
   const [callingNo, setCallingNo] = useState("");
   const getAdminData = () => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/api/admin`).then((res) => {
       setCallingNo(res.data.data[0].callingNo);
     });
   };
   const sendCallRequest = () => {
     axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}/mentor-call`, {
+      .post(`${import.meta.env.VITE_API_URL}/api/mentor-call`, {
         name: mentorData?.fullName,
         phone: mentorData?.phone,
       })

@@ -87,7 +87,7 @@ export default function ParentProfileFormModal({
   const handleSave = async () => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/users/${userId}`,
+        `${import.meta.env.VITE_API_URL}/api/users/${userId}`,
         form
       );
       onClose();

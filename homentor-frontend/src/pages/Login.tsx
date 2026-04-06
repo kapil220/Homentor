@@ -29,7 +29,7 @@ const Login = () => {
   const handlePhoneSubmit = () => {
     try {
       axios
-        .post(`${import.meta.env.VITE_API_BASE_URL}/otp/send-otp`, {
+        .post(`${import.meta.env.VITE_API_URL}/api/otp/send-otp`, {
           mobile: phoneNumber,
           userType : userType
         })
@@ -43,7 +43,7 @@ const Login = () => {
     }
   };
   const handleOtpVerify = async() => {
-     const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/otp/verify-otp`, {
+     const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/otp/verify-otp`, {
       verificationId,
       code: otp,
       phone: phoneNumber,

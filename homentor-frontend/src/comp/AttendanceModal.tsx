@@ -26,7 +26,7 @@ export default function AttendanceModal({ classBooking }) {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/class-records/class-booking/${classBooking._id}`
+        `${import.meta.env.VITE_API_URL}/api/class-records/class-booking/${classBooking._id}`
       );
       setRecords(res.data.data || []);
     } catch (err) {
@@ -52,7 +52,7 @@ export default function AttendanceModal({ classBooking }) {
     try {
       await axios
         .post(
-          `${import.meta.env.VITE_API_BASE_URL}/class-records`,
+          `${import.meta.env.VITE_API_URL}/api/class-records`,
           todayAtt
         )
         .then((res) => {
@@ -99,7 +99,7 @@ export default function AttendanceModal({ classBooking }) {
   const handleUpdate = async (rec) => {
     setSaving(rec._id);
     await axios.put(
-      `${import.meta.env.VITE_API_BASE_URL}/class-records/${rec._id}`,
+      `${import.meta.env.VITE_API_URL}/api/class-records/${rec._id}`,
       rec
     );
     fetchRecords();

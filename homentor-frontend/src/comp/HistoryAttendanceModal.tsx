@@ -19,7 +19,7 @@ export default function HistoryAttendanceModal({ classBooking }) {
   useEffect(() => {
     axios
       .get(
-        `${import.meta.env.VITE_API_BASE_URL}/class-records/class-booking/${classBooking._id}`
+        `${import.meta.env.VITE_API_URL}/api/class-records/class-booking/${classBooking._id}`
       )
       .then((res) => setRecords(res.data.data));
   }, []);

@@ -20,14 +20,14 @@ const ParentBookingsPage = () => {
     setLoading(true)
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/users/login-check`,
+        `${import.meta.env.VITE_API_URL}/api/users/login-check`,
         { phone: studentNumber }
       );
       console.log(response.data.data)
       setStudentDetail(response.data.data);
 
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/student/${response.data.data._id}`
+        `${import.meta.env.VITE_API_URL}/api/class-bookings/student/${response.data.data._id}`
       );
       setBookings(res.data.data);
       setLoading(false)

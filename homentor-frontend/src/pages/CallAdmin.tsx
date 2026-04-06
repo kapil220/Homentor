@@ -55,7 +55,7 @@ const CallAdmin = () => {
   }
   const fetchCallData = () => {
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor-call`)
+      .get(`${import.meta.env.VITE_API_URL}/api/mentor-call`)
       .then((res) => {
         setCallData(res.data.reverse());
       })
@@ -65,7 +65,7 @@ const CallAdmin = () => {
   };
   const updateNumber = (i) => {
     axios
-      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor-call/${i._id}`, {
+      .put(`${import.meta.env.VITE_API_URL}/api/mentor-call/${i._id}`, {
         mentorPhone: mentorPhone,
       })
       .then((res) => {

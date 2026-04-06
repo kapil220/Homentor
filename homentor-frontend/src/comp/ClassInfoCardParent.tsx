@@ -47,7 +47,7 @@ export default function ClassInfoCardParent({ classBooking }) {
   const handleParentCheck = async (checked) => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/${classBooking._id}/parent-complete`
+        `${import.meta.env.VITE_API_URL}/api/class-bookings/${classBooking._id}/parent-complete`
       );
       setParentConfirmed(checked);
     } catch (err) {

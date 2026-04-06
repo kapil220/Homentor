@@ -22,7 +22,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingActi
 
   const handlePhoneSubmit = (phone: string) => {
     try {
-      axios.post(`${import.meta.env.VITE_API_BASE_URL}/otp/send-otp`, { mobile: phone }).then((res) => {
+      axios.post(`${import.meta.env.VITE_API_URL}/api/otp/send-otp`, { mobile: phone }).then((res) => {
         console.log(res.data)
         setVerificationId(res.data.verificationId)
         setPhoneNumber(phone);
@@ -34,7 +34,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingActi
   };
 
   const handleOtpVerify = async (otp: string) => {
-    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/otp/verify-otp`, {
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/otp/verify-otp`, {
       verificationId,
       code: otp,
       phone: phoneNumber,

@@ -158,7 +158,7 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
         try {
           if (!mentorDetail?._id) return;
           const response = await axios.get(
-            `${import.meta.env.VITE_API_BASE_URL}/class-bookings/mentor/${mentorDetail._id}`
+            `${import.meta.env.VITE_API_URL}/api/class-bookings/mentor/${mentorDetail._id}`
           );
           const currentMentorId = mentorDetail._id.toString();
     

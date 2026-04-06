@@ -23,7 +23,7 @@ export default function ParentAttendanceModal({ classBooking, modalType, fetchBo
   const getClassRecords = async () => {
     setLoading(true)
     const response = await axios.get(
-      `${import.meta.env.VITE_API_BASE_URL}/class-records/class-booking/${classBooking._id}`
+      `${import.meta.env.VITE_API_URL}/api/class-records/class-booking/${classBooking._id}`
     );
     setRecords(response.data.data);
     setLoading(false)
@@ -31,7 +31,7 @@ export default function ParentAttendanceModal({ classBooking, modalType, fetchBo
 
   const updateParentAtt = async (record) => {
     const response = await axios.put(
-      `${import.meta.env.VITE_API_BASE_URL}/class-records/${record._id}`,
+      `${import.meta.env.VITE_API_URL}/api/class-records/${record._id}`,
       {
         parentTick: true,
       }

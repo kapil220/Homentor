@@ -46,7 +46,7 @@ const TornCard = ({ mentor }) => {
     if (fees === 0) {
       // Free demo → hit your demo booking API directly
       try {
-        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/demo-booking`, {
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/demo-booking`, {
           mentorId: mentor._id,
           parentPhone: userNumber,
           studentName: "Demo Student", // you can collect name in popup if needed
@@ -96,7 +96,7 @@ const TornCard = ({ mentor }) => {
 
   const sendCallRequest = () => {
     axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}/mentor-call`, {
+      .post(`${import.meta.env.VITE_API_URL}/api/mentor-call`, {
         name: mentor.fullName,
         phone: mentor.phone,
       })
@@ -105,7 +105,7 @@ const TornCard = ({ mentor }) => {
   };
   const [callingNo, setCallingNo] = useState("");
   const getAdminData = () => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/api/admin`).then((res) => {
       if (mentor?.callRouting?.mode === "mentor") {
         setCallingNo(mentor?.phone);
       } else {
@@ -125,7 +125,7 @@ const TornCard = ({ mentor }) => {
       return;
     }
     axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`,
+      `${import.meta.env.VITE_API_URL}/api/exotel/call/initiate`,
       {
         parentPhone: `0${userNumber}`, mentorId: mentor._id, mentorPhone: mentor.phone
       }

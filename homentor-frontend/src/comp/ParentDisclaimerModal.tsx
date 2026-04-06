@@ -18,7 +18,7 @@ const ParentDisclaimerModal = ({
 
     setLoading(true);
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/disclaimer/${audience}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/disclaimer/${audience}`)
       .then((res) => setDisclaimers(res.data.data || []))
       .finally(() => setLoading(false));
   }, [open]);
@@ -31,7 +31,7 @@ const ParentDisclaimerModal = ({
     setSaving(true);
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/users/accept-disclaimer/` +
+        `${import.meta.env.VITE_API_URL}/api/users/accept-disclaimer/` +
           userId,
         { disclaimers: disclaimers }
       );

@@ -45,7 +45,7 @@ const MentorDashboard = () => {
     try {
       if (!mentorDetail?._id) return;
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/mentor/${mentorDetail._id}`
+        `${import.meta.env.VITE_API_URL}/api/class-bookings/mentor/${mentorDetail._id}`
       );
       const currentMentorId = mentorDetail._id.toString();
 
@@ -136,7 +136,7 @@ const MentorDashboard = () => {
   const getMentorDetail = async () => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/mentor/login-check`,
+        `${import.meta.env.VITE_API_URL}/api/mentor/login-check`,
         { phone: localStorage.getItem("mentor") }
       );
       console.log('Mentor details:', res.data.data);
@@ -146,7 +146,7 @@ const MentorDashboard = () => {
       setIsOn(mentorData?.showOnWebsite);
 
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/class-bookings/mentor/${mentorData._id}`
+        `${import.meta.env.VITE_API_URL}/api/class-bookings/mentor/${mentorData._id}`
       );
 
       const currentMentorId = mentorData._id.toString();
@@ -203,7 +203,7 @@ const MentorDashboard = () => {
   const updateMentorDetail = async (websiteStatus) => {
     try {
       const res = await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorDetail._id}`,
+        `${import.meta.env.VITE_API_URL}/api/mentor/${mentorDetail._id}`,
         { showOnWebsite: websiteStatus }
       );
       console.log(res.data.data);
