@@ -3,6 +3,13 @@ const express = require('express')
 const cors =  require('cors')
 const connectDB = require('./configDB/db')
 
+// Essential environment variable check
+if (!process.env.MONGO_URI) {
+    console.error('❌ CRITICAL ERROR: MONGO_URI is missing from environment variables.');
+    console.error('The server cannot start without a database connection.');
+    process.exit(1);
+}
+
 connectDB()
 const app = express()
 app.use(cors())
