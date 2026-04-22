@@ -97,6 +97,11 @@ const classBookingSchema = new mongoose.Schema({
   isViewedByAdmin: {
     type: Boolean,
     default: false
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["online", "cash"],
+    default: "online"
   }
 
 });

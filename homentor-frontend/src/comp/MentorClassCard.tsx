@@ -12,8 +12,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { createOrder } from "@/api/payment.jsx";
-import { load } from "@cashfreepayments/cashfree-js";
+import { initiateCheckout } from "@/api/paymentProvider.jsx";
 import { Badge } from "@/components/ui/badge";
 import ParentAttendanceModal from "./ParentAttendanceModal";
 import ScheduleModal from "./SetScheduleForm";
@@ -74,7 +73,7 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
     // ------------- PAYMENT FUNCTION (CASHFREE) -------------
     const payNow = async () => {
         try {
-            const data = await createOrder({
+            await initiateCheckout({
                 amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
                 customerId: `homentor${Date.now()}`,
                 customerPhone: localStorage.getItem("usernumber"),
@@ -84,18 +83,6 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                 isDemo: classItem.isDemo,
                 classBookingId: classItem._id,
             });
-            localStorage.setItem("orderId", data.order_id);
-            console.log(data);
-            let cashfree = await load({
-                mode: "production",
-            });
-            console.log(cashfree);
-
-            let checkoutOptions = {
-                paymentSessionId: data.payment_session_id,
-                redirectTarget: "_self",
-            };
-            cashfree.checkout(checkoutOptions);
         } catch (error) {
             alert("Failed to initiate payment");
         }

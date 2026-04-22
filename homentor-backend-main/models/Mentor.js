@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const MentorSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   email: { type: String },
   phone: { type: String, required: true, unique: true },
+  password: { type: String },
   gender: { type: String },
   age: { type: Number },
   profilePhoto: { type: String },
@@ -128,6 +130,18 @@ const MentorSchema = new mongoose.Schema({
 });
 
 MentorSchema.index({ coordinates: "2dsphere" });
+
+MentorSchema.pre("save", async function (next) {
+  if (!this.isModified("password") || !this.password) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+MentorSchema.methods.comparePassword = function (plain) {
+  if (!this.password) return Promise.resolve(false);
+  return bcrypt.compare(plain, this.password);
+};
 
 
 module.exports = mongoose.model("Mentor", MentorSchema);

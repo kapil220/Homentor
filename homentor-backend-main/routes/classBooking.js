@@ -351,8 +351,12 @@ router.post("/:id/admin-approve", async (req, res) => {
     const booking = await ClassBooking.findById(req.params.id);
     if (!booking) return res.status(404).json({ message: "Not found" });
 
-    // ✅ All classes finished → allow parent confirmation
     booking.adminApproved = !booking.adminApproved;
+
+    // For cash bookings, approving activates the booking (pending_schedule -> scheduled)
+    if (booking.paymentMethod === "cash" && booking.adminApproved && booking.status === "pending_schedule") {
+      booking.status = "scheduled";
+    }
     await booking.save();
 
     res.json({

@@ -23,7 +23,9 @@ const OrderSchema = new mongoose.Schema({
     ref: "classBooking"
   },
   isDemo: {type : Boolean, default: false},
-  session : {type : Number}
+  session : {type : Number},
+  paymentProvider: { type: String, enum: ["cashfree", "payu", "cash"], default: "cashfree" },
+  paymentMethod: { type: String, enum: ["online", "cash"], default: "online" }
 });
 
 module.exports = mongoose.model("Order", OrderSchema);

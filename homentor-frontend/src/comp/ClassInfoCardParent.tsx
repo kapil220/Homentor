@@ -13,9 +13,8 @@ import {
 } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
 import axios from "axios";
-import { load } from "@cashfreepayments/cashfree-js";
+import { initiateCheckout } from "@/api/paymentProvider.jsx";
 import TerminateClassModal from "./TerminateClassModal";
-import { createOrder } from "@/api/payment.jsx";
 import ChangeTeacherModal from "./ChangeTeacherModal";
 
 export default function ClassInfoCardParent({ classBooking }) {
@@ -59,7 +58,7 @@ export default function ClassInfoCardParent({ classBooking }) {
   // ------------- PAYMENT FUNCTION (CASHFREE) -------------
   const payNow = async () => {
     try {
-      const data = await createOrder({
+      await initiateCheckout({
         amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
         customerId: `homentor${Date.now()}`,
         customerPhone: localStorage.getItem("usernumber"),
@@ -69,18 +68,6 @@ export default function ClassInfoCardParent({ classBooking }) {
         isDemo: classBooking.isDemo,
         classBookingId: classBooking._id
       });
-      localStorage.setItem("orderId", data.order_id);
-      console.log(data);
-      let cashfree = await load({
-        mode: "production",
-      });
-      console.log(cashfree);
- 
-      let checkoutOptions = {
-        paymentSessionId: data.payment_session_id,
-        redirectTarget: "_self",
-      };
-      cashfree.checkout(checkoutOptions);
     } catch (error) {
       alert("Failed to initiate payment");
     }

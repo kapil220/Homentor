@@ -20,6 +20,7 @@ const startServer = async () => {
 
     // Routes
     app.use("/api/otp", require("./routes/otpRoutes"));
+    app.use("/api/auth", require("./routes/authRoutes"));
     app.use("/api/class-bookings", require('./routes/classBooking.js'));
     app.use("/api/class-records", require('./routes/classRecordRoutes.js'));
     app.use('/api/admin', require('./routes/adminRoutes'))
@@ -28,6 +29,8 @@ const startServer = async () => {
     app.use('/api', require('./routes/callMentor'))
     app.use('/api/mentor',require('./routes/mentorRoutes'))
     app.use("/api/payment", require("./routes/cashfreePayment.js"));
+    app.use("/api/payu", require("./routes/payuPayment.js"));
+    app.use("/api/cash-booking", require("./routes/cashBooking.js"));
     app.use("/api/order", require("./routes/orderRoutes.js"));
     app.use("/api/margin-rule", require("./routes/marginRule.js"));
     app.use("/api/demo-booking", require("./routes/demoBookingRoutes.js"));

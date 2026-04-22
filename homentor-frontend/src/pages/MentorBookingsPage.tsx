@@ -7,7 +7,7 @@ import NoBookingCard from '@/comp/NoBookingCard';
 import axios from 'axios';
 import ClassCard from '@/comp/ClassCard';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import DashboardLayout from '@/components/DashboardLayout';
 import AllBookingsPage from './AllBookingsPage';
 
 const MentorBookingsPage = () => {
@@ -48,13 +48,10 @@ const MentorBookingsPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <Navbar></Navbar>
-      <div className="container mx-auto px-4 py-8 mt-[8vh]">
-        {!mentorData ? <p>Loading...</p> :
-          <AllBookingsPage userData={mentorData} userType="mentor" userId={mentorData._id}></AllBookingsPage>}
-      </div>
-    </div>
+    <DashboardLayout role="mentor" title="Your Bookings" subtitle="All classes assigned to you">
+      {!mentorData ? <p className="text-gray-500">Loading...</p> :
+        <AllBookingsPage userData={mentorData} userType="mentor" userId={mentorData._id}></AllBookingsPage>}
+    </DashboardLayout>
   );
 };
 

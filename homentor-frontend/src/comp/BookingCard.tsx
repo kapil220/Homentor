@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, MessageCircle } from "lucide-react";
+import { Calendar, MessageCircle, Wallet } from "lucide-react";
 
-const BookingCard = ({ mentorData, payNow }) => {
+const BookingCard = ({ mentorData, payNow, payCash }: { mentorData: any; payNow: (price: number, duration: number) => void; payCash?: (price: number, duration: number) => void }) => {
   const [mode, setMode] = useState("monthly");
   const [hours, setHours] = useState(1);
 
@@ -81,13 +81,25 @@ const BookingCard = ({ mentorData, payNow }) => {
 
       {/* Book Now */}
       <Button
-        onClick={() => payNow(getPrice(), duration)}
+        onClick={() => payNow(getPrice() as number, duration)}
         size="lg"
         className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white text-md font-semibold shadow-md"
       >
         <Calendar className="h-4 w-4 mr-2" />
-        Book Now
+        Book Now (Online)
       </Button>
+
+      {payCash && getPrice() !== "Free" && (
+        <Button
+          onClick={() => payCash(getPrice() as number, duration)}
+          size="lg"
+          variant="outline"
+          className="w-full border-green-500 text-green-700 hover:bg-green-50 font-semibold"
+        >
+          <Wallet className="h-4 w-4 mr-2" />
+          Book with Cash (Admin approval)
+        </Button>
+      )}
 
       {/* Contact Buttons */}
       <div className="lg:flex hidden justify-between gap-2 mt-1">

@@ -90,7 +90,7 @@ const TornCard = ({ mentor }) => {
     if (userNumber && pendingAction.type === "PAYMENT") {
       handlePayment(bookingAmount)
     } else if (userNumber && pendingAction.type === "CALL") {
-      initiateExotelCall()
+      initiateDirectCall()
     }
   }, [pendingAction])
 
@@ -114,6 +114,24 @@ const TornCard = ({ mentor }) => {
     });
   };
 
+  // Direct tel: call. Exotel kept below (disabled) for later re-enable.
+  const initiateDirectCall = () => {
+    if (!userNumber) {
+      setPendingAction({
+        type: "call",
+        mentorId: mentor._id,
+        mentorPhone: mentor.phone,
+      });
+      setIsLoginOpen(true);
+      return;
+    }
+    const number = callingNo || mentor?.phone;
+    if (number) {
+      window.location.href = `tel:${number}`;
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const initiateExotelCall = () => {
     if (!userNumber) {
       setPendingAction({
@@ -217,7 +235,7 @@ const TornCard = ({ mentor }) => {
           </div>
         </button>
         <button
-          onClick={() => initiateExotelCall()}
+          onClick={() => initiateDirectCall()}
           className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-homentor-chat to-homentor-chatHover hover:from-homentor-chatHover hover:to-homentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
           title="Chat with mentor"
         >

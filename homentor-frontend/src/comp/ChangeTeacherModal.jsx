@@ -77,6 +77,16 @@ const ChangeTeacherModal = ({
   };
 
   const userNumber = localStorage.getItem("usernumber");
+
+  // Direct tel: call. Exotel kept below (disabled) for later re-enable.
+  const initiateDirectCall = () => {
+    const number = selectedTeacher?.phone;
+    if (number) {
+      window.location.href = `tel:${number}`;
+    }
+  };
+
+  // eslint-disable-next-line no-unused-vars
   const initiateExotelCall = () => {
       axios
         .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
@@ -152,7 +162,7 @@ const ChangeTeacherModal = ({
                       <div className="flex gap-2">
                         {/* Call Button */}
                         <a
-                          onClick={()=>initiateExotelCall()}
+                          onClick={()=>initiateDirectCall()}
                           className="px-3 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-sm flex items-center gap-2"
                         >
                           <Phone size={16} />

@@ -1,7 +1,10 @@
-
-import React, { useEffect, useRef, useState } from 'react';
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from "@/components/ui/collapsible";
+import { Plus, Minus } from "lucide-react";
 
 interface FAQItem {
   question: string;
@@ -14,98 +17,53 @@ interface FAQSectionProps {
   items: FAQItem[];
 }
 
-const FAQSection: React.FC<FAQSectionProps> = ({ 
-  title = "Frequently Asked Questions", 
-  description = "Find answers to common questions about Homentor", 
-  items 
+const FAQSection: React.FC<FAQSectionProps> = ({
+  title = "Frequently Asked Questions",
+  description = "Answers to the questions parents ask us most.",
+  items,
 }) => {
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
-  const [scrollY, setScrollY] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-      
-      // Check if section is in view
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-        if (isInView && !inView) {
-          setInView(true);
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check on initial render
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [inView]);
 
   const toggleItem = (index: number) => {
-    setOpenItems((prev) => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
+    setOpenItems((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   return (
-    <section ref={sectionRef} className="py-20 bg-gray-50 relative overflow-hidden">
-      {/* Background decorative elements with parallax */}
-      <div 
-        className="absolute -top-20 -right-20 h-64 w-64 bg-homentor-lightBlue rounded-full opacity-30 -z-10"
-        style={{ transform: `translateY(${scrollY * 0.05}px)` }}
-      />
-      <div 
-        className="absolute bottom-0 left-0 h-48 w-48 bg-homentor-lightGold rounded-full opacity-20 -z-10"
-        style={{ transform: `translateY(${scrollY * -0.08}px)` }}
-      />
-      
-      <div className="container-tight">
-        <div 
-          className="text-center mb-12 scroll-reveal"
-          ref={(el) => {
-            if (el && inView) {
-              el.classList.add('revealed');
-            }
-          }}
-        >
-          <h2 className="section-heading relative inline-block">
+    <section className="py-20 bg-white">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-homentor-blue border border-blue-100">
+            FAQ
+          </span>
+          <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
             {title}
-            <span className="absolute -z-10 bottom-2 left-0 h-3 bg-homentor-lightBlue opacity-30 w-full"></span>
           </h2>
-          <p className="section-subheading">{description}</p>
+          <p className="mt-3 text-slate-600">{description}</p>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="space-y-3">
           {items.map((item, index) => (
             <Collapsible
               key={index}
               open={!!openItems[index]}
               onOpenChange={() => toggleItem(index)}
-              className="glassmorphism rounded-xl shadow-soft border border-gray-100 overflow-hidden scroll-reveal"
-              style={{ transitionDelay: `${index * 0.1}s` }}
-              ref={(el) => {
-                if (el && inView) {
-                  el.classList.add('revealed');
-                }
-              }}
+              className="rounded-2xl bg-white border border-slate-200 hover:border-slate-300 transition-colors overflow-hidden"
             >
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-6 py-4 text-left group">
-                <h3 className="text-lg font-medium text-gray-900 group-hover:text-homentor-blue transition-colors">{item.question}</h3>
-                <div className="bg-homentor-lightBlue rounded-full p-1 flex-shrink-0 transition-transform duration-300 transform group-hover:bg-homentor-blue group-hover:text-white">
+              <CollapsibleTrigger className="flex items-center justify-between w-full px-5 py-4 text-left group">
+                <h3 className="text-base font-medium text-slate-900 pr-4">
+                  {item.question}
+                </h3>
+                <div className="shrink-0 w-8 h-8 rounded-lg bg-slate-50 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
                   {openItems[index] ? (
-                    <ChevronUp className="h-5 w-5 text-homentor-blue group-hover:text-white" />
+                    <Minus className="h-4 w-4 text-homentor-blue" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-homentor-blue group-hover:text-white" />
+                    <Plus className="h-4 w-4 text-slate-500 group-hover:text-homentor-blue" />
                   )}
                 </div>
               </CollapsibleTrigger>
-              <CollapsibleContent className="overflow-hidden transition-all duration-300">
-                <div className="px-6 pb-4 pt-2 text-gray-600">
-                  <p>{item.answer}</p>
+              <CollapsibleContent className="overflow-hidden">
+                <div className="px-5 pb-5 pt-0 text-slate-600 leading-relaxed text-sm">
+                  {item.answer}
                 </div>
               </CollapsibleContent>
             </Collapsible>

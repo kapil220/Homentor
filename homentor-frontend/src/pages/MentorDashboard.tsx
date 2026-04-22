@@ -22,7 +22,7 @@ import AttendanceModal from "@/comp/AttendanceModal";
 import HistoryAttendanceModal from "@/comp/HistoryAttendanceModal"
 import EditMentorForm from "@/comp/EditMentorForm";
 import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/Navbar";
+import DashboardLayout from "@/components/DashboardLayout";
 import MentorSecondForm from "@/comp/MentorSecondForm";
 import ParentDisclaimerModal from "@/comp/ParentDisclaimerModal";
 
@@ -221,10 +221,6 @@ const MentorDashboard = () => {
   };
   
   const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("mentor");
-    navigate("/"); // redirect to login page (change if your route differs)
-  };
 
   function AddressBlock({ classItem }) {
     const [showAddress, setShowAddress] = useState(
@@ -274,53 +270,44 @@ const MentorDashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <Navbar></Navbar>
-      <div className="container mx-auto px-4 py-8 mt-[8vh]">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            {/* Title and Subheading */}
+    <DashboardLayout
+      role="mentor"
+      title={mentorDetail?.fullName || "Mentor Dashboard"}
+      subtitle={mentorDetail?._id ? `ID: ${mentorDetail._id.slice(0, 10)}` : undefined}
+    >
+      <div>
+        {/* Profile summary + actions */}
+        <div className="mb-6 bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
             <div className="flex items-center gap-4">
               <img
                 src={mentorDetail?.profilePhoto || "/placeholder.svg"}
                 alt="mentor profile"
-                className="w-16 h-16 rounded-full border object-cover"
+                className="w-14 h-14 rounded-full border object-cover"
               />
               <div>
-                <p className="font-semibold text-lg">
+                <p className="font-semibold text-gray-900">
                   {mentorDetail?.fullName}
                 </p>
-                <p className="text-sm text-gray-500">ID: {mentorDetail?._id.slice(0, 10)}</p>
+                <p className="text-xs text-gray-500">
+                  ID: {mentorDetail?._id?.slice(0, 10)}
+                </p>
               </div>
-              <Button
-                variant="destructive"
-                onClick={handleLogout}
-                className="flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </Button>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-2 w-full sm:w-auto justify-between sm:justify-start">
+            <div className="flex gap-2 flex-wrap items-center">
               <Button variant="secondary" onClick={() => setShowFormEdit(true)}>
                 Form Edit
               </Button>
               <MentorSecondForm mentorId={mentorDetail._id} phone={mentorDetail?.phone}></MentorSecondForm>
-              <div className="flex flex-col items-center ">
-                <label className="text-gray-700 font-medium ">
-                  Display
-                </label>
+              <div className="flex flex-col items-center">
+                <label className="text-gray-700 font-medium text-xs">Display</label>
                 <button
                   onClick={() => updateMentorDetail(!isOn)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${isOn ? "bg-green-500" : "bg-gray-300"
-                    }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${isOn ? "bg-green-500" : "bg-gray-300"}`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${isOn ? "translate-x-6" : "translate-x-1"
-                      }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${isOn ? "translate-x-6" : "translate-x-1"}`}
                   />
                 </button>
               </div>
@@ -611,7 +598,7 @@ const MentorDashboard = () => {
         userId={mentorDetail?._id}
         disclaimerAccepted={mentorDetail?.disclaimerAccepted}
       />
-    </div>
+    </DashboardLayout>
   );
 };
 

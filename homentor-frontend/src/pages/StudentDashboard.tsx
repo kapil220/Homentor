@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
-import { Calendar, DollarSign, Settings, PhoneCall, LogOut } from 'lucide-react';
 import NoBookingCard from '@/comp/NoBookingCard';
 import axios from 'axios';
 import ClassCard from '@/comp/ClassCard';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import DashboardLayout from '@/components/DashboardLayout';
 import ParentProfileForm from '@/comp/ParentProfileForm';
 import ParentDisclaimerModal from '@/comp/ParentDisclaimerModal';
 
@@ -72,51 +71,24 @@ const MentorDashboard = () => {
   };
 
   const navigate = useNavigate();
-  const handleLogout = () => {
-    localStorage.removeItem("usernumber");
-    navigate("/"); // redirect to login page (change if your route differs)
-  };
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(false)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <Navbar></Navbar>
-      <div className="container mx-auto px-4 py-8 mt-[8vh]">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className='flex flex-row justify-between'>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                  {userType === "parent" ? "Parent" : "Mentor"} Dashboard
-                </h1>
-                <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                  Manage your students and upcoming sessions
-                </p>
-              </div>
-              <Button
-                variant="destructive"
-                onClick={handleLogout}
-                className="flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </Button>
-            </div>
-
-            <div className="flex gap-2 w-full sm:w-auto justify-end sm:justify-start">
-              <Button onClick={() => setShowProfileForm(true)} variant="outline" size="sm" className="w-full sm:w-auto">
-
-                Edit Profile
-
-              </Button>
-              <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                <PhoneCall className="w-4 h-4 mr-2" />
-                <span className=" sm:inline">9203149956</span>
-              </Button>
-            </div>
-          </div>
+    <DashboardLayout
+      role="student"
+      title={`${userType === "parent" ? "Parent" : "Mentor"} Dashboard`}
+      subtitle="Manage your students and upcoming sessions"
+    >
+      <div>
+        <div className="mb-6 flex justify-end">
+          <Button
+            onClick={() => setShowProfileForm(true)}
+            variant="outline"
+            size="sm"
+          >
+            Edit Profile
+          </Button>
         </div>
         {studentDetail && (
           <ParentProfileForm
@@ -226,7 +198,7 @@ const MentorDashboard = () => {
         userId={studentDetail?._id}
         disclaimerAccepted={studentDetail?.disclaimerAccepted}
       />
-    </div>
+    </DashboardLayout>
   );
 };
 

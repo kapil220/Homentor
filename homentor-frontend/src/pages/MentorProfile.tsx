@@ -28,6 +28,7 @@ import LoginPopup from "@/components/LoginPopup";
 import BookingCard from "@/comp/BookingCard";
 import { createOrder } from "@/api/payment.jsx";
 import { load } from "@cashfreepayments/cashfree-js";
+import { createCashBooking } from "@/api/cashBooking.jsx";
 
 // Mock teacher data for homentor platform
 const teacherData = {
@@ -210,6 +211,29 @@ const MentorDetails = () => {
       payNow(bookingAmount);
     }
   }, [isPayment]);
+
+  const payCash = async (fees, duration) => {
+    if (!userNumber) {
+      setBookingAmount(fees);
+      setIsLoginOpen(true);
+      return;
+    }
+    const proceed = window.confirm(
+      `Place a CASH booking for ₹${Math.round(fees)}?\n\nThe booking will remain pending until an admin approves it.`
+    );
+    if (!proceed) return;
+    try {
+      await createCashBooking({
+        amount: Math.round(fees),
+        customerPhone: userNumber,
+        mentorId: mentorData._id,
+        duration,
+      });
+      alert("Cash booking placed! You'll see it as 'Pending Approval' in your bookings.");
+    } catch (error) {
+      alert(error?.response?.data?.message || "Failed to create cash booking");
+    }
+  };
   const targetDivRef = useRef(null);
   const handleScroll = () => {
     targetDivRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -339,6 +363,7 @@ const MentorDetails = () => {
                     <BookingCard
                       mentorData={mentorData}
                       payNow={payNow}
+                      payCash={payCash}
                     ></BookingCard>
                     <div className="flex flex-row lg:hidden justify-center gap-4">
                       <Button

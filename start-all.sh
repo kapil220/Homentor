@@ -81,7 +81,12 @@ echo "Press Ctrl+C to stop all services."
 # Trap Ctrl+C to stop all background processes
 cleanup() {
     echo -e "\n${RED}Stopping all services...${RESET}"
+    # Kill the recorded PIDs
     kill $BACKEND_PID $ADMIN_PID $FRONTEND_PID 2>/dev/null
+    
+    # Fallback: kill any remaining processes on these specific ports
+    lsof -ti :5000,5173,3000 | xargs kill -9 2>/dev/null
+    
     exit
 }
 

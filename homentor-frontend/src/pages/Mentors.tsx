@@ -660,222 +660,244 @@ const Mentors = () => {
 
   return (
     <Layout>
-      <div className="bg-gray-50 py-16">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 pb-20">
+        {/* Page header */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-6">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+            <div>
+              <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-homentor-blue border border-blue-100">
+                Mentors in {locationName}
+              </span>
+              <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+                Find your next home tutor
+              </h1>
+              <p className="mt-2 text-slate-600 max-w-xl">
+                Filter by subject, class, city or budget. Every mentor is manually verified.
+              </p>
+            </div>
+            <div className="text-sm text-slate-500">
+              <span className="font-semibold text-slate-900">
+                {filteredMentors.length}
+              </span>{" "}
+              mentors shown
+            </div>
+          </div>
+        </div>
+
+        {/* Filter card */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-3">
-            <div className="flex gap-4 items-center">
-              {/* 1 */}
-              <SearchBar
-                setSearchTerm={setSearchTerm}
-                searchTerm={searchTerm}
-              />
-              <Input
-                className="hidden lg:block"
-                placeholder="Enter Here..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              ></Input>
-
-              {/* Class */}
-              <ClassSelect
-                selectedSubjects={selectedClass}
-                handleClassChange={handleClassChange}
-              ></ClassSelect>
-
-              {/* Subject */}
-              <MultiSubjectSelect
-                selectedSubjects={selectedSubject}
-                subjects={subjects}
-                setSelectedSubjects={setSelectedSubject}
-              ></MultiSubjectSelect>
+          <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div className="md:col-span-5">
+                <SearchBar
+                  setSearchTerm={setSearchTerm}
+                  searchTerm={searchTerm}
+                />
+              </div>
+              <div className="md:col-span-3">
+                <ClassSelect
+                  selectedSubjects={selectedClass}
+                  handleClassChange={handleClassChange}
+                />
+              </div>
+              <div className="md:col-span-4">
+                <MultiSubjectSelect
+                  selectedSubjects={selectedSubject}
+                  subjects={subjects}
+                  setSelectedSubjects={setSelectedSubject}
+                />
+              </div>
             </div>
 
-            <div className="flex gap-4 items-center">
-              <StateSelect
-                selectedState={selectedState}
-                allStates={allStates}
-                setSelectedState={setSelectedState}
-              ></StateSelect>
-
-              <Select
-                disabled={!selectedState} // disable until a state is selected
-                onValueChange={setSelectedCity}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select City" />
-                </SelectTrigger>
-                <SelectContent>
-                  {selectedState &&
-                    StateData[`${selectedState}`]?.map((city) => (
-                      <SelectItem value={`${city}`}>{city}</SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-
-              <Button
-                variant="outline"
-                className="border-blue-500 text-blue-500 hover:bg-blue-50"
-                onClick={resetFilters}
-              >
-                Reset
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+              <div className="md:col-span-4">
+                <StateSelect
+                  selectedState={selectedState}
+                  allStates={allStates}
+                  setSelectedState={setSelectedState}
+                />
+              </div>
+              <div className="md:col-span-4">
+                <Select
+                  disabled={!selectedState}
+                  onValueChange={setSelectedCity}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select City" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {selectedState &&
+                      StateData[`${selectedState}`]?.map((city) => (
+                        <SelectItem key={city} value={`${city}`}>
+                          {city}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="md:col-span-4">
+                <Button
+                  variant="outline"
+                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50"
+                  onClick={resetFilters}
+                >
+                  Reset filters
+                </Button>
+              </div>
             </div>
+
             {selectedCity && (
-              <div className="space-y-2">
-                <label className="block font-medium text-sm">
-                  Select Area in {selectedCity}
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">
+                  Area in {selectedCity}
                 </label>
                 <input
                   ref={inputRef}
                   placeholder={`Type to search in ${selectedCity}`}
-                  className="border px-3 py-2 rounded w-full"
+                  className="border border-slate-200 px-3 py-2 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-homentor-blue/30"
                 />
                 {selectedLocation && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-slate-500 mt-1">
                     Selected: {selectedLocation}
                   </p>
                 )}
               </div>
             )}
 
-            <div className="px-4 py-3 bg-white rounded-xl shadow-sm border mt-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-700 font-medium">
-                  ₹{priceRange[0]}
-                </span>
-                <Label className="text-sm font-semibold text-gray-800">
-                  Fees Range (₹/month)
+            <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-sm font-semibold text-slate-800">
+                  Monthly fee range
                 </Label>
-                <span className="text-sm text-gray-700 font-medium">
-                  ₹{priceRange[1]}
+                <span className="text-xs text-slate-500">
+                  ₹{priceRange[0].toLocaleString()} – ₹{priceRange[1].toLocaleString()}
                 </span>
               </div>
               <PriceSlider value={priceRange} onChange={setPriceRange} />
             </div>
+          </div>
+        </div>
 
-            <p className="text-xl text-center text-mentor-yellow-500 my-2 font-bold">
-              Top Tutors's of {locationName}
-            </p>
-           
-
-            <SVGFilter />
-            <div className="mb-12 sm:mb-16">
-              <div className="flex items-center justify-between mb-6 sm:mb-8 gap-3">
-                <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Award className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
-                  </div>
-                  <h2 className="text-xl sm:text-3xl font-bold text-gray-900 truncate">
+        {/* Gold Mentors */}
+        {goldMentors.length > 0 && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
+                  <Award className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
                     Gold Mentors
                   </h2>
-                  <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs hidden sm:inline-flex">
-                    Premium
-                  </Badge>
+                  <p className="text-xs text-slate-500">Premium · Top-rated educators</p>
                 </div>
-                <Button
-                  onClick={() => setShowAllGold(true)}
-                  variant="outline"
-                  className="border-yellow-400 text-yellow-600 hover:bg-yellow-50 text-xs px-3 py-2 h-8 flex-shrink-0"
-                >
-                  <span className="">View More </span>
-                </Button>
               </div>
+              <Button
+                onClick={() => setShowAllGold(true)}
+                variant="outline"
+                size="sm"
+                className="border-amber-300 text-amber-700 hover:bg-amber-50"
+              >
+                View all
+              </Button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {goldMentors?.map(
                 (mentor, index) =>
                   index <= 1 && (
                     <TornCard
-                      key={mentor._id || mentor._id || index}
+                      key={mentor._id || index}
                       mentor={mentor}
                     />
                   )
               )}
             </div>
+
             <Dialog open={showAllGold} onOpenChange={setShowAllGold}>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto ">
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="flex items-center gap-2 text-xl sm:text-2xl">
-                    <Award className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" />
+                    <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
                     More Gold Mentors
                   </DialogTitle>
                 </DialogHeader>
-
                 <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-6">
                   {goldMentors.map((mentor) => (
-                    <TornCard key={mentor.id} mentor={mentor} />
+                    <TornCard key={mentor._id || mentor.id} mentor={mentor} />
                   ))}
                 </div>
               </DialogContent>
             </Dialog>
-            {/* Silver Mentors Section */}
-            <div>
-              <div className="flex items-center gap-2 sm:gap-3 mt-6 sm:mb-8">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Users className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
-                </div>
-                <h2 className="text-xl sm:text-3xl font-bold text-gray-900">Silver Mentors</h2>
-                <Badge className="bg-gradient-to-r from-gray-400 to-gray-500 text-white text-xs hidden sm:inline-flex">
-                  Standard
-                </Badge>
-              </div>
+          </div>
+        )}
+
+        {/* All / Silver Mentors */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-sm">
+              <Users className="w-4 h-4 text-white" />
             </div>
-            
-            <div className="mt-8">
-              {loader ? (
-                <div className="flex justify-center items-center py-16">
-                  <div className="text-lg">Loading mentors...</div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {filteredMentors?.map((mentor, index) => (
-                    <TornCard
-                      key={mentor._id || mentor._id || index}
-                      mentor={mentor}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {!loader &&
-                filteredMentors.length === 0 &&
-                mentorsData.length > 0 && (
-                  <div className="text-center py-16">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                      No mentors found
-                    </h3>
-                    <p className="text-gray-600">
-                      Try adjusting your search filters or reset them to see all
-                      available mentors.
-                    </p>
-                    <Button
-                      className="mt-4 bg-blue-600 hover:bg-blue-700"
-                      onClick={resetFilters}
-                    >
-                      Reset Filters
-                    </Button>
-                  </div>
-                )}
-
-              {!loader && mentorsData.length === 0 && (
-                <div className="text-center py-16">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                    Unable to load mentors
-                  </h3>
-                  <p className="text-gray-600">
-                    Please check your internet connection and try again.
-                  </p>
-                  <Button
-                    className="mt-4 bg-blue-600 hover:bg-blue-700"
-                    onClick={fetchMentors}
-                  >
-                    Retry
-                  </Button>
-                </div>
-              )}
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+                All Mentors
+              </h2>
+              <p className="text-xs text-slate-500">Verified educators across your area</p>
             </div>
           </div>
+
+          <SVGFilter />
+
+          {loader ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl bg-white border border-slate-100 h-64 animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filteredMentors.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {filteredMentors?.map((mentor, index) => (
+                <TornCard
+                  key={mentor._id || index}
+                  mentor={mentor}
+                />
+              ))}
+            </div>
+          ) : mentorsData.length === 0 ? (
+            <div className="text-center py-16 rounded-2xl bg-white border border-slate-200">
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                Unable to load mentors
+              </h3>
+              <p className="text-slate-600">
+                Please check your internet connection and try again.
+              </p>
+              <Button
+                className="mt-4 bg-homentor-blue hover:bg-homentor-darkBlue"
+                onClick={fetchMentors}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <div className="text-center py-16 rounded-2xl bg-white border border-slate-200">
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                No mentors match your filters
+              </h3>
+              <p className="text-slate-600">
+                Try widening your search or reset the filters.
+              </p>
+              <Button
+                className="mt-4 bg-homentor-blue hover:bg-homentor-darkBlue"
+                onClick={resetFilters}
+              >
+                Reset Filters
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </Layout>

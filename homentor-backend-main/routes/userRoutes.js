@@ -33,32 +33,29 @@ router.post("/login-check", async (req, res) => {
   }
 });
 
-// GET single user
+// Verify OTP (uses shared otpService)
 router.post("/verify-check", async (req, res) => {
-  const { verificationId, code } = req.body;
-  const token =
-    "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJDLTNGMkU1OTlEMDkzRDRDNCIsImlhdCI6MTc1MDU5MjAyMywiZXhwIjoxOTA4MjcyMDIzfQ.CU0VtNuJu5MzHoSh-ItvVdeYEQqURgRTHymtUtuka-S6fxqzfuLPM8KgoVIMiCc965oZjw-XoKvSPQZhk00S4g";
+  const { verificationId, code, phone } = req.body;
 
-  const url = "https://cpaas.messagecentral.com/verification/v3/validateOtp";
-  const params = {
-    verificationId,
-    code,
-    langId: "en",
-  };
+  if (!phone || !code) {
+    return res.status(400).json({ message: "Phone and code are required" });
+  }
+
   try {
-    const response = await axios.get(url, {
-      params,
-      headers: {
-        authToken: token,
-      },
-    });
-    res.status(200).json({
-      message: "OTP verified",
-      verificationStatus: response.data.data.verificationStatus,
-    });
+    const { verifyOtp } = require("../utils/otpService");
+    const result = await verifyOtp(phone, code, verificationId);
+
+    if (result.success) {
+      res.status(200).json({
+        message: "OTP verified",
+        verificationStatus: "VERIFIED",
+      });
+    } else {
+      res.status(400).json({ message: result.message || "OTP validation failed" });
+    }
   } catch (err) {
-    console.error("OTP validation failed:", err.response?.data || err.message);
-    throw new Error("OTP validation failed");
+    console.error("OTP validation failed:", err.message);
+    res.status(500).json({ message: "OTP validation failed" });
   }
 });
 

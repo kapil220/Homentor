@@ -5,8 +5,7 @@ import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoginPopup from "./LoginPopup";
-import { createOrder } from "@/api/payment.jsx";
-import { load } from "@cashfreepayments/cashfree-js";
+import { initiateCheckout } from "@/api/paymentProvider.jsx";
 import SuccessModal from "@/comp/SuccessModal";
 
 const TornCard = ({ mentor }) => {
@@ -59,22 +58,12 @@ const TornCard = ({ mentor }) => {
 
     // Paid demo or monthly subscription → use gateway
     try {
-      const data = await createOrder({
+      await initiateCheckout({
         amount: fees,
         customerId: `homentor${Date.now()}`,
         customerPhone: userNumber,
         mentorId: mentor._id,
-      }); 
-
-      localStorage.setItem("orderId", data.order_id);
-
-      let cashfree = await load({ mode: "production" });
-
-      let checkoutOptions = {
-        paymentSessionId: data.payment_session_id,
-        redirectTarget: "_self",
-      };
-      await cashfree.checkout(checkoutOptions);
+      });
     } catch (error) {
       alert("Failed to initiate payment");
     }
@@ -84,7 +73,7 @@ const TornCard = ({ mentor }) => {
     if (userNumber && pendingAction.type === "PAYMENT") {
       handlePayment(bookingAmount);
     } else if (userNumber && pendingAction.type === "CALL") {
-      initiateExotelCall();
+      initiateDirectCall();
     }
   }, [pendingAction]);
   const [callingNo, setCallingNo] = useState("");
@@ -98,6 +87,24 @@ const TornCard = ({ mentor }) => {
     });
   };
 
+  // Direct tel: call. Exotel kept below (disabled) for later re-enable.
+  const initiateDirectCall = () => {
+    if (!userNumber) {
+      setPendingAction({
+        type: "call",
+        mentorId: mentor._id,
+        mentorPhone: mentor.phone,
+      });
+      setIsLoginOpen(true);
+      return;
+    }
+    const number = callingNo || mentor?.phone;
+    if (number) {
+      window.location.href = `tel:${number}`;
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const initiateExotelCall = () => {
     if (!userNumber) {
       setPendingAction({
@@ -190,7 +197,7 @@ const TornCard = ({ mentor }) => {
           </Button> */}
 
           <Button
-            onClick={initiateExotelCall}
+            onClick={initiateDirectCall}
             className="flex-1 bg-gradient-to-r from-homentor-call to-homentor-callHover hover:opacity-90 text-xs gap-1"
           >
             <PhoneCall className="w-4 h-4" />

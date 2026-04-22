@@ -9,8 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { createOrder } from "@/api/payment.jsx";
-import { load } from "@cashfreepayments/cashfree-js";
+import { initiateCheckout } from "@/api/paymentProvider.jsx";
 import { Badge } from "@/components/ui/badge";
 import ParentAttendanceModal from "./ParentAttendanceModal";
 
@@ -65,7 +64,7 @@ export default function ClassCard({ classItem, userType }) {
   // ------------- PAYMENT FUNCTION (CASHFREE) -------------
   const payNow = async () => {
     try {
-      const data = await createOrder({
+      await initiateCheckout({
         amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
         customerId: `homentor${Date.now()}`,
         customerPhone: localStorage.getItem("usernumber"),
@@ -75,18 +74,6 @@ export default function ClassCard({ classItem, userType }) {
         isDemo: classItem.isDemo,
         classBookingId: classItem._id,
       });
-      localStorage.setItem("orderId", data.order_id);
-      console.log(data);
-      let cashfree = await load({
-        mode: "production",
-      });
-      console.log(cashfree);
-
-      let checkoutOptions = {
-        paymentSessionId: data.payment_session_id,
-        redirectTarget: "_self",
-      };
-      cashfree.checkout(checkoutOptions);
     } catch (error) {
       alert("Failed to initiate payment");
     }
@@ -109,6 +96,16 @@ export default function ClassCard({ classItem, userType }) {
               <Badge className={getStatusColor(classItem.status)}>
                 {getStatusText(classItem.status)}
               </Badge>
+              {classItem.paymentMethod === "cash" && !classItem.adminApproved && (
+                <Badge className="bg-amber-100 text-amber-800 border border-amber-300">
+                  Cash • Pending Admin Approval
+                </Badge>
+              )}
+              {classItem.paymentMethod === "cash" && classItem.adminApproved && (
+                <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  Cash • Approved
+                </Badge>
+              )}
               {/* Demo Badge */}
               {classItem.demoStatus == "running" ? (
                 <Badge className="bg-purple-100 text-purple-700 border border-purple-300">
