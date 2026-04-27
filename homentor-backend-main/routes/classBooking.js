@@ -353,8 +353,12 @@ router.post("/:id/admin-approve", async (req, res) => {
 
     booking.adminApproved = !booking.adminApproved;
 
-    // For cash bookings, approving activates the booking (pending_schedule -> scheduled)
-    if (booking.paymentMethod === "cash" && booking.adminApproved && booking.status === "pending_schedule") {
+    // For cash / manual UPI bookings, approving activates the booking (pending_schedule -> scheduled)
+    if (
+      (booking.paymentMethod === "cash" || booking.paymentMethod === "manual") &&
+      booking.adminApproved &&
+      booking.status === "pending_schedule"
+    ) {
       booking.status = "scheduled";
     }
     await booking.save();

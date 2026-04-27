@@ -659,4 +659,25 @@ router.put("/mark-viewed", async (req, res) => {
 
 
 
+// CHANGE mentor password — uses .save() so the pre-save hash hook runs
+const rateLimitPwd = require("../middleware/rateLimit");
+router.post("/change-password", rateLimitPwd({ windowMs: 60_000, max: 5 }), async (req, res) => {
+  try {
+    const { phone, oldPassword, newPassword } = req.body;
+    if (!phone || !oldPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: "phone, oldPassword and newPassword are required" });
+    }
+    const Mentor = require("../models/Mentor");
+    const mentor = await Mentor.findOne({ phone: Number(phone) });
+    if (!mentor) return res.status(404).json({ success: false, message: "Mentor not found" });
+    const ok = await mentor.comparePassword(oldPassword);
+    if (!ok) return res.status(400).json({ success: false, message: "Current password is incorrect" });
+    mentor.password = newPassword;
+    await mentor.save();
+    return res.json({ success: true, message: "Password updated" });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;

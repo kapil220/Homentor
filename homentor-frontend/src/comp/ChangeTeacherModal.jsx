@@ -78,25 +78,57 @@ const ChangeTeacherModal = ({
 
   const userNumber = localStorage.getItem("usernumber");
 
-  // Direct tel: call. Exotel kept below (disabled) for later re-enable.
+  const [callingMode, setCallingMode] = useState("direct");
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
+      const cfg = res.data?.data?.[0] || {};
+      if (cfg.callingMode === "exotel" || cfg.callingMode === "direct") {
+        setCallingMode(cfg.callingMode);
+      }
+    }).catch(() => {});
+  }, []);
+
+  // Direct tel: call — also logs the intent so admin can see who called.
   const initiateDirectCall = () => {
+    if (!selectedTeacher) return;
+    if (userNumber) {
+      axios
+        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
+          parentPhone: userNumber,
+          mentorId: selectedTeacher._id,
+          mentorPhone: selectedTeacher.phone,
+          mentorName: selectedTeacher.fullName,
+          mode: "direct",
+        })
+        .catch((err) => console.warn("direct call log failed", err));
+    }
     const number = selectedTeacher?.phone;
     if (number) {
       window.location.href = `tel:${number}`;
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
   const initiateExotelCall = () => {
-      axios
-        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
-          parentPhone: `0${userNumber}`,
-          mentorId: selectedTeacher._id,
-          mentorPhone: selectedTeacher.phone,
-        })
-        .then((res) => (window.location.href = "tel:07314852387"))
-        .catch((err) => console.log(err));
-    };
+    if (!selectedTeacher) return;
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
+        parentPhone: `0${userNumber}`,
+        mentorId: selectedTeacher._id,
+        mentorPhone: selectedTeacher.phone,
+        mentorName: selectedTeacher.fullName,
+        mode: "exotel",
+      })
+      .then(() => (window.location.href = "tel:07314852387"))
+      .catch((err) => console.log(err));
+  };
+
+  const initiateCall = () => {
+    if (callingMode === "exotel") {
+      initiateExotelCall();
+    } else {
+      initiateDirectCall();
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -162,7 +194,7 @@ const ChangeTeacherModal = ({
                       <div className="flex gap-2">
                         {/* Call Button */}
                         <a
-                          onClick={()=>initiateDirectCall()}
+                          onClick={()=>initiateCall()}
                           className="px-3 py-2 rounded-md bg-gray-100 hover:bg-gray-200 text-sm flex items-center gap-2"
                         >
                           <Phone size={16} />

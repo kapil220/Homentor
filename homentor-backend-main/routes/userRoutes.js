@@ -173,6 +173,27 @@ router.post("/logout", (req, res) => {
   });
 });
 
+// CHANGE password — uses .save() so the pre-save hash hook runs
+const rateLimit = require("../middleware/rateLimit");
+router.post("/change-password", rateLimit({ windowMs: 60_000, max: 5 }), async (req, res) => {
+  try {
+    const { phone, oldPassword, newPassword } = req.body;
+    if (!phone || !oldPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: "phone, oldPassword and newPassword are required" });
+    }
+    const User = require("../models/User");
+    const user = await User.findOne({ phone: Number(phone) });
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+    const ok = await user.comparePassword(oldPassword);
+    if (!ok) return res.status(400).json({ success: false, message: "Current password is incorrect" });
+    user.password = newPassword;
+    await user.save();
+    return res.json({ success: true, message: "Password updated" });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 router.put("/accept-disclaimer/:id", async (req, res) => {
   await User.findByIdAndUpdate(req.params.id, {
     disclaimerAccepted: true,

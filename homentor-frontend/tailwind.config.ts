@@ -73,6 +73,9 @@ export default {
                     lightGold: '#fff8e6',
                     charcoal: '#333333',
                     lightGray: '#f7f9fc',
+                    coral: '#FF6B57',
+                    ink: '#0B1220',
+                    mist: '#F4F7FB',
                 },
 								// Custom yellow and blue theme colors
 								'mentor-yellow': {
@@ -183,7 +186,7 @@ export default {
 			},
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                heading: ['Poppins', 'sans-serif'],
+                heading: ['"Plus Jakarta Sans"', 'Poppins', 'sans-serif'],
             },
             backgroundImage: {
                 'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

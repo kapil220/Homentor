@@ -21,6 +21,18 @@ const CallIntentSchema = new mongoose.Schema(
       required: false,
     },
 
+    mentorName: {
+      type: String,
+    },
+
+    // 📲 Which calling mode initiated this intent
+    mode: {
+      type: String,
+      enum: ["exotel", "direct"],
+      default: "exotel",
+      index: true,
+    },
+
     // ⏱ Validity window (important)
     createdAt: {
       type: Date,

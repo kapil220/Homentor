@@ -85,12 +85,14 @@ router.post("/sync-call-logs", async (req, res) => {
 });
 
 router.post("/call/initiate", async (req, res) => {
-  const { parentPhone, mentorId, mentorPhone } = req.body;
+  const { parentPhone, mentorId, mentorPhone, mentorName, mode } = req.body;
 
   await CallIntent.create({
     parentPhone,
     mentorId,
     mentorPhone: mentorPhone,
+    mentorName,
+    mode: mode === "direct" ? "direct" : "exotel",
     createdAt: new Date(),
     statusCallbackUrl: "https://homentor-backend.onrender.com/api/exotel/call-status"
   });

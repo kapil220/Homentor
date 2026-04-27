@@ -26,16 +26,26 @@ import CallAdmin from "./pages/CallAdmin";
 import BackUpTeacherProfile from "./pages/BackUpTeacherProfile";
 import ParentBookingsPage from "./pages/ParentBookingsPage";
 import MentorBookingsPage from "./pages/MentorBookingsPage";
+import StudentClasses from "./pages/StudentClasses";
+import StudentPayments from "./pages/StudentPayments";
+import StudentProfile from "./pages/StudentProfile";
+import MentorSchedule from "./pages/MentorSchedule";
+import MentorStudents from "./pages/MentorStudents";
+import MentorEarnings from "./pages/MentorEarnings";
+import MentorProfileSettings from "./pages/MentorProfileSettings";
+import ForMentors from "./pages/ForMentors";
+import ScrollProgressBar from "./comp/ScrollProgressBar";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-     <LoadScript googleMapsApiKey="AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk" libraries={['places']}>
+     <LoadScript googleMapsApiKey={(import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || "AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk"} libraries={['places']}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollProgressBar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
@@ -44,13 +54,21 @@ const App = () => (
           <Route path="/selected-mentors" element={<SelectedMentors />} />
           <Route path="/mentors/:id" element={<MentorProfile />} />
           <Route path="/dashboard/student" element={<StudentDashboard />} />
+          <Route path="/dashboard/student/classes" element={<StudentClasses />} />
+          <Route path="/dashboard/student/payments" element={<StudentPayments />} />
+          <Route path="/dashboard/student/profile" element={<StudentProfile />} />
           <Route path="/parent/bookings" element={<ParentBookingsPage />} />
           <Route path="/mentor/bookings" element={<MentorBookingsPage />} />
           <Route path="/dashboard/mentor" element={<MentorDashboard />} />
+          <Route path="/dashboard/mentor/schedule" element={<MentorSchedule />} />
+          <Route path="/dashboard/mentor/students" element={<MentorStudents />} />
+          <Route path="/dashboard/mentor/earnings" element={<MentorEarnings />} />
+          <Route path="/dashboard/mentor/profile" element={<MentorProfileSettings />} />
           <Route path="/call-admin" element={<CallAdmin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/for-mentors" element={<ForMentors />} />
           <Route path="/terms-conditions" element={<TermsCondition />} />
           <Route path="/payment-status" element={<PaymentSuccessful />} />
           <Route path="/refund" element={<Refund />} />

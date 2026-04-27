@@ -28,7 +28,8 @@ import LoginPopup from "@/components/LoginPopup";
 import BookingCard from "@/comp/BookingCard";
 import { createOrder } from "@/api/payment.jsx";
 import { load } from "@cashfreepayments/cashfree-js";
-import { createCashBooking } from "@/api/cashBooking.jsx";
+import { createCashBooking, createManualBooking } from "@/api/cashBooking.jsx";
+import ManualPaymentModal from "@/comp/ManualPaymentModal";
 
 // Mock teacher data for homentor platform
 const teacherData = {
@@ -239,10 +240,98 @@ const MentorDetails = () => {
     targetDivRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const [callingNo, setCallingNo] = useState("");
+  const [callingMode, setCallingMode] = useState("direct");
+  const [onlinePaymentMode, setOnlinePaymentMode] = useState<"gateway" | "manual">("gateway");
+  const [adminPaymentDetails, setAdminPaymentDetails] = useState({
+    upiId: "",
+    bankAccountName: "",
+    bankAccountNumber: "",
+    bankIfsc: "",
+    bankName: "",
+    paymentInstructions: "",
+  });
+  const [manualModal, setManualModal] = useState<{ open: boolean; amount: number; duration: number }>({
+    open: false,
+    amount: 0,
+    duration: 0,
+  });
+
   const getAdminData = () => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
-      setCallingNo(res.data.data[0].callingNo);
+      const cfg = res.data?.data?.[0] || {};
+      setCallingNo(cfg.callingNo);
+      if (cfg.callingMode === "exotel" || cfg.callingMode === "direct") {
+        setCallingMode(cfg.callingMode);
+      }
+      if (cfg.onlinePaymentMode === "manual" || cfg.onlinePaymentMode === "gateway") {
+        setOnlinePaymentMode(cfg.onlinePaymentMode);
+      }
+      setAdminPaymentDetails({
+        upiId: cfg.upiId || "",
+        bankAccountName: cfg.bankAccountName || "",
+        bankAccountNumber: cfg.bankAccountNumber || "",
+        bankIfsc: cfg.bankIfsc || "",
+        bankName: cfg.bankName || "",
+        paymentInstructions: cfg.paymentInstructions || "",
+      });
     });
+  };
+
+  const initiateCall = () => {
+    const parentPhone = localStorage.getItem("usernumber");
+    if (callingMode === "exotel") {
+      axios
+        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
+          parentPhone: parentPhone ? `0${parentPhone}` : undefined,
+          mentorId: mentorData?._id,
+          mentorPhone: mentorData?.phone,
+          mentorName: mentorData?.fullName,
+          mode: "exotel",
+        })
+        .then(() => (window.location.href = "tel:07314852387"))
+        .catch((err) => console.log(err));
+      return;
+    }
+    if (parentPhone) {
+      axios
+        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
+          parentPhone,
+          mentorId: mentorData?._id,
+          mentorPhone: mentorData?.phone,
+          mentorName: mentorData?.fullName,
+          mode: "direct",
+        })
+        .catch((err) => console.warn("direct call log failed", err));
+    }
+    const number = callingNo || mentorData?.phone;
+    if (number) {
+      window.location.href = `tel:${number}`;
+    }
+  };
+
+  const payManual = async (fees: number, duration: number) => {
+    if (!userNumber) {
+      setBookingAmount(fees);
+      setIsLoginOpen(true);
+      return;
+    }
+    setManualModal({ open: true, amount: Math.round(fees), duration });
+  };
+
+  const submitManualPayment = async (paymentReference: string) => {
+    try {
+      await createManualBooking({
+        amount: manualModal.amount,
+        customerPhone: userNumber,
+        mentorId: mentorData._id,
+        duration: manualModal.duration,
+        paymentReference,
+      });
+      setManualModal({ open: false, amount: 0, duration: 0 });
+      alert("Booking placed! It will be confirmed once admin verifies your payment.");
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "Failed to submit manual payment");
+    }
   };
   const sendCallRequest = () => {
     axios
@@ -364,6 +453,8 @@ const MentorDetails = () => {
                       mentorData={mentorData}
                       payNow={payNow}
                       payCash={payCash}
+                      payManual={payManual}
+                      onlinePaymentMode={onlinePaymentMode}
                     ></BookingCard>
                     <div className="flex flex-row lg:hidden justify-center gap-4">
                       <Button
@@ -375,8 +466,8 @@ const MentorDetails = () => {
                         Send Message
                       </Button>
                       <a
-                        onClick={() => sendCallRequest()}
-                        href={`tel:${callingNo}`}
+                        onClick={(e) => { e.preventDefault(); sendCallRequest(); initiateCall(); }}
+                        href="#"
                         className=" lg:text-md text-[10px]"
                       >
                         <Button
@@ -398,6 +489,13 @@ const MentorDetails = () => {
             isOpen={isLoginOpen}
             setIsPayment={setIsPayment}
             onClose={() => setIsLoginOpen(false)}
+          />
+          <ManualPaymentModal
+            open={manualModal.open}
+            amount={manualModal.amount}
+            details={adminPaymentDetails}
+            onClose={() => setManualModal({ open: false, amount: 0, duration: 0 })}
+            onSubmit={submitManualPayment}
           />
           {/* Main Content Tabs */}
           <Tabs

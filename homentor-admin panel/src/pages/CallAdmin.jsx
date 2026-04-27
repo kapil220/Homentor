@@ -11,19 +11,25 @@ const statusColor = {
 
 const AdminCallLogs = () => {
   const [calls, setCalls] = useState([]);
+  const [directCalls, setDirectCalls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [fromFilter, setFromFilter] = useState("");
   const [toFilter, setToFilter] = useState("");
   const [connectionFilter, setConnectionFilter] = useState("all");
+  const [modeFilter, setModeFilter] = useState("exotel"); // exotel | direct
   // all | connected | not_connected
 
 
   useEffect(() => {
-    fetchCallLogs();
-  }, []);
+    if (modeFilter === "direct") {
+      fetchDirectCalls();
+    } else {
+      fetchCallLogs();
+    }
+  }, [modeFilter]);
 
-  // 🔹 Fetch from DB (CallLogs)
+  // 🔹 Fetch from DB (CallLogs — Exotel)
   const fetchCallLogs = async () => {
     try {
       setLoading(true);
@@ -31,6 +37,21 @@ const AdminCallLogs = () => {
         `${import.meta.env.VITE_API_BASE_URL}/call-logs`
       );
       setCalls(res.data.logs || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔹 Fetch direct-call records (CallIntent with mode=direct)
+  const fetchDirectCalls = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/call-intent/all?mode=direct`
+      );
+      setDirectCalls(res.data.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -73,6 +94,12 @@ const AdminCallLogs = () => {
   return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
 };
 
+  const filteredDirectCalls = directCalls.filter((c) => {
+    if (fromFilter && !c.parentPhone?.includes(fromFilter)) return false;
+    if (toFilter && !c.mentorPhone?.includes(toFilter)) return false;
+    return true;
+  });
+
   const filteredCalls = calls.filter((call) => {
     // From (Parent)
     if (
@@ -111,22 +138,24 @@ const AdminCallLogs = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-xl font-semibold">
-            📞 Call Logs
+            📞 {modeFilter === "direct" ? "Direct Calls" : "Call Logs"}
             <span className="text-sm text-gray-500 ml-2">
-              ({calls.length})
+              ({modeFilter === "direct" ? directCalls.length : calls.length})
             </span>
           </h1>
 
-          <button
-            onClick={syncCallLogs}
-            disabled={syncing}
-            className={`px-4 py-2 rounded-lg text-sm font-medium text-white ${syncing
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-              }`}
-          >
-            {syncing ? "Syncing…" : "🔄 Sync Call Logs"}
-          </button>
+          {modeFilter === "exotel" && (
+            <button
+              onClick={syncCallLogs}
+              disabled={syncing}
+              className={`px-4 py-2 rounded-lg text-sm font-medium text-white ${syncing
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {syncing ? "Syncing…" : "🔄 Sync Call Logs"}
+            </button>
+          )}
         </div>
 
         {/* Filters */}
@@ -151,16 +180,28 @@ const AdminCallLogs = () => {
               className="border rounded-lg px-3 py-2 text-sm"
             />
 
-            {/* Connected / Not Connected */}
+            {/* Mode (Exotel / Direct) */}
             <select
-              value={connectionFilter}
-              onChange={(e) => setConnectionFilter(e.target.value)}
+              value={modeFilter}
+              onChange={(e) => setModeFilter(e.target.value)}
               className="border rounded-lg px-3 py-2 text-sm"
             >
-              <option value="all">All Calls</option>
-              <option value="connected">Connected (Money Deducted)</option>
-              <option value="not_connected">Not Connected (No Deduction)</option>
+              <option value="exotel">Exotel Calls</option>
+              <option value="direct">Direct Calls</option>
             </select>
+
+            {/* Connected / Not Connected (Exotel only) */}
+            {modeFilter === "exotel" && (
+              <select
+                value={connectionFilter}
+                onChange={(e) => setConnectionFilter(e.target.value)}
+                className="border rounded-lg px-3 py-2 text-sm"
+              >
+                <option value="all">All Calls</option>
+                <option value="connected">Connected (Money Deducted)</option>
+                <option value="not_connected">Not Connected (No Deduction)</option>
+              </select>
+            )}
 
             {/* Reset */}
             <button
@@ -183,6 +224,44 @@ const AdminCallLogs = () => {
             <div className="p-10 text-center text-gray-500">
               Loading call logs…
             </div>
+          ) : modeFilter === "direct" ? (
+            filteredDirectCalls.length === 0 ? (
+              <div className="p-10 text-center text-gray-500">
+                No direct call records found
+              </div>
+            ) : (
+              <table className="min-w-full text-sm">
+                <thead className="bg-gray-50 text-gray-700">
+                  <tr>
+                    <th className="px-4 py-3 text-left">#</th>
+                    <th className="px-4 py-3 text-left">Parent</th>
+                    <th className="px-4 py-3 text-left">Mentor</th>
+                    <th className="px-4 py-3 text-left">Time</th>
+                    <th className="px-4 py-3 text-left">Mode</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {filteredDirectCalls.map((c, idx) => (
+                    <tr key={c._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3">{idx + 1}</td>
+                      <td className="px-4 py-3 font-medium">{c.parentPhone}</td>
+                      <td className="px-4 py-3 flex flex-col">
+                        <label>{c.mentorPhone}</label>
+                        <label className="text-blue-500 text-sm">
+                          {c.mentorName || c.mentorId?.fullName || "-"}
+                        </label>
+                      </td>
+                      <td className="px-4 py-3">{formatDateTimeExact(c.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                          direct
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )
           ) : calls.length === 0 ? (
             <div className="p-10 text-center text-gray-500">
               No call records found

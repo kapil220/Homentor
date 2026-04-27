@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, MessageCircle, Wallet } from "lucide-react";
+import { Calendar, MessageCircle, Wallet, Banknote } from "lucide-react";
 
-const BookingCard = ({ mentorData, payNow, payCash }: { mentorData: any; payNow: (price: number, duration: number) => void; payCash?: (price: number, duration: number) => void }) => {
+type BookingCardProps = {
+  mentorData: any;
+  payNow: (price: number, duration: number) => void;
+  payCash?: (price: number, duration: number) => void;
+  payManual?: (price: number, duration: number) => void;
+  onlinePaymentMode?: "gateway" | "manual";
+};
+
+const BookingCard = ({ mentorData, payNow, payCash, payManual, onlinePaymentMode = "gateway" }: BookingCardProps) => {
   const [mode, setMode] = useState("monthly");
   const [hours, setHours] = useState(1);
 
@@ -79,15 +87,26 @@ const BookingCard = ({ mentorData, payNow, payCash }: { mentorData: any; payNow:
         </div>
       </div>
 
-      {/* Book Now */}
-      <Button
-        onClick={() => payNow(getPrice() as number, duration)}
-        size="lg"
-        className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white text-md font-semibold shadow-md"
-      >
-        <Calendar className="h-4 w-4 mr-2" />
-        Book Now (Online)
-      </Button>
+      {/* Book Now — gateway mode uses payNow; manual mode shows UPI/bank details flow */}
+      {onlinePaymentMode === "manual" && payManual ? (
+        <Button
+          onClick={() => payManual(getPrice() as number, duration)}
+          size="lg"
+          className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white text-md font-semibold shadow-md"
+        >
+          <Banknote className="h-4 w-4 mr-2" />
+          Book Now (UPI / Bank Transfer)
+        </Button>
+      ) : (
+        <Button
+          onClick={() => payNow(getPrice() as number, duration)}
+          size="lg"
+          className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white text-md font-semibold shadow-md"
+        >
+          <Calendar className="h-4 w-4 mr-2" />
+          Book Now (Online)
+        </Button>
+      )}
 
       {payCash && getPrice() !== "Free" && (
         <Button

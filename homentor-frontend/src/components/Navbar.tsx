@@ -26,7 +26,7 @@ const Navbar = () => {
 
 
   return (
-    <header className={`fixed w-full top-0 z-[50] transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
+    <header className={`fixed w-full top-0 z-[50] transition-all duration-300 backdrop-blur-md border-b ${scrolled ? 'bg-white/95 shadow-md border-slate-200 py-2' : 'bg-white/80 border-white/30 py-3'
       }`}>
       <div className="container-tight flex items-center justify-between">
         <div className="flex items-center">
@@ -67,18 +67,22 @@ const Navbar = () => {
           </div>
 
           <Link
-            to="/about-us"
-            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/about' ? 'text-homentor-blue' : ''
-              }`}
+            to="/for-mentors"
+            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/for-mentors' ? 'text-homentor-blue' : ''}`}
           >
-            About Us
+            For Mentors
+          </Link>
+          <Link
+            to="/about-us"
+            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/about-us' ? 'text-homentor-blue' : ''}`}
+          >
+            About
           </Link>
           <Link
             to="/contact-us"
-            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/about' ? 'text-homentor-blue' : ''
-              }`}
+            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/contact-us' ? 'text-homentor-blue' : ''}`}
           >
-            Contact Us
+            Contact
           </Link>
         </nav>
 
@@ -108,8 +112,14 @@ const Navbar = () => {
 
 
           <Link to="/signup">
-            <Button className="bg-homentor-blue hover:bg-homentor-darkBlue text-white shadow-soft hover:shadow-hover">
+            <Button variant="outline" className="border-slate-200 text-slate-700 hover:bg-slate-50">
               Join as Mentor
+            </Button>
+          </Link>
+
+          <Link to="/#hero">
+            <Button className="bg-homentor-coral hover:bg-[#ff5944] text-white shadow-md font-semibold">
+              Free demo
             </Button>
           </Link>
         </div>
@@ -145,20 +155,25 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/about-us"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/about' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'
-                }`}
+              to="/for-mentors"
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/for-mentors' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setIsMenuOpen(false)}
             >
-              About Us
+              For Mentors
+            </Link>
+            <Link
+              to="/about-us"
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/about-us' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
             </Link>
             <Link
               to="/contact-us"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/about' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'
-                }`}
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/contact-us' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setIsMenuOpen(false)}
             >
-              Contact Us
+              Contact
             </Link>
             <div className="border-t border-gray-100 pt-4 flex flex-col space-y-2 mt-4">
               {

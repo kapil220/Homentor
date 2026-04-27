@@ -19,7 +19,7 @@ import MultiSubjectSelect from "@/comp/MultiSubjectSelect ";
 import ClassSelect from "@/comp/ClassSelect";
 import StateSelect from "@/comp/StateSelect";
 import { Input } from "@/components/ui/input";
-import { Award, Badge, Users } from "lucide-react";
+import { Award, Users, Filter, Sparkles, Search as SearchIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -131,6 +131,15 @@ const classSubjects = {
   ],
 };
 
+const FilterField = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div>
+    <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
+      {label}
+    </label>
+    {children}
+  </div>
+);
+
 const Mentors = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -191,8 +200,9 @@ const Mentors = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+        const mapsKey = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || "AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk";
         const res = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${mapsKey}`
         );
         const data = await res.json();
         const components = data.results[0].address_components;
@@ -307,7 +317,7 @@ const Mentors = () => {
     if (data.status === "OK") {
       const location = data.results[0].geometry.location;
       console.log("Selected Area - ", location.lat, location.lng);
-      setUserLocation({ lat: location.lat, lon: location.lat }); // Default location
+      setUserLocation({ lat: location.lat, lon: location.lng });
       return {
         lat: location.lat,
         lon: location.lng,
@@ -322,7 +332,7 @@ const Mentors = () => {
         selectedLocation,
         selectedCity,
         selectedState,
-        "AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk"
+        (import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string) || "AIzaSyAb6ZthJEvNAczmOeuvFrnwEcMJjhlNpUk"
       );
     }
   }, [selectedLocation]);
@@ -656,248 +666,257 @@ const Mentors = () => {
     };
   }, []);
 
-  const [showAllGold, setShowAllGold] = useState(false);
+
+  const activeFilterCount =
+    (searchTerm ? 1 : 0) +
+    (selectedSubject?.length || 0) +
+    (selectedClass ? 1 : 0) +
+    (selectedState ? 1 : 0) +
+    (selectedCity ? 1 : 0) +
+    ((priceRange[0] !== 0 || priceRange[1] !== 20000) ? 1 : 0);
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 pb-20">
-        {/* Page header */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-            <div>
-              <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-homentor-blue border border-blue-100">
-                Mentors in {locationName}
+      <div className="min-h-screen bg-white pb-20">
+        {/* Hero — dark mesh banner with prominent search */}
+        <div className="relative isolate overflow-hidden bg-mesh-dark bg-mesh-animated noise-overlay text-white">
+          <div aria-hidden className="absolute inset-0 dot-grid-dark opacity-50" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-14 md:pt-32 md:pb-20">
+            <div className="max-w-3xl">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-full bg-white/10 text-white border border-white/15 backdrop-blur">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                Mentors near {locationName}
               </span>
-              <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-                Find your next home tutor
+              <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl font-heading font-extrabold tracking-tight leading-[1.05]">
+                Find your next <span className="text-gradient-brand">home tutor</span>
               </h1>
-              <p className="mt-2 text-slate-600 max-w-xl">
-                Filter by subject, class, city or budget. Every mentor is manually verified.
+              <p className="mt-4 text-slate-300 text-base sm:text-lg max-w-2xl">
+                Verified, vetted, hand-picked. Free demo · 100% refund on the first session.
               </p>
+
+              {/* Inline search hero */}
+              <div className="mt-7 max-w-2xl">
+                <div className="flex items-center bg-white rounded-2xl shadow-2xl shadow-blue-900/30 overflow-hidden">
+                  <div className="pl-5 pr-2 text-slate-400">
+                    <SearchIcon className="w-5 h-5" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by mentor name, subject or city…"
+                    className="flex-1 h-14 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none text-base"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm("")}
+                      className="text-xs text-slate-500 hover:text-slate-700 px-3"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="text-sm text-slate-500">
-              <span className="font-semibold text-slate-900">
+          </div>
+        </div>
+
+        {/* Sticky results bar */}
+        <div className="sticky top-16 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-slate-600">
+              <span className="text-2xl font-heading font-bold text-homentor-ink mr-2 align-middle">
                 {filteredMentors.length}
-              </span>{" "}
-              mentors shown
-            </div>
-          </div>
-        </div>
-
-        {/* Filter card */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl bg-white border border-slate-200 shadow-sm p-4 sm:p-5 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-              <div className="md:col-span-5">
-                <SearchBar
-                  setSearchTerm={setSearchTerm}
-                  searchTerm={searchTerm}
-                />
-              </div>
-              <div className="md:col-span-3">
-                <ClassSelect
-                  selectedSubjects={selectedClass}
-                  handleClassChange={handleClassChange}
-                />
-              </div>
-              <div className="md:col-span-4">
-                <MultiSubjectSelect
-                  selectedSubjects={selectedSubject}
-                  subjects={subjects}
-                  setSelectedSubjects={setSelectedSubject}
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-              <div className="md:col-span-4">
-                <StateSelect
-                  selectedState={selectedState}
-                  allStates={allStates}
-                  setSelectedState={setSelectedState}
-                />
-              </div>
-              <div className="md:col-span-4">
-                <Select
-                  disabled={!selectedState}
-                  onValueChange={setSelectedCity}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select City" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {selectedState &&
-                      StateData[`${selectedState}`]?.map((city) => (
-                        <SelectItem key={city} value={`${city}`}>
-                          {city}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="md:col-span-4">
-                <Button
-                  variant="outline"
-                  className="w-full border-slate-200 text-slate-700 hover:bg-slate-50"
-                  onClick={resetFilters}
-                >
-                  Reset filters
-                </Button>
-              </div>
-            </div>
-
-            {selectedCity && (
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">
-                  Area in {selectedCity}
-                </label>
-                <input
-                  ref={inputRef}
-                  placeholder={`Type to search in ${selectedCity}`}
-                  className="border border-slate-200 px-3 py-2 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-homentor-blue/30"
-                />
-                {selectedLocation && (
-                  <p className="text-xs text-slate-500 mt-1">
-                    Selected: {selectedLocation}
-                  </p>
-                )}
-              </div>
-            )}
-
-            <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3">
-              <div className="flex items-center justify-between mb-2">
-                <Label className="text-sm font-semibold text-slate-800">
-                  Monthly fee range
-                </Label>
-                <span className="text-xs text-slate-500">
-                  ₹{priceRange[0].toLocaleString()} – ₹{priceRange[1].toLocaleString()}
+              </span>
+              <span className="align-middle">mentors</span>
+              {activeFilterCount > 0 && (
+                <span className="ml-3 align-middle inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-homentor-blue text-xs font-semibold">
+                  <Filter className="w-3 h-3" />
+                  {activeFilterCount} {activeFilterCount === 1 ? "filter" : "filters"} on
                 </span>
-              </div>
-              <PriceSlider value={priceRange} onChange={setPriceRange} />
-            </div>
+              )}
+            </p>
+            {activeFilterCount > 0 && (
+              <button
+                onClick={resetFilters}
+                className="text-sm font-medium text-homentor-blue hover:text-homentor-darkBlue"
+              >
+                Clear all
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Gold Mentors */}
-        {goldMentors.length > 0 && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
-                  <Award className="w-4 h-4 text-white" />
+        {/* Page body — sidebar filters + results */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Filter sidebar */}
+            <aside className="lg:col-span-3">
+              <div className="lg:sticky lg:top-32 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+                  <Filter className="w-4 h-4 text-homentor-blue" />
+                  <p className="font-heading font-semibold text-homentor-ink">Filters</p>
                 </div>
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-                    Gold Mentors
-                  </h2>
-                  <p className="text-xs text-slate-500">Premium · Top-rated educators</p>
-                </div>
-              </div>
-              <Button
-                onClick={() => setShowAllGold(true)}
-                variant="outline"
-                size="sm"
-                className="border-amber-300 text-amber-700 hover:bg-amber-50"
-              >
-                View all
-              </Button>
-            </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {goldMentors?.map(
-                (mentor, index) =>
-                  index <= 1 && (
-                    <TornCard
-                      key={mentor._id || index}
-                      mentor={mentor}
+                <FilterField label="Class">
+                  <ClassSelect
+                    selectedSubjects={selectedClass}
+                    handleClassChange={handleClassChange}
+                  />
+                </FilterField>
+
+                <FilterField label="Subjects">
+                  <MultiSubjectSelect
+                    selectedSubjects={selectedSubject}
+                    subjects={subjects}
+                    setSelectedSubjects={setSelectedSubject}
+                  />
+                </FilterField>
+
+                <FilterField label="State">
+                  <StateSelect
+                    selectedState={selectedState}
+                    allStates={allStates}
+                    setSelectedState={setSelectedState}
+                  />
+                </FilterField>
+
+                <FilterField label="City">
+                  <Select
+                    disabled={!selectedState}
+                    onValueChange={setSelectedCity}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={selectedState ? "Select city" : "Pick a state first"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedState &&
+                        StateData[`${selectedState}`]?.map((city) => (
+                          <SelectItem key={city} value={`${city}`}>
+                            {city}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </FilterField>
+
+                {selectedCity && (
+                  <FilterField label={`Area in ${selectedCity}`}>
+                    <input
+                      ref={inputRef}
+                      placeholder={`Type to search in ${selectedCity}`}
+                      className="border border-slate-200 px-3 py-2 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-homentor-blue/30"
                     />
-                  )
+                    {selectedLocation && (
+                      <p className="text-xs text-slate-500 mt-1.5">
+                        Selected: {selectedLocation}
+                      </p>
+                    )}
+                  </FilterField>
+                )}
+
+                <FilterField label="Monthly fee">
+                  <p className="text-xs text-slate-500 mb-2">
+                    ₹{priceRange[0].toLocaleString()} – ₹{priceRange[1].toLocaleString()}
+                  </p>
+                  <PriceSlider value={priceRange} onChange={setPriceRange} />
+                </FilterField>
+              </div>
+            </aside>
+
+            {/* Results */}
+            <main className="lg:col-span-9 space-y-10">
+              {/* Gold mentors strip */}
+              {goldMentors.length > 0 && (
+                <section>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
+                      <Award className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
+                        Gold Mentors
+                      </h2>
+                      <p className="text-xs text-slate-500">Premium · Top-rated educators</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {goldMentors.map((mentor) => (
+                      <TornCard key={mentor._id || mentor.id} mentor={mentor} />
+                    ))}
+                  </div>
+                </section>
               )}
-            </div>
 
-            <Dialog open={showAllGold} onOpenChange={setShowAllGold}>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 text-xl sm:text-2xl">
-                    <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
-                    More Gold Mentors
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-6">
-                  {goldMentors.map((mentor) => (
-                    <TornCard key={mentor._id || mentor.id} mentor={mentor} />
-                  ))}
+              {/* All mentors */}
+              <section>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-homentor-blue to-indigo-600 flex items-center justify-center shadow-sm">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
+                      All mentors
+                    </h2>
+                    <p className="text-xs text-slate-500">Verified educators across your area</p>
+                  </div>
                 </div>
-              </DialogContent>
-            </Dialog>
+
+                <SVGFilter />
+
+                {loader ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="rounded-2xl bg-white border border-slate-100 h-72 animate-pulse"
+                      />
+                    ))}
+                  </div>
+                ) : filteredMentors.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredMentors.map((mentor, index) => (
+                      <TornCard
+                        key={mentor._id || index}
+                        mentor={mentor}
+                      />
+                    ))}
+                  </div>
+                ) : mentorsData.length === 0 ? (
+                  <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
+                    <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
+                      Unable to load mentors
+                    </h3>
+                    <p className="text-slate-600 mb-4">
+                      Please check your internet connection and try again.
+                    </p>
+                    <Button
+                      className="bg-homentor-blue hover:bg-homentor-darkBlue"
+                      onClick={fetchMentors}
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
+                    <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
+                      No mentors match your filters
+                    </h3>
+                    <p className="text-slate-600 mb-4">
+                      Try widening your search or clearing some filters.
+                    </p>
+                    <Button
+                      className="bg-homentor-blue hover:bg-homentor-darkBlue"
+                      onClick={resetFilters}
+                    >
+                      Clear filters
+                    </Button>
+                  </div>
+                )}
+              </section>
+            </main>
           </div>
-        )}
-
-        {/* All / Silver Mentors */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center shadow-sm">
-              <Users className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-                All Mentors
-              </h2>
-              <p className="text-xs text-slate-500">Verified educators across your area</p>
-            </div>
-          </div>
-
-          <SVGFilter />
-
-          {loader ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl bg-white border border-slate-100 h-64 animate-pulse"
-                />
-              ))}
-            </div>
-          ) : filteredMentors.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {filteredMentors?.map((mentor, index) => (
-                <TornCard
-                  key={mentor._id || index}
-                  mentor={mentor}
-                />
-              ))}
-            </div>
-          ) : mentorsData.length === 0 ? (
-            <div className="text-center py-16 rounded-2xl bg-white border border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">
-                Unable to load mentors
-              </h3>
-              <p className="text-slate-600">
-                Please check your internet connection and try again.
-              </p>
-              <Button
-                className="mt-4 bg-homentor-blue hover:bg-homentor-darkBlue"
-                onClick={fetchMentors}
-              >
-                Retry
-              </Button>
-            </div>
-          ) : (
-            <div className="text-center py-16 rounded-2xl bg-white border border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-800 mb-2">
-                No mentors match your filters
-              </h3>
-              <p className="text-slate-600">
-                Try widening your search or reset the filters.
-              </p>
-              <Button
-                className="mt-4 bg-homentor-blue hover:bg-homentor-darkBlue"
-                onClick={resetFilters}
-              >
-                Reset Filters
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </Layout>

@@ -90,7 +90,7 @@ const TornCard = ({ mentor }) => {
     if (userNumber && pendingAction.type === "PAYMENT") {
       handlePayment(bookingAmount)
     } else if (userNumber && pendingAction.type === "CALL") {
-      initiateDirectCall()
+      initiateCall()
     }
   }, [pendingAction])
 
@@ -104,17 +104,22 @@ const TornCard = ({ mentor }) => {
       .catch((err) => console.log(err));
   };
   const [callingNo, setCallingNo] = useState("");
+  const [callingMode, setCallingMode] = useState("direct");
   const getAdminData = () => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
+      const cfg = res.data?.data?.[0] || {};
       if (mentor?.callRouting?.mode === "mentor") {
         setCallingNo(mentor?.phone);
       } else {
-        setCallingNo(res.data.data[0].callingNo);
+        setCallingNo(cfg.callingNo);
+      }
+      if (cfg.callingMode === "exotel" || cfg.callingMode === "direct") {
+        setCallingMode(cfg.callingMode);
       }
     });
   };
 
-  // Direct tel: call. Exotel kept below (disabled) for later re-enable.
+  // Direct tel: call — also logs the intent so admin can see who called.
   const initiateDirectCall = () => {
     if (!userNumber) {
       setPendingAction({
@@ -125,13 +130,21 @@ const TornCard = ({ mentor }) => {
       setIsLoginOpen(true);
       return;
     }
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
+        parentPhone: userNumber,
+        mentorId: mentor._id,
+        mentorPhone: mentor.phone,
+        mentorName: mentor.fullName,
+        mode: "direct",
+      })
+      .catch((err) => console.warn("direct call log failed", err));
     const number = callingNo || mentor?.phone;
     if (number) {
       window.location.href = `tel:${number}`;
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const initiateExotelCall = () => {
     if (!userNumber) {
       setPendingAction({
@@ -145,9 +158,21 @@ const TornCard = ({ mentor }) => {
     axios.post(
       `${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`,
       {
-        parentPhone: `0${userNumber}`, mentorId: mentor._id, mentorPhone: mentor.phone
+        parentPhone: `0${userNumber}`,
+        mentorId: mentor._id,
+        mentorPhone: mentor.phone,
+        mentorName: mentor.fullName,
+        mode: "exotel",
       }
-    ).then((res) => window.location.href = "tel:07314852387").catch((err) => console.log(err))
+    ).then(() => window.location.href = "tel:07314852387").catch((err) => console.log(err))
+  };
+
+  const initiateCall = () => {
+    if (callingMode === "exotel") {
+      initiateExotelCall();
+    } else {
+      initiateDirectCall();
+    }
   };
 
   return (
@@ -202,8 +227,8 @@ const TornCard = ({ mentor }) => {
         >
           <PhoneCall className="lg:w-4 lg:h-4 h-2 w-2 transition-transform duration-300 group-hover/icon:scale-110" />
           <a
-            onClick={() => { sendCallRequest() }}
-            href={`tel:${callingNo}`}
+            onClick={(e) => { e.preventDefault(); sendCallRequest(); initiateCall(); }}
+            href="#"
             className="inline lg:text-md text-[10px]"
           >
             Call
@@ -235,7 +260,7 @@ const TornCard = ({ mentor }) => {
           </div>
         </button>
         <button
-          onClick={() => initiateDirectCall()}
+          onClick={() => initiateCall()}
           className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-homentor-chat to-homentor-chatHover hover:from-homentor-chatHover hover:to-homentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
           title="Chat with mentor"
         >

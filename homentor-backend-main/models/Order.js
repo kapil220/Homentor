@@ -24,8 +24,9 @@ const OrderSchema = new mongoose.Schema({
   },
   isDemo: {type : Boolean, default: false},
   session : {type : Number},
-  paymentProvider: { type: String, enum: ["cashfree", "payu", "cash"], default: "cashfree" },
-  paymentMethod: { type: String, enum: ["online", "cash"], default: "online" }
-});
+  paymentProvider: { type: String, enum: ["cashfree", "payu", "cash", "manual"], default: "cashfree" },
+  paymentMethod: { type: String, enum: ["online", "cash", "manual"], default: "online" },
+  paymentReference: { type: String, default: "" }
+}, { timestamps: true });
 
 module.exports = mongoose.model("Order", OrderSchema);

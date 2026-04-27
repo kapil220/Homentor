@@ -114,9 +114,13 @@ router.patch("/status/:id", async (req, res) => {
  */
 router.get("/all", async (req, res) => {
   try {
-    const intents = await CallIntent.find().populate("mentorId", "fullName" )
+    const filter = {};
+    if (req.query.mode === "direct" || req.query.mode === "exotel") {
+      filter.mode = req.query.mode;
+    }
+    const intents = await CallIntent.find(filter).populate("mentorId", "fullName")
       .sort({ createdAt: -1 })
-      .limit(100);
+      .limit(200);
 
     return res.json({
       success: true,

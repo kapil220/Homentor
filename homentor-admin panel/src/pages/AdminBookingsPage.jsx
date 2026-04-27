@@ -126,6 +126,7 @@ export default function AdminBookingsPage() {
                   <th className="px-4 py-2">Student</th>
                   <th className="px-4 py-2">Classes Done</th>
                   <th className="px-4 py-2">Fees</th>
+                  <th className="px-4 py-2">Payment</th>
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Approve</th>
                   <th className="px-4 py-2">Actions</th>
@@ -210,6 +211,26 @@ export default function AdminBookingsPage() {
                       </label>
                       /
                       ₹{b.price}
+                    </td>
+
+                    {/* Payment method + reference */}
+                    <td className="px-4 py-2 text-xs">
+                      <span
+                        className={`px-2 py-[2px] rounded font-semibold ${
+                          b.paymentMethod === "manual"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : b.paymentMethod === "cash"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-blue-100 text-blue-800"
+                        }`}
+                      >
+                        {b.paymentMethod || "online"}
+                      </span>
+                      {b.paymentReference && (
+                        <div className="mt-1 text-[10px] text-gray-700 break-all">
+                          Ref: <strong>{b.paymentReference}</strong>
+                        </div>
+                      )}
                     </td>
 
                     {/* Status */}

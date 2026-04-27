@@ -1,271 +1,271 @@
-// AllOrdersCard.tsx
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import AdminLayout from "../comp/AdminLayout";
-import MentorEditModal from "../comp/MentorEditModal";
+import StatTile from "../comp/StatTile";
+import { IndianRupee, AlertTriangle, Receipt, Calendar } from "lucide-react";
 
-const AllOrders = () => {
-  const [selectedMentor, setSelectedMentor] = useState(null);
+const formatINR = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+
+const formatDate = (iso) => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return d.toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const methodPillClass = (m) => {
+  const map = {
+    online: "bg-blue-100 text-blue-700",
+    cash: "bg-green-100 text-green-700",
+    manual: "bg-yellow-100 text-yellow-700",
+  };
+  return map[m] || "bg-gray-100 text-gray-700";
+};
+
+const statusPillClass = (s) => {
+  const map = {
+    PAID: "bg-green-100 text-green-700",
+    PENDING: "bg-yellow-100 text-yellow-700",
+    FAILED: "bg-red-100 text-red-700",
+  };
+  return map[s] || "bg-gray-100 text-gray-700";
+};
+
+export default function AllOrders() {
+  const [orders, setOrders] = useState([]);
+  const [stats, setStats] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [methodFilter, setMethodFilter] = useState("all");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
   useEffect(() => {
-    getMentorData();
+    const load = async () => {
+      try {
+        const [ordersRes, statsRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_BASE_URL}/order/`),
+          axios.get(`${import.meta.env.VITE_API_BASE_URL}/order/stats`),
+        ]);
+        const list = Array.isArray(ordersRes.data) ? ordersRes.data : ordersRes.data?.data || [];
+        list.sort(
+          (a, b) =>
+            new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        );
+        setOrders(list);
+        setStats(statsRes.data || {});
+      } catch (err) {
+        console.error("Orders load failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
-  const [showModal, setShowModal] = useState(false);
-  const [mentorList, setMentorList] = useState([]);
-  const getMentorData = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/mentor/approved-mentors`)
-      .then((res) => {
-        setMentorList(res.data.data.reverse());
-      });
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return orders.filter((o) => {
+      if (statusFilter !== "all" && o.status !== statusFilter) return false;
+      // Legacy orders predate the paymentMethod field — treat them as a separate "unknown" bucket
+      // so picking "Online" doesn't silently include them.
+      const method = o.paymentMethod || "unknown";
+      if (methodFilter !== "all" && method !== methodFilter) return false;
+      if (fromDate) {
+        const t = new Date(o.createdAt || 0).getTime();
+        if (t < new Date(fromDate).getTime()) return false;
+      }
+      if (toDate) {
+        const t = new Date(o.createdAt || 0).getTime();
+        const end = new Date(toDate);
+        end.setHours(23, 59, 59, 999);
+        if (t > end.getTime()) return false;
+      }
+      if (q) {
+        const hay =
+          `${o.orderId || ""} ${o.parent?.phone || ""} ${o.parent?.name || ""} ${
+            o.mentor?.fullName || ""
+          } ${o.mentor?.phone || ""} ${o.paymentReference || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [orders, search, statusFilter, methodFilter, fromDate, toDate]);
+
+  const reset = () => {
+    setSearch("");
+    setStatusFilter("all");
+    setMethodFilter("all");
+    setFromDate("");
+    setToDate("");
   };
 
-  const [isAdminRank, setIsAdminRank] = useState(false);
-  const handleAdminRanking = (mentorId, rank) => {
-    axios
-      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`, {
-        adminRanking: rank,
-      })
-      .then((res) => {
-        alert("User Status Updated");
-        getMentorData();
-      });
-  };
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [isPriceEditing, setIsPriceEditing] = useState(false);
-  const [price, setPrice] = useState();
-  const [isModified, setIsModified] = useState(false);
-  const handleSave = (mentor) => {
-    axios
-      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`, {
-        teachingModes: {
-          homeTuition: {
-            monthlyPrice: price,
-          },
-        },
-      })
-      .then((res) => {
-        getMentorData();
-        setIsPriceEditing(false);
-        setIsModified(false);
-      });
-  };
-  const [editData, setEditData] = useState({ ...selectedMentor });
-
-  const handleSaveEdit = () => {
-    // 🔄 Make an API call here to save `editData`
-    console.log("Updated Data:", editData);
-    setSelectedMentor(editData);
-    setIsEditing(false);
-  };
-
-  const handleToggle = (mentor) => {
-    try {
-      axios
-        .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}`, {
-          showOnWebsite: !mentor.showOnWebsite,
-        })
-        .then(() => {
-          alert("Mentor Updated");
-          getMentorData();
-        });
-    } catch (error) {
-      console.error("Failed to update visibility:", error);
-    }
-  };
-  const [shareList, setShareList] = useState([]);
-  const link =
-    "https://homentor.onrender.com/selected-mentors?id=" + shareList.join(",");
-
-   const handleStatus = (mentorId, status) => {
-    axios
-      .put(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentorId}`, {
-        status: status,
-      })
-      .then((res) => {
-        alert("User Status Updated");
-        getMentorData();
-      });
-  };
   return (
-    <AdminLayout>
-      <div className="p-6 bg-gray-50 min-h-screen">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">
-          All Approved Mentors
-        </h2>
-        {shareList.length ? (
-          <button
-            className="w-[200px] m-1  mb-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow transition duration-200 active:scale-95"
-            style={{ width: 200 }}
-            onClick={() => navigator.clipboard.writeText(link)}
-          >
-            Copy Share Link
-          </button>
-        ) : null}
-        <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
-          <table className="min-w-full text-sm text-gray-700">
-            <thead className="bg-gray-100 text-xs uppercase text-gray-500">
-              <tr>
-                <th className="px-4 py-3">S.no</th>
-                <th className="px-4 py-3">Photo</th>
-                <th className="px-4 py-3">Name & Phone</th>
-                <th className="px-4 py-3">Ranking</th>
-                <th className="px-4 py-3">Salary</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Display</th>
-                <th className="px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {mentorList.map((mentor, index) => (
-                <tr key={mentor._id} className="hover:bg-gray-50 border-t">
-                  <td className="px-4 py-3">{index + 1}</td>
-                  <td className="px-4 py-3">
-                    <img
-                      src={mentor.profilePhoto}
-                      alt="Profile"
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  </td>
-                  <td className="px-4 py-3 flex items-center gap-2">
-                    <input
-                      onClick={() => {
-                        if (shareList.includes(mentor._id)) {
-                          setShareList(
-                            shareList.filter((i) => i._id !== mentor._id)
-                          );
-                        } else {
-                          setShareList([...shareList, mentor._id]);
-                        }
-                      }}
-                      type="checkbox"
-                    />
-                    <div>
-                      <div className="font-medium">{mentor.fullName}</div>
-                      <div className="text-gray-500 text-xs">
-                        {mentor.phone}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="space-y-1 text-center">
-                      <select
-                        onChange={(e) =>
-                          handleAdminRanking(mentor._id, e.target.value)
-                        }
-                        value={mentor.adminRanking || ""}
-                        className="border border-gray-300 rounded px-2 py-1 text-sm"
-                      >
-                        <option disabled value="">
-                          Set Rank
-                        </option>
-                        {[...Array(10)].map((_, i) => (
-                          <option key={i} value={i + 1}>
-                            {i + 1}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="flex justify-center gap-0.5 pt-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <svg
-                            key={star}
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill={
-                              star <= mentor?.rating ? "#facc15" : "#e5e7eb"
-                            }
-                            className="w-5 h-5"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.975a1 1 0 00.95.69h4.18c.969 0 1.371 1.24.588 1.81l-3.39 2.463a1 1 0 00-.364 1.118l1.286 3.975c.3.921-.755 1.688-1.538 1.118L10 14.347l-3.39 2.463c-.783.57-1.838-.197-1.539-1.118l1.287-3.975a1 1 0 00-.364-1.118L2.605 9.402c-.783-.57-.38-1.81.588-1.81h4.18a1 1 0 00.951-.69l1.286-3.975z" />
-                          </svg>
-                        ))}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm cursor-pointer">
-                    {isPriceEditing ? (
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          className="w-24 border rounded px-2 py-1 text-sm"
-                          value={price}
-                          onChange={(e) => {
-                            setPrice(e.target.value);
-                            setIsModified(true);
-                          }}
-                        />
-                        {isModified && (
-                          <button
-                            onClick={() => {handleSave(mentor);setPrice(mentor?.teachingModes?.homeTuition?.monthlyPrice)}}
-                            className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
-                          >
-                            Update
-                          </button>
-                        )}
-                      </div>
-                    ) : (
-                      <span onClick={() => setIsPriceEditing(true)}>
-                        ₹
-                        {mentor?.teachingModes?.homeTuition?.monthlyPrice ||
-                          "--"}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div>{mentor.location?.area}</div>
-                    <div className="text-xs text-gray-500">
-                      {mentor.location?.city}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleToggle(mentor)}
-                      className={`w-12 h-6 rounded-full p-1 flex items-center transition ${
-                        mentor.showOnWebsite ? "bg-green-500" : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`w-4 h-4 bg-white rounded-full shadow transform transition-transform ${
-                          mentor.showOnWebsite
-                            ? "translate-x-6"
-                            : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 flex gap-2 text-xs">
-                    <button
-                      onClick={() => setSelectedMentor(mentor)}
-                      className="px-2 py-1 text-blue-600 hover:underline"
-                    >
-                      View
-                    </button>
-                    
-                    <button
-                      onClick={() => handleStatus(mentor._id, "Rejected")}
-                      className="px-2 py-1 text-red-600 hover:underline"
-                    >
-                      Reject
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <AdminLayout title="Orders">
+      <div className="space-y-6 px-4 py-4">
+        {/* Stat tiles */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatTile
+            label="Total Revenue"
+            value={formatINR(stats.totalRevenue)}
+            icon={<IndianRupee className="w-5 h-5" />}
+            accent="green"
+            hint="All PAID orders"
+          />
+          <StatTile
+            label="Pending Verification"
+            value={formatINR(stats.pendingAmount)}
+            icon={<AlertTriangle className="w-5 h-5" />}
+            accent="yellow"
+            hint="Awaiting admin approval"
+          />
+          <StatTile
+            label="Today's Orders"
+            value={stats.todayOrders || 0}
+            icon={<Calendar className="w-5 h-5" />}
+            accent="blue"
+            hint={`${formatINR(stats.todayRevenue)} earned`}
+          />
+          <StatTile
+            label="Total Orders"
+            value={stats.totalOrders || orders.length}
+            icon={<Receipt className="w-5 h-5" />}
+            accent="purple"
+          />
         </div>
 
-        {/* You already have a nice modal; just ensure these: */}
-        {selectedMentor && (
-          <MentorEditModal
-            getMentorData={getMentorData}
-            onSave={handleSaveEdit}
-            selectedMentor={selectedMentor}
-            setSelectedMentor={setSelectedMentor}
-          />
-        )}
+        {/* Filters */}
+        <div className="bg-white rounded-xl shadow-sm border p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3">
+            <input
+              type="text"
+              placeholder="Search order ID / phone / mentor / reference"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm lg:col-span-2"
+            />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="all">All Statuses</option>
+              <option value="PAID">PAID</option>
+              <option value="PENDING">PENDING</option>
+              <option value="FAILED">FAILED</option>
+            </select>
+            <select
+              value={methodFilter}
+              onChange={(e) => setMethodFilter(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm"
+            >
+              <option value="all">All Methods</option>
+              <option value="online">Online (Gateway)</option>
+              <option value="cash">Cash</option>
+              <option value="manual">Manual UPI</option>
+              <option value="unknown">Unknown (legacy)</option>
+            </select>
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm"
+            />
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
+              className="border rounded-lg px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="mt-3 flex items-center justify-between">
+            <p className="text-xs text-gray-500">
+              Showing {filtered.length} of {orders.length} orders
+            </p>
+            <button
+              onClick={reset}
+              className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200"
+            >
+              Reset filters
+            </button>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+          {loading ? (
+            <p className="p-8 text-center text-gray-500">Loading orders…</p>
+          ) : filtered.length === 0 ? (
+            <p className="p-8 text-center text-gray-500">No orders match the filters.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead className="bg-gray-50 text-gray-700">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Date</th>
+                    <th className="px-4 py-3 text-left">Order ID</th>
+                    <th className="px-4 py-3 text-left">Parent</th>
+                    <th className="px-4 py-3 text-left">Mentor</th>
+                    <th className="px-4 py-3 text-left">Amount</th>
+                    <th className="px-4 py-3 text-left">Method</th>
+                    <th className="px-4 py-3 text-left">Reference</th>
+                    <th className="px-4 py-3 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {filtered.map((o) => (
+                    <tr key={o._id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs">
+                        {formatDate(o.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-xs break-all">{o.orderId}</td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{o.parent?.name || "—"}</div>
+                        <div className="text-xs text-gray-500">
+                          {o.parent?.phone || o.userPhone}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium">{o.mentor?.fullName || "—"}</div>
+                        <div className="text-xs text-gray-500">{o.mentor?.phone}</div>
+                      </td>
+                      <td className="px-4 py-3 font-semibold">{formatINR(o.amount)}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${methodPillClass(
+                            o.paymentMethod
+                          )}`}
+                        >
+                          {o.paymentMethod || "online"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-gray-700 break-all max-w-[180px]">
+                        {o.paymentReference || <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${statusPillClass(
+                            o.status
+                          )}`}
+                        >
+                          {o.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );
-};
-
-export default AllOrders;
+}

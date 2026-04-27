@@ -4,6 +4,11 @@ const Admin = require("../models/Admin");
 const ClassBooking = require("../models/ClassBooking");
 const Mentor = require("../models/Mentor");
 const CallLog = require("../models/CallLog");
+const Order = require("../models/Order");
+const User = require("../models/User");
+const MentorLead = require("../models/MentorLead");
+const ParentLead = require("../models/ParentLead");
+const CallIntent = require("../models/CallIntent");
 
 // GET admin by ID
 router.get("/:id", async (req, res) => {
@@ -99,11 +104,9 @@ router.post("/logout", (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    console.log("Counting")
     const bookings = await ClassBooking.countDocuments({
       isViewedByAdmin: false,
     });
-    console.log(bookings)
     const calls = await CallLog.countDocuments({
       isViewedByAdmin: false,
     });
@@ -112,11 +115,66 @@ router.get("/", async (req, res) => {
       isViewedByAdmin: false,
     });
 
+    let configs = await Admin.find();
+    if (configs.length === 0) {
+      const created = await Admin.create({});
+      configs = [created];
+    }
+
+    // ----- Dashboard aggregates -----
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const closedLeadStatuses = ["paid_booking"]; // open = anything not yet converted
+
+    const [
+      pendingApprovals,
+      totalMentors,
+      activeMentors,
+      totalUsers,
+      todayPaidAgg,
+      todayOrdersCount,
+      pendingPaidAgg,
+      mentorLeadsOpen,
+      parentLeadsOpen,
+      todayCalls,
+    ] = await Promise.all([
+      ClassBooking.countDocuments({ adminApproved: false, status: "pending_schedule" }),
+      Mentor.countDocuments({}),
+      Mentor.countDocuments({ showOnWebsite: true }),
+      User.countDocuments({}),
+      Order.aggregate([
+        { $match: { status: "PAID", createdAt: { $gte: startOfDay } } },
+        { $group: { _id: null, sum: { $sum: "$amount" } } },
+      ]),
+      Order.countDocuments({ createdAt: { $gte: startOfDay } }),
+      Order.aggregate([
+        { $match: { status: "PENDING" } },
+        { $group: { _id: null, sum: { $sum: "$amount" } } },
+      ]),
+      MentorLead.countDocuments({ status: { $nin: closedLeadStatuses } }),
+      ParentLead.countDocuments({ status: { $nin: closedLeadStatuses } }),
+      CallIntent.countDocuments({ createdAt: { $gte: startOfDay } }),
+    ]);
+
     res.json({
+      data: configs,
+      // legacy counts (kept for sidebar badges)
       bookings,
       calls,
       mentorRequests,
-    }); 
+      // new dashboard fields
+      pendingApprovals,
+      totalMentors,
+      activeMentors,
+      totalUsers,
+      todayRevenue: todayPaidAgg[0]?.sum || 0,
+      todayOrders: todayOrdersCount,
+      pendingPaymentAmount: pendingPaidAgg[0]?.sum || 0,
+      mentorLeadsOpen,
+      parentLeadsOpen,
+      todayCalls,
+    });
 
   } catch (error) {
     console.error("❌ Sidebar-counts error:", error);

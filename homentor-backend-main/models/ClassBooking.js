@@ -100,9 +100,11 @@ const classBookingSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ["online", "cash"],
+    enum: ["online", "cash", "manual"],
     default: "online"
-  }
+  },
+  // For manual UPI/bank transfer: UTR / transaction reference submitted by user
+  paymentReference: { type: String, default: "" }
 
 });
 

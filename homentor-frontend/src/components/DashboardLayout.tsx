@@ -10,6 +10,10 @@ import {
   PhoneCall,
   ChevronLeft,
   ChevronRight,
+  BookOpen,
+  Wallet,
+  Users,
+  Receipt,
 } from "lucide-react";
 
 type Role = "student" | "mentor";
@@ -30,13 +34,20 @@ interface NavItem {
 const navForRole = (role: Role): NavItem[] => {
   if (role === "mentor") {
     return [
-      { label: "Dashboard", path: "/dashboard/mentor", icon: LayoutDashboard },
-      { label: "Bookings", path: "/mentor/bookings", icon: CalendarDays },
+      { label: "Overview", path: "/dashboard/mentor", icon: LayoutDashboard },
+      { label: "Schedule", path: "/dashboard/mentor/schedule", icon: CalendarDays },
+      { label: "My Students", path: "/dashboard/mentor/students", icon: Users },
+      { label: "Bookings", path: "/mentor/bookings", icon: BookOpen },
+      { label: "Earnings", path: "/dashboard/mentor/earnings", icon: Wallet },
+      { label: "Profile", path: "/dashboard/mentor/profile", icon: UserIcon },
     ];
   }
   return [
-    { label: "Dashboard", path: "/dashboard/student", icon: LayoutDashboard },
+    { label: "Overview", path: "/dashboard/student", icon: LayoutDashboard },
+    { label: "My Classes", path: "/dashboard/student/classes", icon: BookOpen },
     { label: "Bookings", path: "/parent/bookings", icon: CalendarDays },
+    { label: "Payments", path: "/dashboard/student/payments", icon: Receipt },
+    { label: "Profile", path: "/dashboard/student/profile", icon: UserIcon },
   ];
 };
 
