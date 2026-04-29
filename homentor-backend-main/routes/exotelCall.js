@@ -85,18 +85,28 @@ router.post("/sync-call-logs", async (req, res) => {
 });
 
 router.post("/call/initiate", async (req, res) => {
-  const { parentPhone, mentorId, mentorPhone, mentorName, mode } = req.body;
+  try {
+    const { parentPhone, mentorId, mentorPhone, mentorName, mode } = req.body;
 
-  await CallIntent.create({
-    parentPhone,
-    mentorId,
-    mentorPhone: mentorPhone,
-    mentorName,
-    mode: mode === "direct" ? "direct" : "exotel",
-    createdAt: new Date(),
-    statusCallbackUrl: "https://homentor-backend.onrender.com/api/exotel/call-status"
-  });
-  res.json({ success: true });
+    if (!mentorPhone) {
+      return res.status(400).json({ success: false, message: "mentorPhone is required" });
+    }
+
+    const intent = await CallIntent.create({
+      parentPhone: parentPhone ? String(parentPhone) : "anonymous",
+      mentorId: mentorId || undefined,
+      mentorPhone: String(mentorPhone),
+      mentorName,
+      mode: mode === "direct" ? "direct" : "exotel",
+      createdAt: new Date(),
+      statusCallbackUrl: "https://homentor-backend.onrender.com/api/exotel/call-status",
+    });
+
+    return res.json({ success: true, data: intent });
+  } catch (err) {
+    console.error("call/initiate error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 function normalizePhone(phone) {

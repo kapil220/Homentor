@@ -160,10 +160,17 @@ router.post("/manual", async (req, res) => {
       isDemo,
       classBookingId,
       paymentReference,
+      paymentScreenshot,
     } = req.body;
 
     if (!amount || !customerPhone || !mentorId) {
       return res.status(400).json({ success: false, message: "amount, customerPhone, and mentorId are required" });
+    }
+    if (!paymentReference && !paymentScreenshot) {
+      return res.status(400).json({
+        success: false,
+        message: "Provide a transaction reference (UTR) or upload a payment screenshot.",
+      });
     }
 
     const mentor = await Mentor.findById(mentorId);
@@ -183,6 +190,7 @@ router.post("/manual", async (req, res) => {
       paymentProvider: "manual",
       paymentMethod: "manual",
       paymentReference: paymentReference || "",
+      paymentScreenshot: paymentScreenshot || "",
       duration: duration || null,
       session: session || 1,
       isDemo: !!isDemo,
@@ -211,6 +219,7 @@ router.post("/manual", async (req, res) => {
         remainingClasses: effectiveDuration,
         paymentMethod: "manual",
         paymentReference: paymentReference || "",
+        paymentScreenshot: paymentScreenshot || "",
         adminApproved: false,
         status: "pending_schedule",
       });
@@ -235,6 +244,7 @@ router.post("/manual", async (req, res) => {
         remainingClasses: effectiveDuration,
         paymentMethod: "manual",
         paymentReference: paymentReference || "",
+        paymentScreenshot: paymentScreenshot || "",
         adminApproved: false,
         status: "pending_schedule",
         isDemo: !!isDemo,

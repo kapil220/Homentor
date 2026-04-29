@@ -17,7 +17,7 @@ const AdminCallLogs = () => {
   const [fromFilter, setFromFilter] = useState("");
   const [toFilter, setToFilter] = useState("");
   const [connectionFilter, setConnectionFilter] = useState("all");
-  const [modeFilter, setModeFilter] = useState("exotel"); // exotel | direct
+  const [modeFilter, setModeFilter] = useState("direct"); // exotel | direct
   // all | connected | not_connected
 
 

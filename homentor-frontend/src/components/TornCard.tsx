@@ -5,8 +5,8 @@ import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoginPopup from "./LoginPopup";
-import { initiateCheckout } from "@/api/paymentProvider.jsx";
 import SuccessModal from "@/comp/SuccessModal";
+import { usePaymentFlow } from "@/hooks/usePaymentFlow";
 
 const TornCard = ({ mentor }) => {
   const [showBookingOptions, setShowBookingOptions] = useState(false);
@@ -56,18 +56,15 @@ const TornCard = ({ mentor }) => {
       return;
     }
 
-    // Paid demo or monthly subscription → use gateway
-    try {
-      await initiateCheckout({
-        amount: fees,
-        customerId: `homentor${Date.now()}`,
-        customerPhone: userNumber,
-        mentorId: mentor._id,
-      });
-    } catch (error) {
-      alert("Failed to initiate payment");
-    }
+    // Paid demo or monthly subscription → open payment selector popup
+    startPayment({
+      amount: fees,
+      mentorId: mentor._id,
+      customerPhone: userNumber,
+    });
   };
+
+  const { start: startPayment, ui: paymentUI } = usePaymentFlow({ defaultOnlineProvider: "payu" });
 
   useEffect(() => {
     if (userNumber && pendingAction.type === "PAYMENT") {
@@ -297,6 +294,7 @@ const TornCard = ({ mentor }) => {
         setPendingAction={setPendingAction}
         onClose={() => setIsLoginOpen(false)}
       />
+      {paymentUI}
     </div>
   );
 };

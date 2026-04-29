@@ -115,7 +115,10 @@ router.get("/", async (req, res) => {
       isViewedByAdmin: false,
     });
 
-    let configs = await Admin.find();
+    // Always return the most recently saved admin config first so the
+    // public site / booking flow reflects the latest payment settings,
+    // even if multiple Admin docs exist in the DB.
+    let configs = await Admin.find().sort({ _id: -1 });
     if (configs.length === 0) {
       const created = await Admin.create({});
       configs = [created];

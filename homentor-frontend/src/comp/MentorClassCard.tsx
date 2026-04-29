@@ -12,7 +12,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { initiateCheckout } from "@/api/paymentProvider.jsx";
+import { usePaymentFlow } from "@/hooks/usePaymentFlow";
 import { Badge } from "@/components/ui/badge";
 import ParentAttendanceModal from "./ParentAttendanceModal";
 import ScheduleModal from "./SetScheduleForm";
@@ -70,22 +70,17 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
     const totalHourlyPrice = selectedHours * hourlyPrice;
     console.log(JSON.stringify(mentor))
 
-    // ------------- PAYMENT FUNCTION (CASHFREE) -------------
-    const payNow = async () => {
-        try {
-            await initiateCheckout({
-                amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
-                customerId: `homentor${Date.now()}`,
-                customerPhone: localStorage.getItem("usernumber"),
-                mentorId: mentor._id,
-                duration: sessionType === "hourly" ? selectedHours : 22,
-                session: classItem.isDemo ? null : classItem?.session + 1,
-                isDemo: classItem.isDemo,
-                classBookingId: classItem._id,
-            });
-        } catch (error) {
-            alert("Failed to initiate payment");
-        }
+    // ------------- PAYMENT FLOW (popup → online / UPI+screenshot / cash) -------------
+    const { start: startPayment, ui: paymentUI } = usePaymentFlow({ defaultOnlineProvider: "payu" });
+    const payNow = () => {
+        startPayment({
+            amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
+            mentorId: mentor._id,
+            duration: sessionType === "hourly" ? selectedHours : 22,
+            session: classItem.isDemo ? null : (classItem?.session + 1),
+            isDemo: classItem.isDemo,
+            classBookingId: classItem._id,
+        });
     };
 
     function AddressBlock({ classItem }) {
@@ -442,6 +437,7 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+            {paymentUI}
         </>
     );
 }

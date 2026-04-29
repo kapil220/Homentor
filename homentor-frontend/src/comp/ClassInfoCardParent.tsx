@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
 import axios from "axios";
-import { initiateCheckout } from "@/api/paymentProvider.jsx";
+import { usePaymentFlow } from "@/hooks/usePaymentFlow";
 import TerminateClassModal from "./TerminateClassModal";
 import ChangeTeacherModal from "./ChangeTeacherModal";
 
@@ -55,22 +55,17 @@ export default function ClassInfoCardParent({ classBooking }) {
     }
   };
 
-  // ------------- PAYMENT FUNCTION (CASHFREE) -------------
-  const payNow = async () => {
-    try {
-      await initiateCheckout({
-        amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
-        customerId: `homentor${Date.now()}`,
-        customerPhone: localStorage.getItem("usernumber"),
-        mentorId: mentor._id,
-        duration: sessionType === "hourly" ? selectedHours : 22,
-        session: classBooking.isDemo ? null : classBooking?.session + 1,
-        isDemo: classBooking.isDemo,
-        classBookingId: classBooking._id
-      });
-    } catch (error) {
-      alert("Failed to initiate payment");
-    }
+  // ------------- PAYMENT FLOW (popup → online / UPI+screenshot / cash) -------------
+  const { start: startPayment, ui: paymentUI } = usePaymentFlow({ defaultOnlineProvider: "payu" });
+  const payNow = () => {
+    startPayment({
+      amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
+      mentorId: mentor._id,
+      duration: sessionType === "hourly" ? selectedHours : 22,
+      session: classBooking.isDemo ? null : (classBooking?.session + 1),
+      isDemo: classBooking.isDemo,
+      classBookingId: classBooking._id,
+    });
   };
 
   return (
@@ -273,6 +268,7 @@ export default function ClassInfoCardParent({ classBooking }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {paymentUI}
     </>
   );
 }

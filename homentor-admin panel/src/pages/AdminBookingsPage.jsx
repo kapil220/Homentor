@@ -231,6 +231,28 @@ export default function AdminBookingsPage() {
                           Ref: <strong>{b.paymentReference}</strong>
                         </div>
                       )}
+                      {b.paymentScreenshot && (
+                        <div className="mt-1">
+                          <a
+                            href={b.paymentScreenshot}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-block"
+                            title="View payment screenshot"
+                          >
+                            <img
+                              src={b.paymentScreenshot}
+                              alt="Payment screenshot"
+                              className="h-12 w-12 object-cover rounded border hover:opacity-90"
+                            />
+                          </a>
+                          <div className="text-[10px] text-blue-600 underline mt-0.5">
+                            <a href={b.paymentScreenshot} target="_blank" rel="noreferrer">
+                              View screenshot
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </td>
 
                     {/* Status */}

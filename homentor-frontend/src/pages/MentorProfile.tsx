@@ -26,10 +26,7 @@ import Layout from "@/components/Layout";
 import axios from "axios";
 import LoginPopup from "@/components/LoginPopup";
 import BookingCard from "@/comp/BookingCard";
-import { createOrder } from "@/api/payment.jsx";
-import { load } from "@cashfreepayments/cashfree-js";
-import { createCashBooking, createManualBooking } from "@/api/cashBooking.jsx";
-import ManualPaymentModal from "@/comp/ManualPaymentModal";
+import { usePaymentFlow } from "@/hooks/usePaymentFlow";
 
 // Mock teacher data for homentor platform
 const teacherData = {
@@ -151,8 +148,8 @@ const MentorDetails = () => {
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
-    (getAdminData(), []);
-  });
+    getAdminData();
+  }, []);
   const mentorData = JSON.parse(localStorage.getItem("mentorDetail"));
   const [bookingAmount, setBookingAmount] = useState(0);
   const [isPayment, setIsPayment] = useState(false);
@@ -175,86 +172,42 @@ const MentorDetails = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const userNumber = localStorage.getItem("usernumber");
 
-  const payNow = async (fees, duration) => {
+  const { start: startPayment, ui: paymentUI } = usePaymentFlow({
+    defaultOnlineProvider: "cashfree",
+  });
+
+  const handleBook = (fees: number, duration: number) => {
     if (!userNumber) {
       setBookingAmount(fees);
       setIsLoginOpen(true);
       return;
     }
-    try {
-      const data = await createOrder({
-        amount: Math.round(fees),
-        customerId: `homentor${Date.now()}`,
-        customerPhone: userNumber,
-        mentorId: mentorData._id,
-        duration: duration
-      });
-      localStorage.setItem("orderId", data.order_id);
-      
-      let cashfree = await load({
-        mode: "production",
-      });
-      console.log(cashfree);
-
-      let checkoutOptions = {
-        paymentSessionId: data.payment_session_id,
-        redirectTarget: "_self",
-      };
-      cashfree.checkout(checkoutOptions);
-    } catch (error) {
-      alert("Failed to initiate payment");
+    if (!fees || fees <= 0) {
+      // Free demo — no payment, just create a cash-style record (admin to follow up).
+      // Or you can plug in your existing free-demo flow here.
+      alert("Free demo selected. The mentor will reach out shortly.");
+      return;
     }
+    startPayment({
+      amount: fees,
+      duration,
+      mentorId: mentorData._id,
+      customerPhone: userNumber,
+    });
   };
 
   useEffect(() => {
     if (userNumber && isPayment) {
-      console.log("userNumber", userNumber);
-      payNow(bookingAmount);
+      handleBook(bookingAmount, 22);
     }
   }, [isPayment]);
 
-  const payCash = async (fees, duration) => {
-    if (!userNumber) {
-      setBookingAmount(fees);
-      setIsLoginOpen(true);
-      return;
-    }
-    const proceed = window.confirm(
-      `Place a CASH booking for ₹${Math.round(fees)}?\n\nThe booking will remain pending until an admin approves it.`
-    );
-    if (!proceed) return;
-    try {
-      await createCashBooking({
-        amount: Math.round(fees),
-        customerPhone: userNumber,
-        mentorId: mentorData._id,
-        duration,
-      });
-      alert("Cash booking placed! You'll see it as 'Pending Approval' in your bookings.");
-    } catch (error) {
-      alert(error?.response?.data?.message || "Failed to create cash booking");
-    }
-  };
   const targetDivRef = useRef(null);
   const handleScroll = () => {
     targetDivRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const [callingNo, setCallingNo] = useState("");
   const [callingMode, setCallingMode] = useState("direct");
-  const [onlinePaymentMode, setOnlinePaymentMode] = useState<"gateway" | "manual">("gateway");
-  const [adminPaymentDetails, setAdminPaymentDetails] = useState({
-    upiId: "",
-    bankAccountName: "",
-    bankAccountNumber: "",
-    bankIfsc: "",
-    bankName: "",
-    paymentInstructions: "",
-  });
-  const [manualModal, setManualModal] = useState<{ open: boolean; amount: number; duration: number }>({
-    open: false,
-    amount: 0,
-    duration: 0,
-  });
 
   const getAdminData = () => {
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
@@ -263,17 +216,6 @@ const MentorDetails = () => {
       if (cfg.callingMode === "exotel" || cfg.callingMode === "direct") {
         setCallingMode(cfg.callingMode);
       }
-      if (cfg.onlinePaymentMode === "manual" || cfg.onlinePaymentMode === "gateway") {
-        setOnlinePaymentMode(cfg.onlinePaymentMode);
-      }
-      setAdminPaymentDetails({
-        upiId: cfg.upiId || "",
-        bankAccountName: cfg.bankAccountName || "",
-        bankAccountNumber: cfg.bankAccountNumber || "",
-        bankIfsc: cfg.bankIfsc || "",
-        bankName: cfg.bankName || "",
-        paymentInstructions: cfg.paymentInstructions || "",
-      });
     });
   };
 
@@ -309,30 +251,6 @@ const MentorDetails = () => {
     }
   };
 
-  const payManual = async (fees: number, duration: number) => {
-    if (!userNumber) {
-      setBookingAmount(fees);
-      setIsLoginOpen(true);
-      return;
-    }
-    setManualModal({ open: true, amount: Math.round(fees), duration });
-  };
-
-  const submitManualPayment = async (paymentReference: string) => {
-    try {
-      await createManualBooking({
-        amount: manualModal.amount,
-        customerPhone: userNumber,
-        mentorId: mentorData._id,
-        duration: manualModal.duration,
-        paymentReference,
-      });
-      setManualModal({ open: false, amount: 0, duration: 0 });
-      alert("Booking placed! It will be confirmed once admin verifies your payment.");
-    } catch (error: any) {
-      alert(error?.response?.data?.message || "Failed to submit manual payment");
-    }
-  };
   const sendCallRequest = () => {
     axios
       .post(`${import.meta.env.VITE_API_BASE_URL}/mentor-call`, {
@@ -451,10 +369,7 @@ const MentorDetails = () => {
                     </div>
                     <BookingCard
                       mentorData={mentorData}
-                      payNow={payNow}
-                      payCash={payCash}
-                      payManual={payManual}
-                      onlinePaymentMode={onlinePaymentMode}
+                      onBook={handleBook}
                     ></BookingCard>
                     <div className="flex flex-row lg:hidden justify-center gap-4">
                       <Button
@@ -490,13 +405,7 @@ const MentorDetails = () => {
             setIsPayment={setIsPayment}
             onClose={() => setIsLoginOpen(false)}
           />
-          <ManualPaymentModal
-            open={manualModal.open}
-            amount={manualModal.amount}
-            details={adminPaymentDetails}
-            onClose={() => setManualModal({ open: false, amount: 0, duration: 0 })}
-            onSubmit={submitManualPayment}
-          />
+          {paymentUI}
           {/* Main Content Tabs */}
           <Tabs
             value={activeTab}

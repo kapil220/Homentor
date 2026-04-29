@@ -25,6 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import Layout from "@/components/Layout";
 import axios from "axios";
 import LoginPopup from "@/components/LoginPopup";
+import { callMentor } from "@/lib/callMentor";
 
 // Mock teacher data for homentor platform
 const teacherData = {
@@ -342,16 +343,15 @@ const BackUpTeacherProfile = () => {
                           Send Message
                         </Button>
 
-                        <a href={`tel:${mentorData.phone}`} className="w-full">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full border-green-500 text-green-600 hover:bg-green-50"
-                          >
-                            <MessageCircle className="h-4 w-4 mr-1" />
-                            Call
-                          </Button>
-                        </a>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => callMentor(mentorData)}
+                          className="w-full border-green-500 text-green-600 hover:bg-green-50"
+                        >
+                          <MessageCircle className="h-4 w-4 mr-1" />
+                          Call
+                        </Button>
                       </div>
                     </div>
                     <div className="flex flex-row lg:hidden justify-center gap-4">
@@ -364,8 +364,8 @@ const BackUpTeacherProfile = () => {
                         Send Message
                       </Button>
                       <a
-                        onClick={() => sendCallRequest()}
-                        href={`tel:${callingNo}`}
+                        onClick={(e) => { e.preventDefault(); sendCallRequest(); callMentor(mentorData); }}
+                        href="#"
                         className=" lg:text-md text-[10px]"
                       >
                         <Button

@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 
 const CallIntentSchema = new mongoose.Schema(
   {
-    // 📞 Parent who initiated the call
+    // 📞 Parent who initiated the call (may be anonymous if not logged in)
     parentPhone: {
       type: String,
-      required: true,
+      default: "anonymous",
       index: true, // fast lookup when Exotel hits webhook
     },
 
