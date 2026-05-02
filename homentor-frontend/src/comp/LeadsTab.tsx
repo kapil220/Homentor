@@ -26,7 +26,7 @@ type AdminPaymentDetails = {
 };
 
 type Props = {
-  mentorPhone: string;
+  mentorPhone: string | null;
 };
 
 export default function LeadsTab({ mentorPhone }: Props) {
