@@ -11,6 +11,7 @@ const teacherLeadSchema = new mongoose.Schema(
     parentPhone: {
       type: String,
       required: true,
+      trim: true,
     },
     parentName: { type: String, default: "" },
     parentClass: { type: String, default: "" },
