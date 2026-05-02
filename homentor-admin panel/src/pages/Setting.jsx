@@ -25,6 +25,10 @@ const Setting = () => {
         setBankIfsc(cfg.bankIfsc || "");
         setBankName(cfg.bankName || "");
         setPaymentInstructions(cfg.paymentInstructions || "");
+        const commission = cfg.commissionByCategory || {};
+        setCommissionGold(commission.gold || 0);
+        setCommissionSilver(commission.silver || 0);
+        setCommissionBudget(commission.budget || 0);
       });
   };
 
@@ -37,6 +41,9 @@ const Setting = () => {
   const [bankIfsc, setBankIfsc] = useState("")
   const [bankName, setBankName] = useState("")
   const [paymentInstructions, setPaymentInstructions] = useState("")
+  const [commissionGold, setCommissionGold] = useState(0);
+  const [commissionSilver, setCommissionSilver] = useState(0);
+  const [commissionBudget, setCommissionBudget] = useState(0);
 
   const postNumber = () => {
     try {
@@ -51,6 +58,11 @@ const Setting = () => {
           bankIfsc,
           bankName,
           paymentInstructions,
+          commissionByCategory: {
+            gold:   Number(commissionGold),
+            silver: Number(commissionSilver),
+            budget: Number(commissionBudget),
+          },
         })
         .then(() => {
           alert("Settings Updated");
@@ -209,6 +221,29 @@ const Setting = () => {
           >
             Submit
           </button>
+        </div>
+
+        <div className="bg-white rounded-xl shadow p-4 mb-6 max-w-xl">
+          <h3 className="text-lg font-semibold mb-3">Lead Commission (₹)</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Amount teacher pays to unlock a parent's contact details. Set 0 to auto-unlock.
+          </p>
+          {[
+            { label: "Gold Teacher", value: commissionGold, set: setCommissionGold },
+            { label: "Silver Teacher", value: commissionSilver, set: setCommissionSilver },
+            { label: "Budget Teacher", value: commissionBudget, set: setCommissionBudget },
+          ].map(({ label, value, set }) => (
+            <div className="mb-3" key={label}>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+              <input
+                type="number"
+                min="0"
+                value={value}
+                onChange={(e) => set(e.target.value)}
+                className="border rounded-lg px-3 py-2 text-sm w-full"
+              />
+            </div>
+          ))}
         </div>
 
         <DisclaimerManager></DisclaimerManager>
