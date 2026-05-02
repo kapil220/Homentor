@@ -11,7 +11,12 @@ const AdminCreationSchema = new mongoose.Schema({
   bankAccountNumber: { type: String, default: "" },
   bankIfsc: { type: String, default: "" },
   bankName: { type: String, default: "" },
-  paymentInstructions: { type: String, default: "" }
+  paymentInstructions: { type: String, default: "" },
+  commissionByCategory: {
+    Premium: { type: Number, default: 0 },
+    Regular: { type: Number, default: 0 },
+    Trial:   { type: Number, default: 0 },
+  }
 });
 
 module.exports = mongoose.model('AdminCreation', AdminCreationSchema);

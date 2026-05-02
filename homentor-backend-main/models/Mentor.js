@@ -126,7 +126,8 @@ const MentorSchema = new mongoose.Schema({
   isViewedByAdmin: {
     type: Boolean,
     default: false
-  }
+  },
+  commissionOverride: { type: Number, default: null }
 });
 
 MentorSchema.index({ coordinates: "2dsphere" });
