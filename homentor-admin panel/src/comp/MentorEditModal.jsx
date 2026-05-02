@@ -675,6 +675,26 @@ const MentorEditModal = ({
                 />
               </div>
 
+              {/* Commission Override */}
+              <div className="space-y-1">
+                <label
+                  htmlFor="commissionOverride"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Commission Override (₹) — leave 0 to use category default
+                </label>
+                <input
+                  type="number"
+                  id="commissionOverride"
+                  min="0"
+                  value={selectedMentor?.commissionOverride || 0}
+                  onChange={(e) =>
+                    updateField("commissionOverride", Number(e.target.value))
+                  }
+                  className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
               {/* Bio */}
               <div className="space-y-1">
                 <div className="flex gap-2 items-center">
