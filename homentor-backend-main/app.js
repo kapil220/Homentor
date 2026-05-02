@@ -41,6 +41,7 @@ const startServer = async () => {
     app.use('/api/parent-leads', require("./routes/parentLeadRoutes.js"))
     app.use("/api/exotel", require("./routes/exotelCall.js"));
     app.use("/api/call-intent", require("./routes/callIntent.js"));
+    app.use("/api/teacher-leads", require("./routes/teacherLeadRoutes.js"));
     app.use("/api/call-logs", require("./routes/callLogsRoutes.js"));
 
     const PORT = process.env.PORT || 5000;

@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const CallIntent = require("../models/CallIntent");
+const TeacherLead = require("../models/TeacherLead");
+const Mentor = require("../models/Mentor");
+const User = require("../models/User");
+const resolveCommission = require("../utils/resolveCommission");
 
 router.post("/create", async (req, res) => {
   try {
@@ -19,6 +23,62 @@ router.post("/create", async (req, res) => {
       mentorId: mentorId || null,
       status: "initiated",
     });
+
+    // Upsert TeacherLead — one per parent-teacher pair
+    if (mentorId) {
+      try {
+        const mentor = await Mentor.findById(mentorId).select("category commissionOverride");
+        if (mentor) {
+          const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
+
+          if (existingLead) {
+            existingLead.callCount += 1;
+            existingLead.lastCalledAt = new Date();
+            await existingLead.save();
+          } else {
+            const commissionAmount = await resolveCommission(mentor);
+
+            let parentName = "";
+            let parentClass = "";
+            let parentSubjects = "";
+            let parentCity = "";
+            let parentArea = "";
+
+            const user = await User.findOne({
+              $or: [{ phone: Number(parentPhone) }, { phone: parentPhone }],
+            }).select("parentName children address");
+
+            if (user) {
+              parentName = user.parentName || "";
+              const firstChild = Array.isArray(user.children) ? user.children[0] : null;
+              if (firstChild) {
+                parentClass = firstChild.class || firstChild.grade || firstChild.className || "";
+                parentSubjects = Array.isArray(firstChild.subjects)
+                  ? firstChild.subjects.join(", ")
+                  : firstChild.subjects || "";
+              }
+              const addr = user.address || {};
+              parentCity = addr.city || "";
+              parentArea = addr.area || "";
+            }
+
+            await TeacherLead.create({
+              mentorId,
+              parentPhone,
+              parentName,
+              parentClass,
+              parentSubjects,
+              parentLocation: { city: parentCity, area: parentArea },
+              commissionAmount,
+              commissionPaid: commissionAmount === 0,
+              paymentStatus: commissionAmount === 0 ? "approved" : "pending",
+            });
+          }
+        }
+      } catch (leadErr) {
+        console.error("TeacherLead upsert error:", leadErr);
+      }
+    }
 
     return res.status(201).json({
       success: true,
