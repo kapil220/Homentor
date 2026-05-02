@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import LeadsTab from "@/comp/LeadsTab";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ const MentorDashboard = () => {
   const [mentorDetail, setMentorDetail] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
   const [showDisclaimer, setShowDisclaimer] = useState(false);
+  const [activeTab, setActiveTab] = useState("Overview");
 
   const phone = localStorage.getItem("mentor");
 
@@ -148,6 +150,27 @@ const MentorDashboard = () => {
           />
         </div>
 
+        {/* Tabs */}
+        <div className="flex gap-1 border-b border-gray-200">
+          {["Overview", "Leads"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeTab === tab
+                  ? "border-b-2 border-blue-600 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "Leads" && <LeadsTab mentorPhone={phone} />}
+
+        {activeTab === "Overview" && (
+        <>
         {/* Today's classes */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-3">
@@ -215,6 +238,8 @@ const MentorDashboard = () => {
             Disclaimer
           </button>
         </div>
+        </>
+        )}
       </div>
 
       <ParentDisclaimerModal
