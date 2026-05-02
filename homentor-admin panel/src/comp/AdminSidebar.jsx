@@ -28,6 +28,7 @@ const navGroups = [
       { label: "Mentor Requests", icon: UserPlus, to: "/mentor-request", countKey: "mentorRequests" },
       { label: "All Mentors", icon: Users, to: "/all-mentor" },
       { label: "Mentor Leads", icon: ClipboardList, to: "/mentor-leads" },
+      { label: "Teacher Lead Payments", icon: ClipboardList, to: "/teacher-leads" },
     ],
   },
   {

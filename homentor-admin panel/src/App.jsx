@@ -9,6 +9,7 @@ import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminMarginRules from "./pages/AdminMarginRules";
 import AdminMentorLeadsPage from "./pages/AdminMentorLeadsPage";
 import AdminParentLeadsPage from "./pages/AdminParentLeadsPage";
+import AdminTeacherLeadsPage from "./pages/AdminTeacherLeadsPage";
 import BookingRecord from "./pages/BookingRecord";
 import ParentsPage from "./pages/ParentsPage";
 import DegreeMaster from "./pages/DegreeMaster";
@@ -30,6 +31,7 @@ function App() {
       <Route path="/margin-rules" element={<AdminMarginRules/>}></Route>
       <Route path="/mentor-leads" element={<AdminMentorLeadsPage/>}></Route>
       <Route path="/parent-leads" element={<AdminParentLeadsPage/>}></Route>
+      <Route path="/teacher-leads" element={<AdminTeacherLeadsPage/>}></Route>
       <Route path="/degree-master" element={<DegreeMaster/>}></Route>
 
       </Routes>
