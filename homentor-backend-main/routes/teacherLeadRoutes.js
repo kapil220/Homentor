@@ -63,6 +63,9 @@ router.post("/:id/pay", async (req, res) => {
     if (lead.commissionPaid) {
       return res.status(400).json({ success: false, message: "Lead already unlocked" });
     }
+    if (lead.paymentStatus === "submitted") {
+      return res.status(400).json({ success: false, message: "Payment already submitted, awaiting admin review" });
+    }
 
     lead.paymentRef = paymentRef;
     lead.paymentStatus = "submitted";
@@ -93,14 +96,16 @@ router.get("/admin/pending", async (req, res) => {
 // Admin: approve payment, unlock lead
 router.put("/admin/:id/approve", async (req, res) => {
   try {
-    const lead = await TeacherLead.findByIdAndUpdate(
-      req.params.id,
-      { commissionPaid: true, paymentStatus: "approved" },
-      { new: true }
-    );
+    const lead = await TeacherLead.findById(req.params.id);
     if (!lead) {
       return res.status(404).json({ success: false, message: "Lead not found" });
     }
+    if (lead.paymentStatus !== "submitted") {
+      return res.status(400).json({ success: false, message: "Lead has not submitted payment yet" });
+    }
+    lead.commissionPaid = true;
+    lead.paymentStatus = "approved";
+    await lead.save();
     res.json({ success: true, data: lead });
   } catch (err) {
     console.error("PUT /teacher-leads/admin/:id/approve error:", err);
