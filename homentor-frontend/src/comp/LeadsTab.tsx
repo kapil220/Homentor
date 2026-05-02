@@ -17,12 +17,12 @@ type Lead = {
 };
 
 type AdminPaymentDetails = {
-  upiId: string;
-  bankAccountName: string;
-  bankAccountNumber: string;
-  bankIfsc: string;
-  bankName: string;
-  paymentInstructions: string;
+  upiId?: string;
+  bankAccountName?: string;
+  bankAccountNumber?: string;
+  bankIfsc?: string;
+  bankName?: string;
+  paymentInstructions?: string;
 };
 
 type Props = {
