@@ -687,6 +687,7 @@ const MentorEditModal = ({
                   type="number"
                   id="commissionOverride"
                   min="0"
+                  step="1"
                   value={selectedMentor?.commissionOverride || 0}
                   onChange={(e) =>
                     updateField("commissionOverride", Number(e.target.value))
