@@ -11,7 +11,7 @@ async function resolveCommission(mentor) {
   }
   const admin = await Admin.findOne().select("commissionByCategory");
   if (!admin) return 0;
-  const category = mentor.category || "Regular";
+  const category = mentor.category || "silver";
   return admin.commissionByCategory?.[category] || 0;
 }
 

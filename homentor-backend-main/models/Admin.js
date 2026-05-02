@@ -13,9 +13,9 @@ const AdminCreationSchema = new mongoose.Schema({
   bankName: { type: String, default: "" },
   paymentInstructions: { type: String, default: "" },
   commissionByCategory: {
-    Premium: { type: Number, default: 0 },
-    Regular: { type: Number, default: 0 },
-    Trial:   { type: Number, default: 0 },
+    gold:   { type: Number, default: 0 },
+    silver: { type: Number, default: 0 },
+    budget: { type: Number, default: 0 },
   }
 });
 
