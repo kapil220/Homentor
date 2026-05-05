@@ -51,7 +51,6 @@
   },
   "devDependencies": {
     "@swc/core": "^1.15.33",
-    "@swc/core-darwin-arm64": "^1.15.33",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.16",
     "lovable-tagger": "^1.0.0",
