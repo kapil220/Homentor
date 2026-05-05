@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.post("/create-order", async (req, res) => {
     try {
-        const { amount, customerId, customerPhone, mentorId, duration, session, isDemo, classBookingId } = req.body;
+        const { amount, customerId, customerPhone, mentorId, duration, session, isDemo, classBookingId, teachingMode } = req.body;
         console.log("amount & duration", amount, duration)
         const user = await User.findOne({
             phone: customerPhone
@@ -50,7 +50,8 @@ router.post("/create-order", async (req, res) => {
             duration: duration ? duration : null,
             session: session ? session : 1,
             isDemo: isDemo,
-            classBookig: classBookingId ? classBookingId : null
+            classBookig: classBookingId ? classBookingId : null,
+            teachingMode: teachingMode === "online" || teachingMode === "offline" ? teachingMode : "offline"
         });
         res.status(200).json(response.data);
     } catch (error) {
@@ -115,7 +116,8 @@ router.get('/verify-order/:id', async (req, res) => {
                     session: oldOrder?.session,
                     commissionPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.margin,
                     currentPerClassPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.monthlyPrice / oldOrder?.duration,
-                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22
+                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22,
+                    teachingMode: oldOrder.teachingMode || "offline"
                 })
 
                 newBooking.isDemo = false
@@ -142,7 +144,8 @@ router.get('/verify-order/:id', async (req, res) => {
                     session: oldOrder?.session,
                     commissionPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.margin,
                     currentPerClassPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.monthlyPrice / oldOrder?.duration,
-                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22
+                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22,
+                    teachingMode: oldOrder.teachingMode || "offline"
                 })
                 newBooking.isDemo = false
                 newBooking.status = "scheduled"
@@ -166,7 +169,8 @@ router.get('/verify-order/:id', async (req, res) => {
                     session: oldOrder?.session,
                     commissionPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.margin,
                     currentPerClassPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.monthlyPrice / oldOrder?.duration,
-                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22
+                    remainingClasses: oldOrder.duration ? oldOrder.duration : 22,
+                    teachingMode: oldOrder.teachingMode || "offline"
                 })
                 await newBooking.save()
             }

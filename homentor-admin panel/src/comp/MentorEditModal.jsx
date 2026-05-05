@@ -696,6 +696,28 @@ const MentorEditModal = ({
                 />
               </div>
 
+              {/* Teaching Mode */}
+              <div className="space-y-1">
+                <label
+                  htmlFor="teachingMode"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Teaching Mode
+                </label>
+                <select
+                  id="teachingMode"
+                  value={selectedMentor?.teachingMode || "offline"}
+                  onChange={(e) =>
+                    updateField("teachingMode", e.target.value)
+                  }
+                  className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="offline">Offline only</option>
+                  <option value="online">Online only</option>
+                  <option value="both">Both online and offline</option>
+                </select>
+              </div>
+
               {/* Bio */}
               <div className="space-y-1">
                 <div className="flex gap-2 items-center">

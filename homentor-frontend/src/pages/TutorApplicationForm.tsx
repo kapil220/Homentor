@@ -147,6 +147,9 @@ const TutorRegistrationForm = () => {
 
     teachingRange: "",
 
+    // Online / Offline / Both
+    teachingMode: "offline",
+
     // Teaching Modes & Pricing
     teachingModes: [],
 
@@ -1069,6 +1072,30 @@ const TutorRegistrationForm = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="lg:p-6 py-2 px-2 lg:px-4 lg:space-y-6 space-y-2">
+              <div>
+                <Label htmlFor="teachingMode">Do you teach Online or Offline? *</Label>
+                <Select
+                  value={mentorData.teachingMode}
+                  onValueChange={(value) =>
+                    updateFormData({ teachingMode: value })
+                  }
+                >
+                  <SelectTrigger
+                    id="teachingMode"
+                    className="mt-1 focus:ring-mentor-yellow-400 focus:border-mentor-yellow-400"
+                  >
+                    <SelectValue placeholder="Select teaching mode" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-mentor-blue-200">
+                    <SelectItem value="offline">Offline only</SelectItem>
+                    <SelectItem value="online">Online only</SelectItem>
+                    <SelectItem value="both">Both online and offline</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Students will see and pick you based on this preference.
+                </p>
+              </div>
               {teachingModeOptions.map((mode) => (
                 <div
                   key={mode.id}

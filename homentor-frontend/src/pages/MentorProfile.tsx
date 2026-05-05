@@ -188,11 +188,24 @@ const MentorDetails = () => {
       alert("Free demo selected. The mentor will reach out shortly.");
       return;
     }
+    let teachingMode: "online" | "offline";
+    if (mentorData.teachingMode === "online") {
+      teachingMode = "online";
+    } else if (mentorData.teachingMode === "both") {
+      teachingMode = window.confirm(
+        "Book this as an ONLINE class?\n\nClick OK for Online, Cancel for Offline (in-person)."
+      )
+        ? "online"
+        : "offline";
+    } else {
+      teachingMode = "offline";
+    }
     startPayment({
       amount: fees,
       duration,
       mentorId: mentorData._id,
       customerPhone: userNumber,
+      teachingMode,
     });
   };
 

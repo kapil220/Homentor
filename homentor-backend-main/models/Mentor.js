@@ -67,6 +67,11 @@ const MentorSchema = new mongoose.Schema({
       finalPrice: { type: Number, default: 0 }        // monthlyPrice + margin
     }
   },
+  teachingMode: {
+    type: String,
+    enum: ["online", "offline", "both"],
+    default: "offline"
+  },
   teachingPreferences: Object,
   availableDays: {
     type: [String],

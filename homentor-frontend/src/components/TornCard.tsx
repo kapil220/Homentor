@@ -57,10 +57,23 @@ const TornCard = ({ mentor }) => {
     }
 
     // Paid demo or monthly subscription → open payment selector popup
+    let teachingMode: "online" | "offline";
+    if (mentor.teachingMode === "online") {
+      teachingMode = "online";
+    } else if (mentor.teachingMode === "both") {
+      teachingMode = window.confirm(
+        "Book this as an ONLINE class?\n\nClick OK for Online, Cancel for Offline (in-person)."
+      )
+        ? "online"
+        : "offline";
+    } else {
+      teachingMode = "offline";
+    }
     startPayment({
       amount: fees,
       mentorId: mentor._id,
       customerPhone: userNumber,
+      teachingMode,
     });
   };
 

@@ -30,6 +30,7 @@ export type PaymentParams = {
    *  - "payu":     use PayU redirect via initiateCheckout (used by class extensions)
    */
   onlineProvider?: "cashfree" | "payu";
+  teachingMode?: "online" | "offline";
   onSuccess?: () => void;
 };
 
@@ -120,6 +121,7 @@ export function usePaymentFlow(options: Options = {}) {
           session: pending.session ?? undefined,
           isDemo: pending.isDemo,
           classBookingId: pending.classBookingId,
+          teachingMode: pending.teachingMode,
         });
         return;
       }
@@ -134,6 +136,7 @@ export function usePaymentFlow(options: Options = {}) {
         session: pending.session ?? undefined,
         isDemo: pending.isDemo,
         classBookingId: pending.classBookingId,
+        teachingMode: pending.teachingMode,
       });
       if (!data?.payment_session_id) {
         throw new Error("Online payment is currently unavailable. Please try UPI / Bank Transfer or Cash.");
@@ -175,6 +178,7 @@ export function usePaymentFlow(options: Options = {}) {
         session: pending.session ?? undefined,
         isDemo: pending.isDemo,
         classBookingId: pending.classBookingId,
+        teachingMode: pending.teachingMode,
       });
       alert("Cash booking placed! You'll see it as 'Pending Approval' in your bookings.");
       pending.onSuccess?.();
@@ -202,6 +206,7 @@ export function usePaymentFlow(options: Options = {}) {
         classBookingId: pending.classBookingId,
         paymentReference,
         paymentScreenshot,
+        teachingMode: pending.teachingMode,
       });
       setManualOpen(false);
       alert("Booking placed! It will be confirmed once admin verifies your payment.");

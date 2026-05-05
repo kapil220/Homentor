@@ -158,6 +158,7 @@ const Mentors = () => {
   const [priceRange, setPriceRange] = useState([0, 20000]);
   const [sortBy, setSortBy] = useState("rating");
   const [inPersonOnly, setInPersonOnly] = useState(false);
+  const [teachingModeFilter, setTeachingModeFilter] = useState<"any" | "online" | "offline">("any");
   const [selectedState, setSelectedState] = useState<string | undefined>(
     undefined
   );
@@ -244,6 +245,7 @@ const Mentors = () => {
     selectedCity,
     selectedArea,
     selectedClass,
+    teachingModeFilter,
   ]);
 
   const fetchMentors = async (params = {}) => {
@@ -545,6 +547,18 @@ const Mentors = () => {
       result = filterAndSortMentors(result, userLocation);
     }
 
+    // --- Online / Offline mode filter ---
+    if (teachingModeFilter !== "any") {
+      result = result.filter((mentor) => {
+        const m = mentor?.teachingMode || "offline";
+        return m === teachingModeFilter || m === "both";
+      });
+      goldMentorList = goldMentorList.filter((mentor) => {
+        const m = mentor?.teachingMode || "offline";
+        return m === teachingModeFilter || m === "both";
+      });
+    }
+
     // --- ✅ New: Monthly Price Filter ---
     if (priceRange[1] != 20000) {
       result = result.filter((mentor) => {
@@ -571,6 +585,7 @@ const Mentors = () => {
     setPriceRange([0, 20000]);
     setSortBy("rating");
     setInPersonOnly(false);
+    setTeachingModeFilter("any");
     setSelectedCity(undefined);
     setSelectedState(undefined);
     setSelectedArea(undefined);
@@ -814,6 +829,24 @@ const Mentors = () => {
                     )}
                   </FilterField>
                 )}
+
+                <FilterField label="Mode">
+                  <Select
+                    value={teachingModeFilter}
+                    onValueChange={(v) =>
+                      setTeachingModeFilter(v as "any" | "online" | "offline")
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Any mode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any">Any</SelectItem>
+                      <SelectItem value="online">Online</SelectItem>
+                      <SelectItem value="offline">Offline</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FilterField>
 
                 <FilterField label="Monthly fee">
                   <p className="text-xs text-slate-500 mb-2">

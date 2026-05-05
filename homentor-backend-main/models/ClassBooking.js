@@ -106,7 +106,12 @@ const classBookingSchema = new mongoose.Schema({
   // For manual UPI/bank transfer: UTR / transaction reference submitted by user
   paymentReference: { type: String, default: "" },
   // For manual UPI/bank transfer: screenshot URL of the payment receipt uploaded by user
-  paymentScreenshot: { type: String, default: "" }
+  paymentScreenshot: { type: String, default: "" },
+  teachingMode: {
+    type: String,
+    enum: ["online", "offline"],
+    default: "offline"
+  }
 
 });
 

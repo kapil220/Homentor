@@ -30,7 +30,7 @@ export default function AdminBookingsPage() {
       const response = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/class-bookings/booking-record`
       );
-      setBookings(response.data.data.filter((i) => i.adminApproved == false));
+      setBookings(response.data.data);
     } catch (err) {
       console.error("Failed to fetch bookings", err);
     } finally {
@@ -226,6 +226,15 @@ export default function AdminBookingsPage() {
                       >
                         {b.paymentMethod || "online"}
                       </span>
+                      <span
+                        className={`ml-1 px-2 py-[2px] rounded font-semibold ${
+                          b.teachingMode === "online"
+                            ? "bg-purple-100 text-purple-800"
+                            : "bg-orange-100 text-orange-800"
+                        }`}
+                      >
+                        {b.teachingMode || "offline"}
+                      </span>
                       {b.paymentReference && (
                         <div className="mt-1 text-[10px] text-gray-700 break-all">
                           Ref: <strong>{b.paymentReference}</strong>
@@ -263,6 +272,15 @@ export default function AdminBookingsPage() {
                         )}`}
                       >
                         {b.status}
+                      </span>
+                      <span
+                        className={`px-2 py-[2px] rounded-full text-[10px] font-semibold w-fit ${
+                          b.adminApproved
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {b.adminApproved ? "Approved" : "Pending"}
                       </span>
                       {b.status == "terminated" &&
                         <label className="text-blue-600 bg-blue-100 px-2 py-[2px] rounded w-fit text-[12px]">

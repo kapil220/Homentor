@@ -26,6 +26,7 @@ router.post("/create", async (req, res) => {
       session,
       isDemo,
       classBookingId,
+      teachingMode,
     } = req.body;
 
     if (!amount || !customerPhone || !mentorId) {
@@ -37,6 +38,13 @@ router.post("/create", async (req, res) => {
 
     const parent = await User.findOne({ phone: Number(customerPhone) });
     if (!parent) return res.status(404).json({ success: false, message: "User not found. Please login first." });
+
+    const resolvedTeachingMode =
+      teachingMode === "online" || teachingMode === "offline"
+        ? teachingMode
+        : mentor.teachingMode === "both"
+          ? "offline"
+          : (mentor.teachingMode || "offline");
 
     const orderId = `CASH_${uuidv4()}`;
     const order = await Order.create({
@@ -57,7 +65,13 @@ router.post("/create", async (req, res) => {
 
     const margin = mentor?.teachingModes?.homeTuition?.margin;
     const monthlyPrice = mentor?.teachingModes?.homeTuition?.monthlyPrice;
+    const finalPrice = mentor?.teachingModes?.homeTuition?.finalPrice;
     const effectiveDuration = duration ? Number(duration) : 22;
+    const perClassPrice = amount && effectiveDuration
+      ? Number(amount) / effectiveDuration
+      : (finalPrice
+          ? finalPrice / effectiveDuration
+          : (monthlyPrice ? monthlyPrice / effectiveDuration : undefined));
 
     let newBooking;
     if (classBookingId) {
@@ -73,11 +87,12 @@ router.post("/create", async (req, res) => {
         duration: effectiveDuration,
         session: session || 1,
         commissionPrice: margin,
-        currentPerClassPrice: monthlyPrice ? monthlyPrice / effectiveDuration : undefined,
+        currentPerClassPrice: perClassPrice,
         remainingClasses: effectiveDuration,
         paymentMethod: "cash",
         adminApproved: false,
         status: "pending_schedule",
+        teachingMode: resolvedTeachingMode,
       });
       if (oldClassBooking) {
         newBooking.class = oldClassBooking.class;
@@ -96,12 +111,13 @@ router.post("/create", async (req, res) => {
         duration: effectiveDuration,
         session: session || 1,
         commissionPrice: margin,
-        currentPerClassPrice: monthlyPrice ? monthlyPrice / effectiveDuration : undefined,
+        currentPerClassPrice: perClassPrice,
         remainingClasses: effectiveDuration,
         paymentMethod: "cash",
         adminApproved: false,
         status: "pending_schedule",
         isDemo: !!isDemo,
+        teachingMode: resolvedTeachingMode,
       });
     }
 
@@ -161,6 +177,7 @@ router.post("/manual", async (req, res) => {
       classBookingId,
       paymentReference,
       paymentScreenshot,
+      teachingMode,
     } = req.body;
 
     if (!amount || !customerPhone || !mentorId) {
@@ -178,6 +195,13 @@ router.post("/manual", async (req, res) => {
 
     const parent = await User.findOne({ phone: Number(customerPhone) });
     if (!parent) return res.status(404).json({ success: false, message: "User not found. Please login first." });
+
+    const resolvedTeachingMode =
+      teachingMode === "online" || teachingMode === "offline"
+        ? teachingMode
+        : mentor.teachingMode === "both"
+          ? "offline"
+          : (mentor.teachingMode || "offline");
 
     const orderId = `MANUAL_${uuidv4()}`;
     const order = await Order.create({
@@ -199,7 +223,13 @@ router.post("/manual", async (req, res) => {
 
     const margin = mentor?.teachingModes?.homeTuition?.margin;
     const monthlyPrice = mentor?.teachingModes?.homeTuition?.monthlyPrice;
+    const finalPrice = mentor?.teachingModes?.homeTuition?.finalPrice;
     const effectiveDuration = duration ? Number(duration) : 22;
+    const perClassPrice = amount && effectiveDuration
+      ? Number(amount) / effectiveDuration
+      : (finalPrice
+          ? finalPrice / effectiveDuration
+          : (monthlyPrice ? monthlyPrice / effectiveDuration : undefined));
 
     let newBooking;
     if (classBookingId) {
@@ -215,13 +245,14 @@ router.post("/manual", async (req, res) => {
         duration: effectiveDuration,
         session: session || 1,
         commissionPrice: margin,
-        currentPerClassPrice: monthlyPrice ? monthlyPrice / effectiveDuration : undefined,
+        currentPerClassPrice: perClassPrice,
         remainingClasses: effectiveDuration,
         paymentMethod: "manual",
         paymentReference: paymentReference || "",
         paymentScreenshot: paymentScreenshot || "",
         adminApproved: false,
         status: "pending_schedule",
+        teachingMode: resolvedTeachingMode,
       });
       if (oldClassBooking) {
         newBooking.class = oldClassBooking.class;
@@ -240,7 +271,7 @@ router.post("/manual", async (req, res) => {
         duration: effectiveDuration,
         session: session || 1,
         commissionPrice: margin,
-        currentPerClassPrice: monthlyPrice ? monthlyPrice / effectiveDuration : undefined,
+        currentPerClassPrice: perClassPrice,
         remainingClasses: effectiveDuration,
         paymentMethod: "manual",
         paymentReference: paymentReference || "",
@@ -248,6 +279,7 @@ router.post("/manual", async (req, res) => {
         adminApproved: false,
         status: "pending_schedule",
         isDemo: !!isDemo,
+        teachingMode: resolvedTeachingMode,
       });
     }
 

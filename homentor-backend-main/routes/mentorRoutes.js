@@ -6,10 +6,14 @@ const MarginRule = require("../models/MarginRule");
 const logMentorActivity = require("../utils/logMentorActivity");
 
 router.get("/nearby-mentors", async (req, res) => {
-  const { lat, lon, subject, classLevel, rank } = req.query;
+  const { lat, lon, subject, classLevel, rank, mode } = req.query;
   const adminLat = Number(lat);
   const adminLon = Number(lon);
-  const mentors = await Mentor.find();
+  const mentorQuery = {};
+  if (mode === "online" || mode === "offline") {
+    mentorQuery.teachingMode = { $in: [mode, "both"] };
+  }
+  const mentors = await Mentor.find(mentorQuery);
 
   // Convert teaching range "5km" / "25km+" / "anywhere"
   function normalizeRange(range) {
