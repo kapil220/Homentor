@@ -4,7 +4,8 @@
 type AnyBooking = any;
 
 export const isActiveBooking = (b: AnyBooking) =>
-  b?.status === "scheduled" || b?.status === "running";
+  b?.adminApproved === true &&
+  (b?.status === "scheduled" || b?.status === "running");
 
 export const isPendingBooking = (b: AnyBooking) =>
   b?.status === "pending_schedule";

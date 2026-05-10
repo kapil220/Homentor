@@ -119,7 +119,6 @@ const StudentPayments = () => {
                       </td>
                       <td className="px-4 py-3">
                         <div className="font-medium">{o.mentor?.fullName || "—"}</div>
-                        <div className="text-xs text-gray-500">{o.mentor?.phone}</div>
                       </td>
                       <td className="px-4 py-3 font-semibold">
                         ₹{Number(o.amount || 0).toLocaleString()}

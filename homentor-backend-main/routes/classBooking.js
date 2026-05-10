@@ -222,24 +222,26 @@ router.get("/mentor/:id", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid mentor ID" });
     }
 
-    // 1️⃣ Active bookings (current mentor)
+    // 1️⃣ Active bookings (current mentor) — only surface after admin approval
     const activeBookings = await ClassBooking.find({
       mentor: id,
-      sessionContinued: false
+      sessionContinued: false,
+      adminApproved: true
     })
       .populate("parent", "phone address")
       .sort({ createdAt: -1 });
 
     const mentorObjectId = new mongoose.Types.ObjectId(id);
 
-    // 2️⃣ History bookings (old mentor)
+    // 2️⃣ History bookings (old mentor) — also gated on admin approval
     const historyBookings = await ClassBooking.find({
       teacherHistory: {
         $elemMatch: {
           teacherId: mentorObjectId
         }
       },
-      sessionContinued: false
+      sessionContinued: false,
+      adminApproved: true
 
     })
       .populate("parent", "phone address")
@@ -274,7 +276,7 @@ router.get("/student/:id", async (req, res) => {
     const booking = await ClassBooking.find({
       parent: req.params.id,
       sessionContinued: false
-    }).populate("mentor", "fullName profilePhoto phone teachingModes backupTeachers").sort({ createdAt: -1 });;
+    }).populate("mentor", "fullName profilePhoto teachingModes backupTeachers").sort({ createdAt: -1 });;
     if (!booking)
       return res.status(404).json({ success: false, message: "Not found" });
     res.status(200).json({ success: true, data: booking });
@@ -287,7 +289,7 @@ router.get("/parent/:id", async (req, res) => {
   try {
     const booking = await ClassBooking.find({
       parent: req.params.id
-    }).populate("mentor", "fullName profilePhoto phone teachingModes backupTeachers").sort({ createdAt: -1 });;
+    }).populate("mentor", "fullName profilePhoto teachingModes backupTeachers").sort({ createdAt: -1 });;
     if (!booking)
       return res.status(404).json({ success: false, message: "Not found" });
     res.status(200).json({ success: true, data: booking });

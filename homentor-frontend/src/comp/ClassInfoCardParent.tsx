@@ -202,7 +202,6 @@ export default function ClassInfoCardParent({ classBooking }) {
               />
               <div>
                 <p className="font-semibold text-lg">{mentor?.fullName}</p>
-                <p className="text-sm text-gray-600">{mentor?.phone}</p>
               </div>
             </div>
 

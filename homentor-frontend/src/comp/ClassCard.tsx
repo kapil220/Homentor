@@ -136,9 +136,6 @@ export default function ClassCard({ classItem, userType }) {
                   </h3>
                 </div>
 
-                <p className="text-gray-600 mb-1">
-                  Mobile No : {classItem?.mentor?.phone}
-                </p>
               </div>
             </div>
             {classItem.scheduledDate && (
@@ -247,7 +244,6 @@ export default function ClassCard({ classItem, userType }) {
               />
               <div>
                 <p className="font-semibold text-lg">{mentor?.fullName}</p>
-                <p className="text-sm text-gray-600">{mentor?.phone}</p>
               </div>
             </div>
 
