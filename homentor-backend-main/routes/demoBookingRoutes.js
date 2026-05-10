@@ -4,6 +4,9 @@ const User = require("../models/User");
 const ClassBooking = require("../models/ClassBooking");
 const MentorLead = require("../models/MentorLead");
 const ParentLead = require("../models/ParentLead");
+const Mentor = require("../models/Mentor");
+const TeacherLead = require("../models/TeacherLead");
+const resolveCommission = require("../utils/resolveCommission");
 
 const router = express.Router();
 
@@ -60,6 +63,62 @@ router.post("/", async (req, res) => {
       parentLead.lastActive = new Date(),
       parentLead.lastActivityText = "Demo Booking"
       await parentLead.save()
+    }
+
+    // Upsert TeacherLead so the booking appears on the teacher's Leads tab
+    // immediately, locked until they pay the platform commission.
+    try {
+      const mentor = await Mentor.findById(mentorId).select("category commissionOverride");
+      if (mentor) {
+        const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
+        if (existingLead) {
+          existingLead.lastCalledAt = new Date();
+          await existingLead.save();
+        } else {
+          const commissionAmount = await resolveCommission(mentor);
+
+          let parentName = "";
+          let parentClass = "";
+          let parentSubjects = "";
+          let parentCity = "";
+          let parentArea = "";
+
+          const userDoc = await User.findOne({
+            $or: [{ phone: Number(parentPhone) }, { phone: parentPhone }],
+          }).select("parentName children address");
+
+          if (userDoc) {
+            parentName = userDoc.parentName || studentName || "";
+            const firstChild = Array.isArray(userDoc.children) ? userDoc.children[0] : null;
+            if (firstChild) {
+              parentClass = firstChild.class || firstChild.grade || firstChild.className || "";
+              parentSubjects = Array.isArray(firstChild.subjects)
+                ? firstChild.subjects.join(", ")
+                : firstChild.subjects || "";
+            }
+            const addr = userDoc.address || {};
+            parentCity = addr.city || "";
+            parentArea = addr.area || (typeof address === "string" ? address : "");
+          } else {
+            parentName = studentName || "";
+            parentArea = typeof address === "string" ? address : "";
+          }
+
+          await TeacherLead.create({
+            mentorId,
+            parentPhone,
+            parentName,
+            parentClass,
+            parentSubjects,
+            parentLocation: { city: parentCity, area: parentArea },
+            commissionAmount,
+            commissionPaid: commissionAmount === 0,
+            paymentStatus: commissionAmount === 0 ? "approved" : "pending",
+          });
+        }
+      }
+    } catch (leadErr) {
+      console.error("TeacherLead upsert from demo booking failed:", leadErr);
     }
 
     res.status(201).json({

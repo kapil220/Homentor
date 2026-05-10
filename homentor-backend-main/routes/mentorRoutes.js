@@ -4,6 +4,9 @@ const Mentor = require("../models/Mentor");
 const MentorLead = require("../models/MentorLead");
 const MarginRule = require("../models/MarginRule");
 const logMentorActivity = require("../utils/logMentorActivity");
+const sanitizeMentorForStudent = require("../utils/sanitizeMentorForStudent");
+const Admin = require("../models/Admin");
+const CallIntent = require("../models/CallIntent");
 
 router.get("/nearby-mentors", async (req, res) => {
   const { lat, lon, subject, classLevel, rank, mode } = req.query;
@@ -118,7 +121,7 @@ router.get("/nearby-mentors", async (req, res) => {
     return a.distance - b.distance;
   });
 
-  res.json(enriched);
+  res.json(enriched.map(sanitizeMentorForStudent));
 });
 
 // GET all mentors
@@ -169,7 +172,7 @@ router.get('/selected-mentors', async (req, res) => {
     // Assuming you're using Mongoose and your model is Mentor
     const mentors = await Mentor.find({ _id: { $in: idsArray } });
 
-    res.json({ mentors });
+    res.json({ mentors: mentors.map(sanitizeMentorForStudent) });
   } catch (err) {
     console.error('Error fetching mentors:', err);
     res.status(500).json({ error: 'Failed to fetch mentors' });
@@ -229,7 +232,7 @@ router.get('/visible-mentors', async (req, res) => {
       return res.json({
         success: true,
         count: mentors.length,
-        mentors,
+        mentors: mentors.map(sanitizeMentorForStudent),
         mode: "geo",
       });
     }
@@ -248,7 +251,7 @@ router.get('/visible-mentors', async (req, res) => {
       return res.json({
         success: true,
         count: mentors.length,
-        mentors,
+        mentors: mentors.map(sanitizeMentorForStudent),
         mode: "city",
       });
     }
@@ -266,7 +269,7 @@ router.get('/visible-mentors', async (req, res) => {
     res.json({
       success: true,
       count: mentors.length,
-      mentors,
+      mentors: mentors.map(sanitizeMentorForStudent),
       mode: "default",
     });
 
@@ -296,9 +299,56 @@ router.get("/:id", async (req, res) => {
     if (!mentor) {
       return res.status(404).json({ message: "Mentor not found" });
     }
-    res.status(200).json({ data: mentor });
+    res.status(200).json({ data: sanitizeMentorForStudent(mentor) });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Privacy-preserving call initiation for student-facing UI.
+// Client sends { parentPhone, mentorId }; server logs the intent and returns
+// the dial target. Mentor phone is never exposed in browse-list responses;
+// it surfaces here only at the moment of the click, and only when admin is
+// in "direct" mode. In "exotel" mode the platform number is returned instead.
+router.post("/:id/initiate-call", async (req, res) => {
+  try {
+    const { parentPhone } = req.body || {};
+    const { id: mentorId } = req.params;
+    if (!parentPhone) {
+      return res.status(400).json({ success: false, message: "parentPhone is required" });
+    }
+
+    const mentor = await Mentor.findById(mentorId).select("phone fullName callRouting");
+    if (!mentor) {
+      return res.status(404).json({ success: false, message: "Mentor not found" });
+    }
+
+    const adminDoc = await Admin.findOne().lean();
+    const adminMode = adminDoc?.callingMode === "exotel" ? "exotel" : "direct";
+    const adminNumber = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+
+    // Per-mentor override: if mentor.callRouting.mode === "mentor", direct route to mentor.
+    const callingMode = mentor?.callRouting?.mode === "mentor" ? "direct" : adminMode;
+    const dialNumber = callingMode === "exotel" ? adminNumber : String(mentor.phone || "");
+
+    try {
+      await CallIntent.create({
+        parentPhone: callingMode === "exotel" ? `0${parentPhone}` : String(parentPhone),
+        mentorId,
+        mentorPhone: String(mentor.phone || ""),
+        mentorName: mentor.fullName,
+        mode: callingMode,
+        status: "initiated",
+        createdAt: new Date(),
+      });
+    } catch (logErr) {
+      console.error("initiate-call intent log failed:", logErr);
+    }
+
+    return res.json({ success: true, dialNumber, callingMode });
+  } catch (err) {
+    console.error("initiate-call error:", err);
+    return res.status(500).json({ success: false, message: err.message });
   }
 });
 

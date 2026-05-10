@@ -7,6 +7,7 @@ import axios from "axios";
 import LoginPopup from "./LoginPopup";
 import SuccessModal from "@/comp/SuccessModal";
 import { usePaymentFlow } from "@/hooks/usePaymentFlow";
+import { callMentor } from "@/lib/callMentor";
 
 const TornCard = ({ mentor }) => {
   const [showBookingOptions, setShowBookingOptions] = useState(false);
@@ -45,11 +46,10 @@ const TornCard = ({ mentor }) => {
             studentName: "Demo Student", // you can collect name in popup if needed
             address: "Not Provided",
             fee: 0,
-            mentorPhone: mentor.phone,
           }
         );
         setShowSuccess(true);
-        
+
       } catch (error) {
         alert("Failed to book demo");
       }
@@ -86,76 +86,19 @@ const TornCard = ({ mentor }) => {
       initiateCall();
     }
   }, [pendingAction]);
-  const [callingNo, setCallingNo] = useState("");
-  const [callingMode, setCallingMode] = useState<"direct" | "exotel">("direct");
+
   const getAdminData = () => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
-      const cfg = res.data?.data?.[0] || {};
-      if (mentor?.callRouting?.mode === "mentor") {
-        setCallingNo(mentor?.phone);
-      } else {
-        setCallingNo(cfg.callingNo);
-      }
-      if (cfg.callingMode === "exotel" || cfg.callingMode === "direct") {
-        setCallingMode(cfg.callingMode);
-      }
-    });
-  };
-
-  // Direct tel: call — also logs the intent so admin can see who called.
-  const initiateDirectCall = () => {
-    if (!userNumber) {
-      setPendingAction({
-        type: "call",
-        mentorId: mentor._id,
-        mentorPhone: mentor.phone,
-      });
-      setIsLoginOpen(true);
-      return;
-    }
-    axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
-        parentPhone: userNumber,
-        mentorId: mentor._id,
-        mentorPhone: mentor.phone,
-        mentorName: mentor.fullName,
-        mode: "direct",
-      })
-      .catch((err) => console.warn("direct call log failed", err));
-    const number = callingNo || mentor?.phone;
-    if (number) {
-      window.location.href = `tel:${number}`;
-    }
-  };
-
-  const initiateExotelCall = () => {
-    if (!userNumber) {
-      setPendingAction({
-        type: "call",
-        mentorId: mentor._id,
-        mentorPhone: mentor.phone,
-      });
-      setIsLoginOpen(true);
-      return;
-    }
-    axios
-      .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
-        parentPhone: `0${userNumber}`,
-        mentorId: mentor._id,
-        mentorPhone: mentor.phone,
-        mentorName: mentor.fullName,
-        mode: "exotel",
-      })
-      .then(() => (window.location.href = "tel:07314852387"))
-      .catch((err) => console.log(err));
+    // Reserved for future client-side admin config; the call flow now resolves
+    // the dial target server-side, so no client state is needed.
   };
 
   const initiateCall = () => {
-    if (callingMode === "exotel") {
-      initiateExotelCall();
-    } else {
-      initiateDirectCall();
+    if (!userNumber) {
+      setPendingAction({ type: "call", mentorId: mentor._id });
+      setIsLoginOpen(true);
+      return;
     }
+    callMentor({ _id: mentor._id, fullName: mentor.fullName });
   };
 
   return (
