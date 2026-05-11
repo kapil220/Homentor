@@ -14,6 +14,7 @@ import {
   Wallet,
   Users,
   Receipt,
+  Inbox,
 } from "lucide-react";
 
 type Role = "student" | "mentor";
@@ -37,6 +38,7 @@ const navForRole = (role: Role): NavItem[] => {
       { label: "Overview", path: "/dashboard/mentor", icon: LayoutDashboard },
       { label: "Schedule", path: "/dashboard/mentor/schedule", icon: CalendarDays },
       { label: "My Students", path: "/dashboard/mentor/students", icon: Users },
+      { label: "Leads", path: "/dashboard/mentor/leads", icon: Inbox },
       { label: "Bookings", path: "/mentor/bookings", icon: BookOpen },
       { label: "Earnings", path: "/dashboard/mentor/earnings", icon: Wallet },
       { label: "Profile", path: "/dashboard/mentor/profile", icon: UserIcon },

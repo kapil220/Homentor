@@ -31,6 +31,7 @@ import StudentPayments from "./pages/StudentPayments";
 import StudentProfile from "./pages/StudentProfile";
 import MentorSchedule from "./pages/MentorSchedule";
 import MentorStudents from "./pages/MentorStudents";
+import MentorLeads from "./pages/MentorLeads";
 import MentorEarnings from "./pages/MentorEarnings";
 import MentorProfileSettings from "./pages/MentorProfileSettings";
 import ForMentors from "./pages/ForMentors";
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/dashboard/mentor" element={<MentorDashboard />} />
           <Route path="/dashboard/mentor/schedule" element={<MentorSchedule />} />
           <Route path="/dashboard/mentor/students" element={<MentorStudents />} />
+          <Route path="/dashboard/mentor/leads" element={<MentorLeads />} />
           <Route path="/dashboard/mentor/earnings" element={<MentorEarnings />} />
           <Route path="/dashboard/mentor/profile" element={<MentorProfileSettings />} />
           <Route path="/call-admin" element={<CallAdmin />} />
