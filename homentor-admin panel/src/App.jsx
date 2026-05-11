@@ -13,6 +13,7 @@ import AdminTeacherLeadsPage from "./pages/AdminTeacherLeadsPage";
 import BookingRecord from "./pages/BookingRecord";
 import ParentsPage from "./pages/ParentsPage";
 import DegreeMaster from "./pages/DegreeMaster";
+import AdminLeadCommissionPage from "./pages/AdminLeadCommissionPage";
 CallAdmin
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
       <Route path="/mentor-leads" element={<AdminMentorLeadsPage/>}></Route>
       <Route path="/parent-leads" element={<AdminParentLeadsPage/>}></Route>
       <Route path="/teacher-leads" element={<AdminTeacherLeadsPage/>}></Route>
+      <Route path="/lead-commission" element={<AdminLeadCommissionPage/>}></Route>
       <Route path="/degree-master" element={<DegreeMaster/>}></Route>
 
       </Routes>
