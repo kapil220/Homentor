@@ -2,11 +2,21 @@
 const Admin = require("../models/Admin");
 
 /**
- * Resolves the commission amount for a mentor.
- * Priority: mentor.commissionOverride → admin.commissionByCategory[mentor.category] → 0
+ * Resolves the commission amount (in ₹) for a mentor.
+ * Priority:
+ *   1. mentor.commissionOverride (flat ₹, or % of teachingModes.homeTuition.monthlyPrice)
+ *   2. admin.commissionByCategory[mentor.category] (flat ₹)
+ *   3. 0
  */
 async function resolveCommission(mentor) {
   if (mentor.commissionOverride != null && mentor.commissionOverride > 0) {
+    if (mentor.commissionType === "percent") {
+      const monthlyPrice = Number(
+        mentor?.teachingModes?.homeTuition?.monthlyPrice || 0
+      );
+      if (!monthlyPrice) return 0;
+      return Math.round((monthlyPrice * mentor.commissionOverride) / 100);
+    }
     return mentor.commissionOverride;
   }
   const admin = await Admin.findOne().select("commissionByCategory");

@@ -439,6 +439,17 @@ router.put("/:id", async (req, res) => {
   try {
     const { teachingModes } = req.body;
     let updateData = { ...req.body };
+
+    // Whitelist commission fields with coercion so admin saves are deterministic
+    if ("commissionOverride" in req.body) {
+      const raw = req.body.commissionOverride;
+      updateData.commissionOverride =
+        raw === "" || raw == null ? null : Number(raw);
+    }
+    if ("commissionType" in req.body && ["flat", "percent"].includes(req.body.commissionType)) {
+      updateData.commissionType = req.body.commissionType;
+    }
+
     // ✅ Only recalc when monthlyPrice changes
     if (teachingModes?.homeTuition?.monthlyPrice !== undefined) {
       const price = teachingModes.homeTuition.monthlyPrice;

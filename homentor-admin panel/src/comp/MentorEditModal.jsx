@@ -675,25 +675,112 @@ const MentorEditModal = ({
                 />
               </div>
 
-              {/* Commission Override */}
-              <div className="space-y-1">
-                <label
-                  htmlFor="commissionOverride"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Commission Override (₹) — leave 0 to use category default
-                </label>
-                <input
-                  type="number"
-                  id="commissionOverride"
-                  min="0"
-                  step="1"
-                  value={selectedMentor?.commissionOverride || 0}
-                  onChange={(e) =>
-                    updateField("commissionOverride", Number(e.target.value))
+              {/* Lead Commission */}
+              <div className="md:col-span-2 space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-gray-800">
+                    Lead Commission (Pay-to-Reveal)
+                  </label>
+                  <span className="text-xs text-gray-500">
+                    Charged to teacher before contact details are revealed
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label
+                      htmlFor="commissionType"
+                      className="block text-xs font-medium text-gray-600 mb-1"
+                    >
+                      Type
+                    </label>
+                    <select
+                      id="commissionType"
+                      value={selectedMentor?.commissionType || "flat"}
+                      onChange={(e) =>
+                        updateField("commissionType", e.target.value)
+                      }
+                      className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 bg-white focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="flat">Flat ₹ per lead</option>
+                      <option value="percent">% of monthly fee</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="commissionOverride"
+                      className="block text-xs font-medium text-gray-600 mb-1"
+                    >
+                      {selectedMentor?.commissionType === "percent"
+                        ? "Value (%)"
+                        : "Value (₹)"}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        id="commissionOverride"
+                        min="0"
+                        max={selectedMentor?.commissionType === "percent" ? 100 : undefined}
+                        step="1"
+                        value={
+                          selectedMentor?.commissionOverride == null
+                            ? ""
+                            : selectedMentor.commissionOverride
+                        }
+                        onChange={(e) =>
+                          updateField(
+                            "commissionOverride",
+                            e.target.value === "" ? null : Number(e.target.value)
+                          )
+                        }
+                        placeholder="Leave empty for category default"
+                        className="w-full border rounded-md px-3 py-2 pr-8 text-sm text-gray-700 bg-white focus:ring-blue-500 focus:border-blue-500"
+                      />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                        {selectedMentor?.commissionType === "percent" ? "%" : "₹"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Live preview / fallback hint */}
+                {(() => {
+                  const type = selectedMentor?.commissionType || "flat";
+                  const value = Number(selectedMentor?.commissionOverride || 0);
+                  const monthly = Number(
+                    selectedMentor?.teachingModes?.homeTuition?.monthlyPrice || 0
+                  );
+                  if (!value) {
+                    return (
+                      <p className="text-xs text-gray-600">
+                        Empty/0 → falls back to admin category default for{" "}
+                        <strong>{selectedMentor?.category || "silver"}</strong>.
+                      </p>
+                    );
                   }
-                  className="w-full border rounded-md px-3 py-2 text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500"
-                />
+                  if (type === "percent") {
+                    const computed = monthly
+                      ? Math.round((monthly * value) / 100)
+                      : 0;
+                    return (
+                      <p className="text-xs text-gray-700">
+                        ≈ <strong>₹{computed}</strong> per lead ({value}% of ₹
+                        {monthly || "?"} monthly fee)
+                        {!monthly && (
+                          <span className="text-red-600">
+                            {" "}— mentor has no monthly price set; will resolve to ₹0
+                          </span>
+                        )}
+                      </p>
+                    );
+                  }
+                  return (
+                    <p className="text-xs text-gray-700">
+                      Teacher pays <strong>₹{value}</strong> to unlock each lead.
+                    </p>
+                  );
+                })()}
               </div>
 
               {/* Teaching Mode */}

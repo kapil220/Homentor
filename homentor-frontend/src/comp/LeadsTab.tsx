@@ -46,8 +46,10 @@ export default function LeadsTab({ mentorPhone }: Props) {
         { headers: { "x-mentor-phone": mentorPhone } }
       );
       setLeads(res.data.data || []);
-    } catch (err) {
-      console.error("Failed to fetch leads", err);
+    } catch (err: any) {
+      const status = err?.response?.status;
+      const msg = err?.response?.data?.message;
+      console.error("Failed to fetch leads", { status, msg, err });
     } finally {
       setLoading(false);
     }
@@ -57,23 +59,35 @@ export default function LeadsTab({ mentorPhone }: Props) {
     if (!mentorPhone) return;
     fetchLeads();
 
-    if (loadedRef.current) return;
-    loadedRef.current = true;
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
-      const cfg = res.data?.data?.[0] || {};
-      setAdminDetails({
-        upiId: cfg.upiId || "",
-        bankAccountName: cfg.bankAccountName || "",
-        bankAccountNumber: cfg.bankAccountNumber || "",
-        bankIfsc: cfg.bankIfsc || "",
-        bankName: cfg.bankName || "",
-        paymentInstructions: cfg.paymentInstructions || "",
-      });
-    }).catch(() => {});
+    const onVisible = () => {
+      if (document.visibilityState === "visible") fetchLeads();
+    };
+    window.addEventListener("focus", fetchLeads);
+    document.addEventListener("visibilitychange", onVisible);
+
+    if (!loadedRef.current) {
+      loadedRef.current = true;
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/admin`).then((res) => {
+        const cfg = res.data?.data?.[0] || {};
+        setAdminDetails({
+          upiId: cfg.upiId || "",
+          bankAccountName: cfg.bankAccountName || "",
+          bankAccountNumber: cfg.bankAccountNumber || "",
+          bankIfsc: cfg.bankIfsc || "",
+          bankName: cfg.bankName || "",
+          paymentInstructions: cfg.paymentInstructions || "",
+        });
+      }).catch(() => {});
+    }
+
+    return () => {
+      window.removeEventListener("focus", fetchLeads);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [mentorPhone]);
 
   if (loading) return <p className="text-gray-400 p-4">Loading leads...</p>;
-  if (leads.length === 0) return <p className="text-gray-400 p-4">No leads yet. When a parent calls you, they'll appear here.</p>;
+  if (leads.length === 0) return <p className="text-gray-400 p-4">No leads yet. They'll appear here after a parent books a demo or calls you.</p>;
 
   return (
     <div className="p-4">

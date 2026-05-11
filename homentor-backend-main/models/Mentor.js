@@ -132,6 +132,7 @@ const MentorSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  commissionType: { type: String, enum: ["flat", "percent"], default: "flat" },
   commissionOverride: { type: Number, default: null }
 });
 

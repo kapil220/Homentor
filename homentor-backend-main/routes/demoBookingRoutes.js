@@ -68,7 +68,7 @@ router.post("/", async (req, res) => {
     // Upsert TeacherLead so the booking appears on the teacher's Leads tab
     // immediately, locked until they pay the platform commission.
     try {
-      const mentor = await Mentor.findById(mentorId).select("category commissionOverride");
+      const mentor = await Mentor.findById(mentorId).select("category commissionOverride commissionType teachingModes");
       if (mentor) {
         const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
         if (existingLead) {

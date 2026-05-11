@@ -11,7 +11,7 @@ async function resolveMentor(req, res) {
     return null;
   }
   const phone = String(rawPhone).replace(/\D/g, "");
-  const mentor = await Mentor.findOne({ $or: [{ phone }, { phone: Number(phone) }] }).select("_id category commissionOverride");
+  const mentor = await Mentor.findOne({ $or: [{ phone }, { phone: Number(phone) }] }).select("_id category commissionOverride commissionType teachingModes");
   if (!mentor) {
     res.status(403).json({ success: false, message: "Mentor not found" });
     return null;

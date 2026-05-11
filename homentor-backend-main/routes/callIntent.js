@@ -27,7 +27,7 @@ router.post("/create", async (req, res) => {
     // Upsert TeacherLead — one per parent-teacher pair
     if (mentorId) {
       try {
-        const mentor = await Mentor.findById(mentorId).select("category commissionOverride");
+        const mentor = await Mentor.findById(mentorId).select("category commissionOverride commissionType teachingModes");
         if (mentor) {
           const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
 
