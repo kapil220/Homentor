@@ -84,31 +84,35 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
     };
 
     function AddressBlock({ classItem }) {
-        const [showAddress, setShowAddress] = useState(
-            classItem.status !== "running"
-        );
+        const isRevealed =
+            classItem.status === "scheduled" ||
+            classItem.status === "running" ||
+            classItem.status === "completed";
 
-        useEffect(() => {
-            if (classItem.status === "running" || classItem.status == "completed") {
-                setShowAddress(false);
-            }
-        }, [classItem.status]);
+        const [showAddress, setShowAddress] = useState(false);
+
+        if (!isRevealed) {
+            return (
+                <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <p className="text-sm text-gray-500">
+                        📍 Address unlocks once the class is scheduled.
+                    </p>
+                </div>
+            );
+        }
 
         if (!classItem.parent?.address) return null;
 
         return (
             <div className="mt-2">
-                {/* Toggle button ONLY when running */}
-                {classItem.status === "running" || classItem.status == "completed" ? (
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        className="mb-2"
-                        onClick={() => setShowAddress((prev) => !prev)}
-                    >
-                        {showAddress ? "Hide Address" : "View Address"}
-                    </Button>
-                ) : null}
+                <Button
+                    size="sm"
+                    variant="outline"
+                    className="mb-2"
+                    onClick={() => setShowAddress((prev) => !prev)}
+                >
+                    {showAddress ? "Hide Address" : "View Address"}
+                </Button>
 
                 {/* Address */}
                 {showAddress && (
@@ -227,7 +231,16 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                                         Name: {classItem?.studentName}
                                     </h3>
                                     <p className="text-gray-600 ">
-                                        Mobile : {classItem?.parent?.phone}
+                                        Mobile :{" "}
+                                        {classItem?.status === "scheduled" ||
+                                        classItem?.status === "running" ||
+                                        classItem?.status === "completed" ? (
+                                            classItem?.parent?.phone || "—"
+                                        ) : (
+                                            <span className="text-gray-400">
+                                                •••••••••• (unlocks when scheduled)
+                                            </span>
+                                        )}
                                     </p>
                                     <p className="text-gray-600 ">
                                         Class : {classItem?.class}

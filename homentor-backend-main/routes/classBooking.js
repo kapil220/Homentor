@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const MentorLead = require("../models/MentorLead");
+const { maskParentForMentor } = require("../utils/maskBookingParent");
 
 // Get all class bookings
 router.get("/booking-record", async (req, res) => {
@@ -257,12 +258,11 @@ router.get("/mentor/:id", async (req, res) => {
       });
     }
 
+    const merged = [...activeBookings, ...historyBookings].map(maskParentForMentor);
+
     res.status(200).json({
       success: true,
-      data: [
-        ...activeBookings,
-        ...historyBookings
-      ]
+      data: merged
     });
   } catch (error) {
     console.error("Error fetching mentor bookings:", error);

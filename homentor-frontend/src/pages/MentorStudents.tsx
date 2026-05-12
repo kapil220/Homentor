@@ -7,6 +7,7 @@ type StudentRow = {
   parentId: string;
   parentName: string;
   parentPhone: string;
+  hasRevealedBooking: boolean;
   studentNames: string[];
   activeBookings: number;
   totalBookings: number;
@@ -14,6 +15,8 @@ type StudentRow = {
   totalClasses: number;
   lastSubject: string;
 };
+
+const REVEALED = new Set(["scheduled", "running", "completed"]);
 
 const MentorStudents = () => {
   const phone = localStorage.getItem("mentor");
@@ -48,11 +51,14 @@ const MentorStudents = () => {
       const classesDone = Math.floor((b.progress || 0) / 60);
       const total = Number(b.duration) || 22;
       const isActive = b.status === "scheduled" || b.status === "running";
+      const isRevealed = REVEALED.has(b.status);
+      const phone = isRevealed ? String(b.parent?.phone || "") : "";
       if (!existing) {
         map.set(key, {
           parentId: key,
           parentName: b.parent?.parentName || b.parent?.name || "—",
-          parentPhone: String(b.parent?.phone || ""),
+          parentPhone: phone,
+          hasRevealedBooking: isRevealed,
           studentNames: b.studentName ? [b.studentName] : [],
           activeBookings: isActive ? 1 : 0,
           totalBookings: 1,
@@ -63,6 +69,10 @@ const MentorStudents = () => {
       } else {
         existing.totalBookings += 1;
         if (isActive) existing.activeBookings += 1;
+        if (isRevealed && !existing.hasRevealedBooking) {
+          existing.hasRevealedBooking = true;
+          existing.parentPhone = phone;
+        }
         existing.classesDone += classesDone;
         existing.totalClasses += total;
         if (b.studentName && !existing.studentNames.includes(b.studentName)) {
@@ -120,7 +130,13 @@ const MentorStudents = () => {
                     <tr key={r.parentId} className="hover:bg-gray-50">
                       <td className="px-4 py-3">
                         <div className="font-medium">{r.parentName}</div>
-                        <div className="text-xs text-gray-500">{r.parentPhone}</div>
+                        <div className="text-xs text-gray-500">
+                          {r.hasRevealedBooking ? (
+                            r.parentPhone || "—"
+                          ) : (
+                            <span className="text-gray-400">•••••••••• (unlocks when scheduled)</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         {r.studentNames.length ? r.studentNames.join(", ") : "—"}
