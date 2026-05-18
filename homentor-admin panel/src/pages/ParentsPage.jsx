@@ -6,6 +6,21 @@ const ParentsPage = () => {
   const [parents, setParents] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedParent, setSelectedParent] = useState(null);
+  const [pwdEdit, setPwdEdit] = useState({}); // { [id]: { editing, value } }
+
+  const startEditPwd = (p) => setPwdEdit((s) => ({ ...s, [p._id]: { editing: true, value: p.passwordPlain || "" } }));
+  const cancelEditPwd = (id) => setPwdEdit((s) => ({ ...s, [id]: { editing: false, value: "" } }));
+  const savePwd = async (p) => {
+    const next = pwdEdit[p._id]?.value || "";
+    if (!next || next.length < 4) { alert("Password must be at least 4 chars"); return; }
+    try {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/admin/reset-password`, {
+        userId: p._id, userType: "student", password: next,
+      });
+      setParents((rows) => rows.map((r) => r._id === p._id ? { ...r, passwordPlain: next } : r));
+      setPwdEdit((s) => ({ ...s, [p._id]: { editing: false, value: "" } }));
+    } catch (e) { alert(e?.response?.data?.message || "Failed to update password"); }
+  };
 
   useEffect(() => {
     fetchParents();
@@ -46,6 +61,7 @@ const ParentsPage = () => {
                 <th className="px-4 py-3">Phone</th>
                 <th className="px-4 py-3">Address</th>
                 <th className="px-4 py-3">Children</th>
+                <th className="px-4 py-3">Password</th>
                 <th className="px-4 py-3">Disclaimer</th>
                 <th className="px-4 py-3">Created</th>
                 <th className="px-4 py-3">Actions</th>
@@ -62,6 +78,26 @@ const ParentsPage = () => {
                   </td>
                   <td className="px-4 py-3 text-center">
                     {p.children?.length || 0}
+                  </td>
+
+                  {/* Password */}
+                  <td className="px-4 py-3 text-center">
+                    {pwdEdit[p._id]?.editing ? (
+                      <div className="flex items-center gap-1 justify-center">
+                        <input
+                          className="border px-2 py-1 rounded w-28 text-xs"
+                          value={pwdEdit[p._id].value}
+                          onChange={(e) => setPwdEdit((s) => ({ ...s, [p._id]: { ...s[p._id], value: e.target.value } }))}
+                        />
+                        <button onClick={() => savePwd(p)} className="text-green-700 text-xs underline">Save</button>
+                        <button onClick={() => cancelEditPwd(p._id)} className="text-gray-500 text-xs underline">Cancel</button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 justify-center">
+                        <code className="text-xs">{p.passwordPlain || "—"}</code>
+                        <button onClick={() => startEditPwd(p)} className="text-blue-600 text-xs underline">Edit</button>
+                      </div>
+                    )}
                   </td>
 
                   {/* Disclaimer Status */}
@@ -94,7 +130,7 @@ const ParentsPage = () => {
 
               {filteredParents.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-400">
+                  <td colSpan="8" className="text-center py-6 text-gray-400">
                     No parents found
                   </td>
                 </tr>

@@ -365,12 +365,33 @@ const AllMentor = () => {
                     </button>
                   </td>
 
-                  <td className="px-4 py-3 flex gap-2 text-xs">
+                  <td className="px-4 py-3 flex gap-2 text-xs flex-wrap">
                     <button
                       onClick={() => setSelectedMentor(mentor)}
                       className="px-2 py-1 text-blue-600 hover:underline"
                     >
                       View
+                    </button>
+
+                    <button
+                      onClick={async () => {
+                        const next = window.prompt(
+                          `Set/reset password for ${mentor.fullName || mentor.phone}.\nCurrent: ${mentor.passwordPlain || "(none)"}`,
+                          mentor.passwordPlain || ""
+                        );
+                        if (!next || next.length < 4) return;
+                        try {
+                          await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/admin/reset-password`, {
+                            userId: mentor._id, userType: "mentor", password: next,
+                          });
+                          mentor.passwordPlain = next;
+                          alert("Password updated");
+                        } catch (e) { alert(e?.response?.data?.message || "Failed"); }
+                      }}
+                      className="px-2 py-1 text-purple-700 hover:underline"
+                      title={mentor.passwordPlain ? `Current: ${mentor.passwordPlain}` : "Set password"}
+                    >
+                      Password
                     </button>
 
                     <button

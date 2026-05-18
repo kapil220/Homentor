@@ -73,6 +73,44 @@ router.post("/", async (req, res) => {
 
     await logMentorActivity(classRecord.mentor, "Attendance Marked");
 
+    // G5: when the attendance chart hits the booked total duration, prompt the
+    // parent over WhatsApp with next-month payment details. Idempotent via
+    // bookingPaymentReminderSent flag so re-saves don't re-spam.
+    try {
+      const totalRequired = Number(classBooking.duration || 0) * 60;
+      if (
+        totalRequired > 0 &&
+        classBooking.progress >= totalRequired &&
+        !classBooking.bookingPaymentReminderSent &&
+        !classBooking.isDemo
+      ) {
+        const User = require("../models/User");
+        const Mentor = require("../models/Mentor");
+        const { sendEvent } = require("../utils/whatsappService");
+        const parent = await User.findById(classBooking.parent).lean();
+        const mentor = await Mentor.findById(classBooking.mentor).lean();
+        const parentPhone = parent?.phone ? `91${String(parent.phone).slice(-10)}` : null;
+        const monthlyPrice = mentor?.teachingModes?.homeTuition?.finalPrice || classBooking.price;
+        const baseUrl = process.env.FRONTEND_URL || "https://homentor.in";
+        const paymentLink = `${baseUrl}/dashboard/student?rebook=${classBooking._id}`;
+        const studentName = classBooking.studentName || parent?.parentName || "Student";
+        const monthName = new Date().toLocaleString("en-IN", { month: "long", year: "numeric" });
+        if (parentPhone) {
+          sendEvent("attendance_payment_link", {
+            to: parentPhone,
+            studentName,
+            monthName,
+            amount: monthlyPrice,
+            paymentLink,
+          }).catch(() => {});
+        }
+        classBooking.bookingPaymentReminderSent = true;
+        await classBooking.save();
+      }
+    } catch (e) {
+      console.warn("G5 payment reminder failed:", e?.message);
+    }
+
     res.status(200).json({ data: classRecord });
 
   } catch (error) {

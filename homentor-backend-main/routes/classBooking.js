@@ -276,7 +276,7 @@ router.get("/student/:id", async (req, res) => {
     const booking = await ClassBooking.find({
       parent: req.params.id,
       sessionContinued: false
-    }).populate("mentor", "fullName profilePhoto teachingModes backupTeachers").sort({ createdAt: -1 });;
+    }).populate("mentor", "fullName profilePhoto teachingModes").sort({ createdAt: -1 });;
     if (!booking)
       return res.status(404).json({ success: false, message: "Not found" });
     res.status(200).json({ success: true, data: booking });
@@ -289,7 +289,7 @@ router.get("/parent/:id", async (req, res) => {
   try {
     const booking = await ClassBooking.find({
       parent: req.params.id
-    }).populate("mentor", "fullName profilePhoto teachingModes backupTeachers").sort({ createdAt: -1 });;
+    }).populate("mentor", "fullName profilePhoto teachingModes").sort({ createdAt: -1 });;
     if (!booking)
       return res.status(404).json({ success: false, message: "Not found" });
     res.status(200).json({ success: true, data: booking });
@@ -364,6 +364,12 @@ router.post("/:id/admin-approve", async (req, res) => {
       booking.status = "scheduled";
     }
     await booking.save();
+
+    // G3/G4: notify both sides once approval flips on.
+    if (booking.adminApproved && !booking.bookingConfirmationSent) {
+      const notifyBookingConfirmed = require("../utils/notifyBookingConfirmed");
+      notifyBookingConfirmed(booking).catch((e) => console.warn("booking notify failed:", e?.message));
+    }
 
     res.json({
       success: true,

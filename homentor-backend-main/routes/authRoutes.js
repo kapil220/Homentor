@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
+const { sendEvent: sendWhatsappEvent } = require("../utils/whatsappService");
+
+const fireWhatsappPassword = (phone, name, password) => {
+  if (!phone || !password) return;
+  const waTo = String(phone).replace(/\D/g, "").slice(-10);
+  if (waTo.length !== 10) return;
+  sendWhatsappEvent("password_share", { to: `91${waTo}`, name, password }).catch(() => {});
+};
 
 const normalizePhone = (mobile) => {
   if (mobile === undefined || mobile === null) return null;
@@ -46,20 +54,24 @@ router.post("/signup", async (req, res) => {
     let doc;
     if (existing) {
       existing.password = password;
+      existing.passwordPlain = password;
       doc = await existing.save();
     } else if (userType === "mentor") {
       doc = await Mentor.create({
         phone: phone,
         password,
+        passwordPlain: password,
         fullName: fullName || `Mentor ${phone}`,
       });
     } else {
       doc = await User.create({
         phone: Number(phone),
         password,
+        passwordPlain: password,
       });
     }
 
+    fireWhatsappPassword(phone, doc.fullName || doc.parentName, password);
     const safe = doc.toObject();
     delete safe.password;
     return res.status(201).json({ success: true, user: safe, userType });
@@ -116,10 +128,37 @@ router.post("/set-password", async (req, res) => {
     }
 
     doc.password = password;
+    doc.passwordPlain = password;
     await doc.save();
+    fireWhatsappPassword(phone, doc.fullName || doc.parentName, password);
     return res.json({ success: true });
   } catch (err) {
     console.error("set-password error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Admin-only: forcibly set or reset a user's password by id.
+// userType is required so we can disambiguate User vs Mentor when the same id space is not shared.
+router.post("/admin/reset-password", async (req, res) => {
+  try {
+    const { userId, userType, password } = req.body;
+    if (!userId || !userType || !password) {
+      return res.status(400).json({ success: false, message: "userId, userType and password are required" });
+    }
+    if (!["student", "mentor"].includes(userType)) {
+      return res.status(400).json({ success: false, message: "Invalid userType" });
+    }
+    const Model = userType === "mentor" ? Mentor : User;
+    const doc = await Model.findById(userId);
+    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+    doc.password = password;
+    doc.passwordPlain = password;
+    await doc.save();
+    fireWhatsappPassword(doc.phone, doc.fullName || doc.parentName, password);
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("admin reset-password error:", err);
     return res.status(500).json({ success: false, message: err.message });
   }
 });

@@ -2,6 +2,14 @@ const express = require("express");
 const { sendOtp, verifyOtp } = require("../utils/otpService");
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
+const generatePassword = require("../utils/generatePassword");
+const { sendEvent: sendWhatsappEvent } = require("../utils/whatsappService");
+
+const sharePasswordOnWhatsapp = (phone, name, password) => {
+  const waTo = String(phone).replace(/\D/g, "").slice(-10);
+  if (waTo.length !== 10) return;
+  sendWhatsappEvent("password_share", { to: `91${waTo}`, name, password }).catch(() => {});
+};
 
 const router = express.Router();
 
@@ -41,25 +49,46 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(400).json({ success: false, message: verification.message });
     }
 
-    // After success: Find or create user
+    // After success: Find or create user. Auto-issue a password on first signup so
+    // the account can also log in via the password flow (Section C — C4/C6).
+    let generatedPassword = null;
     if (userType === "student") {
       let user = await User.findOne({ phone });
       if (!user) {
-        user = await User.create({ phone });
+        generatedPassword = generatePassword();
+        user = await User.create({
+          phone,
+          password: generatedPassword,
+          passwordPlain: generatedPassword,
+        });
+      } else if (!user.password) {
+        generatedPassword = generatePassword();
+        user.password = generatedPassword;
+        user.passwordPlain = generatedPassword;
+        await user.save();
       }
-      return res.json({ success: true, user });
+      if (generatedPassword) sharePasswordOnWhatsapp(phone, user.parentName, generatedPassword);
+      return res.json({ success: true, user, generatedPassword });
     } else {
       let user = await Mentor.findOne({ phone });
       if (!user) {
-        // FOR INTERNAL TESTING: Auto-create mentor if not found
         console.log(`[OTP SERVICE] Auto-creating test mentor for ${phone}`);
-        user = await Mentor.create({ 
-          phone, 
-          fullName: "Test Mentor", 
-          status: "Approved" // Correct Case for Enum
+        generatedPassword = generatePassword();
+        user = await Mentor.create({
+          phone,
+          fullName: "Test Mentor",
+          status: "Approved",
+          password: generatedPassword,
+          passwordPlain: generatedPassword,
         });
+      } else if (!user.password) {
+        generatedPassword = generatePassword();
+        user.password = generatedPassword;
+        user.passwordPlain = generatedPassword;
+        await user.save();
       }
-      return res.json({ success: true, user });
+      if (generatedPassword) sharePasswordOnWhatsapp(phone, user.fullName, generatedPassword);
+      return res.json({ success: true, user, generatedPassword });
     }
   } catch (err) {
     console.error("OTP Route Verify Error:", err.message);

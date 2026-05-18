@@ -1,4 +1,5 @@
 const twilio = require("twilio");
+const { sendEvent: sendWhatsappEvent } = require("./whatsappService");
 
 // Simple in-memory store for OTPs (In production, use Redis)
 const otpStore = {};
@@ -24,6 +25,12 @@ const sendOtp = async (mobileNumber) => {
   console.log(`\n************************************************`);
   console.log(`[OTP SERVICE] Mobile: ${mobileNumber} | Test OTP: ${otp} | Master OTP: ${process.env.TEST_OTP || "123456"}`);
   console.log(`************************************************\n`);
+
+  // G1: WhatsApp OTP (fire-and-forget; SMS below stays as the primary channel).
+  const waTo = String(mobileNumber).replace(/\D/g, "").slice(-10);
+  if (waTo.length === 10) {
+    sendWhatsappEvent("otp", { to: `91${waTo}`, otp }).catch(() => {});
+  }
 
   const client = getTwilioClient();
 

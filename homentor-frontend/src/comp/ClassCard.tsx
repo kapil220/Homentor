@@ -216,11 +216,27 @@ export default function ClassCard({ classItem, userType }) {
               )}
               {classItem.isDemo && classItem.status != "pending_schedule" && (
                 <Button
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className={
+                    classItem.demoStatus === "completed"
+                      ? "bg-orange-600 hover:bg-orange-700 text-white"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  }
                   onClick={() => setOpenModal(true)}
                 >
-                  Continue Session
+                  {classItem.demoStatus === "completed"
+                    ? "Book Monthly Subscription"
+                    : "Continue Session"}
                 </Button>
+              )}
+              {classItem.isDemo && classItem.demoStatus === "completed" && (
+                <div className="w-full mt-2 p-3 rounded-md bg-orange-50 border border-orange-200">
+                  <p className="text-sm font-semibold text-orange-800">
+                    Demo completed — ready to continue with {classItem?.mentor?.fullName}?
+                  </p>
+                  <p className="text-xs text-orange-700 mt-1">
+                    Tap "Book Monthly Subscription" to schedule your next set of classes with the same teacher.
+                  </p>
+                </div>
               )}
             </div>
           </div>

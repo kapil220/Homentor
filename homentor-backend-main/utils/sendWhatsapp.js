@@ -16,17 +16,20 @@ async function sendWhatsappTemplate({
 
   const url = `https://api.exotel.com/v2/accounts/${ACCOUNT_SID}/messages`;
 
+  const fromNumber = process.env.EXOTEL_WHATSAPP_FROM || "9115557943146";
+  const toNumber = String(to || "").replace(/\D/g, "");
+
   const payload = {
     custom_data: customData,
     whatsapp: {
       messages: [
         {
-          from: "9115557943146", // ✅ NO PLUS SIGN
-          to: "919630709988",              // ✅ dynamic number
+          from: fromNumber,
+          to: toNumber,
           content: {
             type: "template",
             template: {
-              name: "booking", // ✅ dynamic template
+              name: templateName,
               language: {
                 policy: "deterministic",
                 code: "en",

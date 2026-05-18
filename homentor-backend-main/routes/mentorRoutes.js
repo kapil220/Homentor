@@ -203,7 +203,7 @@ router.get('/approved-mentors', async (req, res) => {
 router.get('/visible-mentors', async (req, res) => {
   try {
 
-    const { lat, lon, city } = req.query;
+    const { lat, lon, city, parentId } = req.query;
 
     const hasLocation = lat && lon;
 
@@ -218,6 +218,7 @@ router.get('/visible-mentors', async (req, res) => {
         parentLon: Number(lon),
         parentCity: city,
         variant,
+        parentId: parentId || null,
       });
 
       const result = await Mentor.aggregate(pipeline);
@@ -485,9 +486,14 @@ function buildRecommendationPipeline({
   parentLat,
   parentLon,
   variant,
+  parentId,
 }) {
   const bookingBonus = variant === "A" ? 30 : 50;
   const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const mongoose = require("mongoose");
+  const parentObjectId = parentId && mongoose.Types.ObjectId.isValid(parentId)
+    ? new mongoose.Types.ObjectId(parentId)
+    : null;
 
   return [
     // 1️⃣ Basic filtering (cheap operations first)
@@ -586,6 +592,38 @@ function buildRecommendationPipeline({
       },
     },
 
+    // 3.5️⃣ Look up prior demo bookings between this parent and the mentor (F6)
+    ...(parentObjectId
+      ? [
+          {
+            $lookup: {
+              from: "classbookings",
+              let: { mentorId: "$_id" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$mentor", "$$mentorId"] },
+                        { $eq: ["$parent", parentObjectId] },
+                        { $eq: ["$isDemo", true] },
+                      ],
+                    },
+                  },
+                },
+                { $limit: 1 },
+              ],
+              as: "priorDemos",
+            },
+          },
+          {
+            $addFields: {
+              hasPriorDemo: { $gt: [{ $size: "$priorDemos" }, 0] },
+            },
+          },
+        ]
+      : [{ $addFields: { hasPriorDemo: false } }]),
+
     // 4️⃣ Subject + booking + rotation scoring
     {
       $addFields: {
@@ -612,12 +650,50 @@ function buildRecommendationPipeline({
               ],
             },
 
+            // 🔥 class 9–10 Science (F3)
+            {
+              $cond: [
+                {
+                  $in: [
+                    "Science",
+                    {
+                      $ifNull: [
+                        "$teachingPreferences.school.class-9-10",
+                        [],
+                      ],
+                    },
+                  ],
+                },
+                100,
+                0,
+              ],
+            },
+
             // 🟠 class 6–8 Mathematics
             {
               $cond: [
                 {
                   $in: [
                     "Mathematics",
+                    {
+                      $ifNull: [
+                        "$teachingPreferences.school.class-6-8",
+                        [],
+                      ],
+                    },
+                  ],
+                },
+                70,
+                0,
+              ],
+            },
+
+            // 🟠 class 6–8 Science (F3)
+            {
+              $cond: [
+                {
+                  $in: [
+                    "Science",
                     {
                       $ifNull: [
                         "$teachingPreferences.school.class-6-8",
@@ -658,6 +734,9 @@ function buildRecommendationPipeline({
                 0,
               ],
             },
+
+            // Prior-demo with this parent (F6)
+            { $cond: ["$hasPriorDemo", 60, 0] },
 
             // Rotation penalty
             {

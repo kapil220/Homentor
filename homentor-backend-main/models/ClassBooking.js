@@ -84,6 +84,14 @@ const classBookingSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  bookingConfirmationSent: {
+    type: Boolean,
+    default: false
+  },
+  bookingPaymentReminderSent: {
+    type: Boolean,
+    default: false
+  },
 
   parentCompletion: {
     type: Boolean,
@@ -116,5 +124,20 @@ const classBookingSchema = new mongoose.Schema({
 });
 
 
+
+// G3/G4: Fire WhatsApp confirmation when a booking transitions to approved.
+// Require the util lazily to avoid a circular require with utils that pull this model.
+classBookingSchema.post("save", function (doc) {
+  if (doc.adminApproved && !doc.bookingConfirmationSent) {
+    try {
+      const notifyBookingConfirmed = require("../utils/notifyBookingConfirmed");
+      // Fire-and-forget; the util sets the flag and persists, which re-fires
+      // this hook with bookingConfirmationSent=true, so no infinite loop.
+      notifyBookingConfirmed(doc).catch((e) => console.warn("booking notify failed:", e?.message));
+    } catch (e) {
+      console.warn("notifyBookingConfirmed require failed:", e?.message);
+    }
+  }
+});
 
 module.exports = mongoose.model("ClassBooking", classBookingSchema);

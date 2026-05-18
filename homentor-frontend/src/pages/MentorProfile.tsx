@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import Layout from "@/components/Layout"; 
 import axios from "axios";
+import { callMentor } from "@/lib/callMentor";
 import LoginPopup from "@/components/LoginPopup";
 import BookingCard from "@/comp/BookingCard";
 import { usePaymentFlow } from "@/hooks/usePaymentFlow";
@@ -233,35 +234,10 @@ const MentorDetails = () => {
   };
 
   const initiateCall = () => {
-    const parentPhone = localStorage.getItem("usernumber");
-    if (callingMode === "exotel") {
-      axios
-        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
-          parentPhone: parentPhone ? `0${parentPhone}` : undefined,
-          mentorId: mentorData?._id,
-          mentorPhone: mentorData?.phone,
-          mentorName: mentorData?.fullName,
-          mode: "exotel",
-        })
-        .then(() => (window.location.href = "tel:07314852387"))
-        .catch((err) => console.log(err));
-      return;
-    }
-    if (parentPhone) {
-      axios
-        .post(`${import.meta.env.VITE_API_BASE_URL}/exotel/call/initiate`, {
-          parentPhone,
-          mentorId: mentorData?._id,
-          mentorPhone: mentorData?.phone,
-          mentorName: mentorData?.fullName,
-          mode: "direct",
-        })
-        .catch((err) => console.warn("direct call log failed", err));
-    }
-    const number = callingNo || mentorData?.phone;
-    if (number) {
-      window.location.href = `tel:${number}`;
-    }
+    // Route all student → mentor calls through the masked-calling endpoint.
+    // Never read mentor.phone client-side — the backend resolves the dial target
+    // based on the admin's configured callingMode (exotel vs direct).
+    callMentor({ _id: mentorData?._id, fullName: mentorData?.fullName });
   };
 
   const sendCallRequest = () => {
