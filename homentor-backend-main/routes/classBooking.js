@@ -223,18 +223,20 @@ router.get("/mentor/:id", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid mentor ID" });
     }
 
-    // 1️⃣ Active bookings (current mentor) — only surface after admin approval
+    // 1️⃣ Active bookings (current mentor). Surface every booking — pending
+    // admin approval included — so the mentor's Schedule page reflects
+    // reality. The booking's own `status` and `adminApproved` flags carry
+    // the verification state to the UI.
     const activeBookings = await ClassBooking.find({
       mentor: id,
       sessionContinued: false,
-      adminApproved: true
     })
       .populate("parent", "phone address")
       .sort({ createdAt: -1 });
 
     const mentorObjectId = new mongoose.Types.ObjectId(id);
 
-    // 2️⃣ History bookings (old mentor) — also gated on admin approval
+    // 2️⃣ History bookings (mentor previously taught this class).
     const historyBookings = await ClassBooking.find({
       teacherHistory: {
         $elemMatch: {
@@ -242,21 +244,9 @@ router.get("/mentor/:id", async (req, res) => {
         }
       },
       sessionContinued: false,
-      adminApproved: true
-
     })
       .populate("parent", "phone address")
       .sort({ createdAt: -1 });
-    console.log(historyBookings)
-    if (
-      activeBookings.length === 0 &&
-      historyBookings.length === 0
-    ) {
-      return res.status(404).json({
-        success: false,
-        message: "No bookings found"
-      });
-    }
 
     const merged = [...activeBookings, ...historyBookings].map(maskParentForMentor);
 

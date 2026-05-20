@@ -38,16 +38,20 @@ export default function LeadCard({ lead, adminPaymentDetails, mentorPhone, onPay
 
   const handleSubmit = async ({
     paymentReference,
-    paymentScreenshot,
+    screenshotFile,
   }: {
     paymentReference: string;
-    paymentScreenshot: string;
+    screenshotFile: File | null;
   }) => {
     setSubmitting(true);
     try {
+      const formData = new FormData();
+      if (paymentReference) formData.append("paymentReference", paymentReference);
+      if (screenshotFile) formData.append("screenshot", screenshotFile);
+
       await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/teacher-leads/${lead._id}/pay`,
-        { paymentRef: paymentScreenshot || paymentReference },
+        formData,
         { headers: { "x-mentor-phone": mentorPhone } }
       );
       setModalOpen(false);

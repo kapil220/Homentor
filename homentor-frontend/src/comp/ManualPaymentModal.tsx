@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, Check, Upload, X as XIcon, ImageIcon } from "lucide-react";
 
@@ -11,12 +11,17 @@ type AdminPaymentDetails = {
   paymentInstructions?: string;
 };
 
+export type ManualPaymentSubmitArgs = {
+  paymentReference: string;
+  screenshotFile: File | null;
+};
+
 type Props = {
   open: boolean;
   amount: number;
   details: AdminPaymentDetails;
   onClose: () => void;
-  onSubmit: (data: { paymentReference: string; paymentScreenshot: string }) => Promise<void> | void;
+  onSubmit: (data: ManualPaymentSubmitArgs) => Promise<void> | void;
 };
 
 const Row = ({ label, value }: { label: string; value: string }) => {
@@ -48,34 +53,29 @@ const Row = ({ label, value }: { label: string; value: string }) => {
   );
 };
 
-const CLOUDINARY_CLOUD_NAME = "dpveehhtq";
-const CLOUDINARY_UPLOAD_PRESET = "homentor";
-
-const uploadScreenshot = async (file: File): Promise<string> => {
-  const fd = new FormData();
-  fd.append("file", file);
-  fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-    { method: "POST", body: fd }
-  );
-  if (!res.ok) throw new Error("Failed to upload screenshot");
-  const data = await res.json();
-  return data.secure_url as string;
-};
-
 const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props) => {
   const [reference, setReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [refError, setRefError] = useState("");
-  const [screenshotUrl, setScreenshotUrl] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState("");
   const [uploadError, setUploadError] = useState("");
+
+  useEffect(() => {
+    if (!screenshotFile) {
+      setScreenshotPreview("");
+      return;
+    }
+    const url = URL.createObjectURL(screenshotFile);
+    setScreenshotPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [screenshotFile]);
 
   if (!open) return null;
 
-  const handleFile = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/")) {
       setUploadError("Please select an image file (JPG / PNG).");
@@ -86,27 +86,19 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
       return;
     }
     setUploadError("");
-    setUploading(true);
-    try {
-      const url = await uploadScreenshot(file);
-      setScreenshotUrl(url);
-    } catch (err: any) {
-      setUploadError(err?.message || "Failed to upload screenshot. Please try again.");
-    } finally {
-      setUploading(false);
-    }
+    setScreenshotFile(file);
   };
 
   const handleSubmit = async () => {
     const refTrim = reference.trim();
-    if (!refTrim && !screenshotUrl) {
+    if (!refTrim && !screenshotFile) {
       setRefError("Enter the transaction reference (UTR) or upload a payment screenshot.");
       return;
     }
     setRefError("");
     setSubmitting(true);
     try {
-      await onSubmit({ paymentReference: refTrim, paymentScreenshot: screenshotUrl });
+      await onSubmit({ paymentReference: refTrim, screenshotFile });
     } finally {
       setSubmitting(false);
     }
@@ -147,12 +139,12 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
               Payment Screenshot
             </label>
 
-            {screenshotUrl ? (
+            {screenshotPreview ? (
               <div className="relative border rounded-lg overflow-hidden">
-                <img src={screenshotUrl} alt="Payment screenshot" className="w-full max-h-56 object-contain bg-gray-50" />
+                <img src={screenshotPreview} alt="Payment screenshot" className="w-full max-h-56 object-contain bg-gray-50" />
                 <button
                   type="button"
-                  onClick={() => setScreenshotUrl("")}
+                  onClick={() => setScreenshotFile(null)}
                   className="absolute top-2 right-2 bg-white/90 hover:bg-white border rounded-full p-1 shadow"
                   aria-label="Remove screenshot"
                 >
@@ -161,20 +153,14 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
               </div>
             ) : (
               <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-4 py-6 cursor-pointer hover:border-yellow-500 hover:bg-yellow-50 transition">
-                <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={uploading} />
-                {uploading ? (
-                  <span className="text-sm text-gray-600">Uploading…</span>
-                ) : (
-                  <>
-                    <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
-                      <Upload className="h-4 w-4 text-gray-600" />
-                    </div>
-                    <div className="text-sm font-medium text-gray-700">Upload payment screenshot</div>
-                    <div className="text-xs text-gray-500 flex items-center gap-1">
-                      <ImageIcon className="h-3 w-3" /> JPG / PNG up to 5 MB
-                    </div>
-                  </>
-                )}
+                <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={submitting} />
+                <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
+                  <Upload className="h-4 w-4 text-gray-600" />
+                </div>
+                <div className="text-sm font-medium text-gray-700">Upload payment screenshot</div>
+                <div className="text-xs text-gray-500 flex items-center gap-1">
+                  <ImageIcon className="h-3 w-3" /> JPG / PNG up to 5 MB
+                </div>
               </label>
             )}
             {uploadError && <p className="text-xs text-red-600 mt-1.5">{uploadError}</p>}
@@ -200,12 +186,12 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
         </div>
 
         <div className="px-5 py-4 flex gap-2 justify-end border-t">
-          <Button variant="outline" onClick={onClose} disabled={submitting || uploading}>
+          <Button variant="outline" onClick={onClose} disabled={submitting}>
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={submitting || uploading || (!screenshotUrl && !reference.trim())}
+            disabled={submitting || (!screenshotFile && !reference.trim())}
             className="bg-yellow-600 hover:bg-yellow-700 text-white"
           >
             {submitting ? "Submitting…" : "I have paid"}

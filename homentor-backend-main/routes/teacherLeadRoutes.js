@@ -1,7 +1,20 @@
 const express = require("express");
+const multer = require("multer");
 const router = express.Router();
 const TeacherLead = require("../models/TeacherLead");
 const Mentor = require("../models/Mentor");
+const PaymentScreenshot = require("../models/PaymentScreenshot");
+
+const SCREENSHOT_PREFIX = "screenshot:";
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype && file.mimetype.startsWith("image/")) return cb(null, true);
+    cb(new Error("Only image uploads are allowed"));
+  },
+});
 
 // Soft auth: requires x-mentor-phone header, resolves to mentor._id
 async function resolveMentor(req, res) {
@@ -45,35 +58,96 @@ router.get("/mine", async (req, res) => {
 });
 
 // POST /api/teacher-leads/:id/pay
-// Teacher submits payment screenshot; sets paymentStatus to "submitted"
-router.post("/:id/pay", async (req, res) => {
+// Mentor submits payment. Accepts multipart/form-data with optional
+// "screenshot" file and optional "paymentReference" UTR field, or
+// JSON { paymentRef } for backwards compatibility. Sets paymentStatus
+// to "submitted".
+router.post(
+  "/:id/pay",
+  (req, res, next) => {
+    upload.single("screenshot")(req, res, (err) => {
+      if (!err) return next();
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ success: false, message: "Image is too large. Please upload under 5 MB." });
+      }
+      return res.status(400).json({ success: false, message: err.message || "Invalid upload" });
+    });
+  },
+  async (req, res) => {
+    try {
+      const mentor = await resolveMentor(req, res);
+      if (!mentor) return;
+
+      const paymentReference = (req.body.paymentReference || req.body.paymentRef || "").toString().trim();
+      const file = req.file;
+
+      if (!file && !paymentReference) {
+        return res.status(400).json({
+          success: false,
+          message: "Upload a payment screenshot or enter the transaction reference (UTR).",
+        });
+      }
+
+      const lead = await TeacherLead.findOne({ _id: req.params.id, mentorId: mentor._id });
+      if (!lead) {
+        return res.status(404).json({ success: false, message: "Lead not found" });
+      }
+      if (lead.commissionPaid) {
+        return res.status(400).json({ success: false, message: "Lead already unlocked" });
+      }
+      if (lead.paymentStatus === "submitted") {
+        return res.status(400).json({ success: false, message: "Payment already submitted, awaiting admin review" });
+      }
+
+      let paymentRef = paymentReference;
+      if (file) {
+        const shot = await PaymentScreenshot.create({
+          leadId: lead._id,
+          mentorPhone: String(req.headers["x-mentor-phone"]).replace(/\D/g, ""),
+          contentType: file.mimetype,
+          size: file.size,
+          data: file.buffer,
+        });
+        paymentRef = `${SCREENSHOT_PREFIX}${shot._id}`;
+      }
+
+      lead.paymentRef = paymentRef;
+      lead.paymentStatus = "submitted";
+      await lead.save();
+
+      res.json({ success: true, data: lead });
+    } catch (err) {
+      console.error("POST /teacher-leads/:id/pay error:", err);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  }
+);
+
+// GET /api/teacher-leads/screenshot/:screenshotId
+// Returns the raw image bytes. Auth: the mentor who owns the parent lead
+// (x-mentor-phone) OR any caller presenting the admin header.
+router.get("/screenshot/:screenshotId", async (req, res) => {
   try {
-    const mentor = await resolveMentor(req, res);
-    if (!mentor) return;
+    const isAdmin = !!req.headers["x-admin-key"]; // matches the lightweight admin gating used elsewhere
+    const rawPhone = req.headers["x-mentor-phone"];
 
-    const { paymentRef } = req.body;
-    if (!paymentRef) {
-      return res.status(400).json({ success: false, message: "paymentRef (screenshot URL) is required" });
+    const shot = await PaymentScreenshot.findById(req.params.screenshotId);
+    if (!shot) return res.status(404).json({ success: false, message: "Not found" });
+
+    if (!isAdmin) {
+      if (!rawPhone) return res.status(401).json({ success: false, message: "Unauthorized" });
+      const phone = String(rawPhone).replace(/\D/g, "");
+      if (shot.mentorPhone !== phone) {
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      }
     }
 
-    const lead = await TeacherLead.findOne({ _id: req.params.id, mentorId: mentor._id });
-    if (!lead) {
-      return res.status(404).json({ success: false, message: "Lead not found" });
-    }
-    if (lead.commissionPaid) {
-      return res.status(400).json({ success: false, message: "Lead already unlocked" });
-    }
-    if (lead.paymentStatus === "submitted") {
-      return res.status(400).json({ success: false, message: "Payment already submitted, awaiting admin review" });
-    }
-
-    lead.paymentRef = paymentRef;
-    lead.paymentStatus = "submitted";
-    await lead.save();
-
-    res.json({ success: true, data: lead });
+    res.setHeader("Content-Type", shot.contentType);
+    res.setHeader("Content-Length", shot.size);
+    res.setHeader("Cache-Control", "private, max-age=300");
+    res.send(shot.data);
   } catch (err) {
-    console.error("POST /teacher-leads/:id/pay error:", err);
+    console.error("GET /teacher-leads/screenshot/:id error:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
