@@ -1,6 +1,6 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Upload, X as XIcon, ImageIcon } from "lucide-react";
+import { Copy, Check, X as XIcon } from "lucide-react";
 
 type AdminPaymentDetails = {
   upiId?: string;
@@ -13,7 +13,7 @@ type AdminPaymentDetails = {
 
 export type ManualPaymentSubmitArgs = {
   paymentReference: string;
-  screenshotFile: File | null;
+  screenshotFile: null;
 };
 
 type Props = {
@@ -53,52 +53,23 @@ const Row = ({ label, value }: { label: string; value: string }) => {
   );
 };
 
+const WHATSAPP_NUMBER = "917748833998";
+
 const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props) => {
   const [reference, setReference] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [refError, setRefError] = useState("");
-  const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
-  const [screenshotPreview, setScreenshotPreview] = useState("");
-  const [uploadError, setUploadError] = useState("");
-
-  useEffect(() => {
-    if (!screenshotFile) {
-      setScreenshotPreview("");
-      return;
-    }
-    const url = URL.createObjectURL(screenshotFile);
-    setScreenshotPreview(url);
-    return () => URL.revokeObjectURL(url);
-  }, [screenshotFile]);
 
   if (!open) return null;
 
-  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      setUploadError("Please select an image file (JPG / PNG).");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Image is too large. Please upload under 5 MB.");
-      return;
-    }
-    setUploadError("");
-    setScreenshotFile(file);
-  };
+  const waMessage = encodeURIComponent(
+    `Hi, I am a Homentor mentor. I have made the commission payment of ₹${amount}. Please verify and unlock my lead. UTR/Ref: ${reference.trim() || "(will share separately)"}`
+  );
+  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
 
   const handleSubmit = async () => {
-    const refTrim = reference.trim();
-    if (!refTrim && !screenshotFile) {
-      setRefError("Enter the transaction reference (UTR) or upload a payment screenshot.");
-      return;
-    }
-    setRefError("");
     setSubmitting(true);
     try {
-      await onSubmit({ paymentReference: refTrim, screenshotFile });
+      await onSubmit({ paymentReference: reference.trim() || "sent-via-whatsapp", screenshotFile: null });
     } finally {
       setSubmitting(false);
     }
@@ -111,8 +82,7 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
           <div>
             <h2 className="text-lg font-semibold">Pay ₹{amount}</h2>
             <p className="text-xs text-gray-500 mt-1">
-              Pay to the details below, then upload a screenshot of your payment (or enter the UTR).
-              Your booking will be confirmed once admin verifies the payment.
+              Pay to the details below, then send your payment screenshot on WhatsApp. Click "I have paid" once done.
             </p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600" aria-label="Close">
@@ -136,45 +106,11 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
         <div className="px-5 py-3 border-t space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">
-              Payment Screenshot
-            </label>
-
-            {screenshotPreview ? (
-              <div className="relative border rounded-lg overflow-hidden">
-                <img src={screenshotPreview} alt="Payment screenshot" className="w-full max-h-56 object-contain bg-gray-50" />
-                <button
-                  type="button"
-                  onClick={() => setScreenshotFile(null)}
-                  className="absolute top-2 right-2 bg-white/90 hover:bg-white border rounded-full p-1 shadow"
-                  aria-label="Remove screenshot"
-                >
-                  <XIcon className="h-4 w-4 text-gray-700" />
-                </button>
-              </div>
-            ) : (
-              <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-4 py-6 cursor-pointer hover:border-yellow-500 hover:bg-yellow-50 transition">
-                <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={submitting} />
-                <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
-                  <Upload className="h-4 w-4 text-gray-600" />
-                </div>
-                <div className="text-sm font-medium text-gray-700">Upload payment screenshot</div>
-                <div className="text-xs text-gray-500 flex items-center gap-1">
-                  <ImageIcon className="h-3 w-3" /> JPG / PNG up to 5 MB
-                </div>
-              </label>
-            )}
-            {uploadError && <p className="text-xs text-red-600 mt-1.5">{uploadError}</p>}
-          </div>
-
-          <div className="text-center text-xs text-gray-400">— or —</div>
-
-          <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Transaction Reference (UTR / UPI Ref ID)
+              Transaction Reference (UTR / UPI Ref ID) — optional
             </label>
             <input
               value={reference}
-              onChange={(e) => { setReference(e.target.value); setRefError(""); }}
+              onChange={(e) => setReference(e.target.value)}
               placeholder="e.g. 412345678901"
               className="w-full border rounded-lg px-3 py-2 text-sm"
               inputMode="text"
@@ -182,7 +118,17 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
             />
           </div>
 
-          {refError && <p className="text-xs text-red-600">{refError}</p>}
+          <a
+            href={waUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-medium text-sm px-4 py-3 rounded-lg transition"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Send Screenshot on WhatsApp
+          </a>
         </div>
 
         <div className="px-5 py-4 flex gap-2 justify-end border-t">
@@ -191,7 +137,7 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={submitting || (!screenshotFile && !reference.trim())}
+            disabled={submitting}
             className="bg-yellow-600 hover:bg-yellow-700 text-white"
           >
             {submitting ? "Submitting…" : "I have paid"}

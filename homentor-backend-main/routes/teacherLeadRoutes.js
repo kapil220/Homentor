@@ -108,10 +108,7 @@ router.post(
       const file = req.file;
 
       if (!file && !paymentReference) {
-        return res.status(400).json({
-          success: false,
-          message: "Upload a payment screenshot or enter the transaction reference (UTR).",
-        });
+        paymentReference = "sent-via-whatsapp";
       }
 
       const lead = await TeacherLead.findOne({ _id: req.params.id, mentorId: mentor._id });
