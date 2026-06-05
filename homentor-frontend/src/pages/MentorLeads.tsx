@@ -1,8 +1,19 @@
+import { useEffect } from "react";
+import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import LeadsTab from "@/comp/LeadsTab";
 
 const MentorLeads = () => {
   const phone = localStorage.getItem("mentor");
+
+  useEffect(() => {
+    if (!phone) return;
+    axios
+      .patch(`${import.meta.env.VITE_API_BASE_URL}/teacher-leads/mark-seen`, null, {
+        headers: { "x-mentor-phone": phone },
+      })
+      .catch(() => {});
+  }, [phone]);
 
   return (
     <DashboardLayout

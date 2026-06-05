@@ -102,6 +102,15 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid password" });
     }
 
+    if (userType === "mentor" && doc.status !== "Approved") {
+      return res.status(403).json({
+        success: false,
+        message: doc.status === "Rejected"
+          ? "Your mentor application has been rejected. Please contact support."
+          : "Your account is pending admin approval. You'll be notified once approved.",
+      });
+    }
+
     const safe = doc.toObject();
     delete safe.password;
     return res.json({ success: true, user: safe, userType });

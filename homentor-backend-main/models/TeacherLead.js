@@ -22,6 +22,7 @@ const teacherLeadSchema = new mongoose.Schema(
     },
     callCount: { type: Number, default: 1 },
     lastCalledAt: { type: Date, default: Date.now },
+    seenByMentor: { type: Boolean, default: false },
     commissionPaid: { type: Boolean, default: false },
     commissionAmount: { type: Number, default: 0 },
     paymentRef: { type: String, default: "" },

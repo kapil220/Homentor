@@ -57,6 +57,32 @@ router.get("/mine", async (req, res) => {
   }
 });
 
+// GET /api/teacher-leads/unseen-count
+// Returns count of leads the mentor hasn't seen yet (for sidebar badge).
+router.get("/unseen-count", async (req, res) => {
+  try {
+    const mentor = await resolveMentor(req, res);
+    if (!mentor) return;
+    const count = await TeacherLead.countDocuments({ mentorId: mentor._id, seenByMentor: false });
+    res.json({ success: true, count });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// PATCH /api/teacher-leads/mark-seen
+// Marks all of this mentor's unseen leads as seen (called when Leads page opens).
+router.patch("/mark-seen", async (req, res) => {
+  try {
+    const mentor = await resolveMentor(req, res);
+    if (!mentor) return;
+    await TeacherLead.updateMany({ mentorId: mentor._id, seenByMentor: false }, { seenByMentor: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
 // POST /api/teacher-leads/:id/pay
 // Mentor submits payment. Accepts multipart/form-data with optional
 // "screenshot" file and optional "paymentReference" UTR field, or

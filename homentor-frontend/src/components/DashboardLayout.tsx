@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -63,6 +64,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [unseenLeadCount, setUnseenLeadCount] = useState(0);
 
   const phone = useMemo(() => {
     if (role === "mentor") return localStorage.getItem("mentor");
@@ -78,6 +80,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (role !== "mentor" || !phone) return;
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/teacher-leads/unseen-count`, {
+        headers: { "x-mentor-phone": phone },
+      })
+      .then((res) => setUnseenLeadCount(res.data?.count ?? 0))
+      .catch(() => {});
+  }, [role, phone]);
 
   const handleLogout = () => {
     localStorage.removeItem("usernumber");
@@ -116,7 +128,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               title={collapsed ? item.label : undefined}
             >
               <Icon className="w-5 h-5 shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (
+                <span className="flex-1 flex items-center justify-between">
+                  {item.label}
+                  {item.label === "Leads" && unseenLeadCount > 0 && (
+                    <span className="ml-2 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                      {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
+                    </span>
+                  )}
+                </span>
+              )}
             </Link>
           );
         })}
