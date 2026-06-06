@@ -58,6 +58,7 @@ const ParentsPage = () => {
             <thead className="bg-gray-100 text-gray-600">
               <tr>
                 <th className="px-4 py-3">SNo.</th>
+                <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Phone</th>
                 <th className="px-4 py-3">Address</th>
                 <th className="px-4 py-3">Children</th>
@@ -72,6 +73,7 @@ const ParentsPage = () => {
               {filteredParents.map((p, index) => (
                 <tr key={p._id} className="border-t hover:bg-gray-50">
                   <td className="px-4 py-3">{index + 1}</td>
+                  <td className="px-4 py-3">{p.parentName || "—"}</td>
                   <td className="px-4 py-3">{p.phone}</td>
                   <td className="px-4 py-3 w-[20%]">
                     {p.address ? `${p?.address?.street}, ${p?.address?.city}` : "-"}
@@ -130,7 +132,7 @@ const ParentsPage = () => {
 
               {filteredParents.length === 0 && (
                 <tr>
-                  <td colSpan="8" className="text-center py-6 text-gray-400">
+                  <td colSpan="9" className="text-center py-6 text-gray-400">
                     No parents found
                   </td>
                 </tr>
