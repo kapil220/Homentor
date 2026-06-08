@@ -15,6 +15,7 @@ import {
   Receipt,
   Percent,
   GraduationCap,
+  KeyRound,
 } from "lucide-react";
 import axios from "axios";
 
@@ -66,7 +67,10 @@ const navGroups = [
     ],
   },
   {
-    items: [{ label: "Settings", icon: Settings, to: "/setting" }],
+    items: [
+      { label: "Credentials", icon: KeyRound, to: "/credentials" },
+      { label: "Settings", icon: Settings, to: "/setting" },
+    ],
   },
 ];
 

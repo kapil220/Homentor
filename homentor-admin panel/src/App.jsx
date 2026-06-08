@@ -12,6 +12,7 @@ import AdminParentLeadsPage from "./pages/AdminParentLeadsPage";
 import AdminTeacherLeadsPage from "./pages/AdminTeacherLeadsPage";
 import BookingRecord from "./pages/BookingRecord";
 import ParentsPage from "./pages/ParentsPage";
+import CredentialsPage from "./pages/CredentialsPage";
 import DegreeMaster from "./pages/DegreeMaster";
 import AdminLeadCommissionPage from "./pages/AdminLeadCommissionPage";
 CallAdmin
@@ -27,6 +28,7 @@ function App() {
       <Route path="/calling-sheet" element={<CallAdmin/>}></Route>
       <Route path="/booking-record" element={<BookingRecord/>}></Route>
       <Route path="/parents" element={<ParentsPage/>}></Route>
+      <Route path="/credentials" element={<CredentialsPage/>}></Route>
       <Route path="/setting" element={<Setting/>}></Route>
       <Route path="/class-booking" element={<AdminBookingsPage/>}></Route>
       <Route path="/margin-rules" element={<AdminMarginRules/>}></Route>
