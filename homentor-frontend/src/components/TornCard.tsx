@@ -12,6 +12,8 @@ import { callMentor } from "@/lib/callMentor";
 const TornCard = ({ mentor }) => {
   const [showBookingOptions, setShowBookingOptions] = useState(false);
   const [pendingAction, setPendingAction] = useState({ type: null });
+  const [callingNo, setCallingNo] = useState("");
+  const [callingMode, setCallingMode] = useState("exotel");
   useEffect(() => {
     getAdminData();
   }, []);
@@ -88,8 +90,14 @@ const TornCard = ({ mentor }) => {
   }, [pendingAction]);
 
   const getAdminData = () => {
-    // Reserved for future client-side admin config; the call flow now resolves
-    // the dial target server-side, so no client state is needed.
+    axios
+      .get(`${import.meta.env.VITE_API_BASE_URL}/admin`)
+      .then((res) => {
+        const cfg = res.data.data?.[0] || {};
+        if (cfg.callingNo) setCallingNo(String(cfg.callingNo));
+        if (cfg.callingMode) setCallingMode(cfg.callingMode);
+      })
+      .catch(() => {});
   };
 
   const initiateCall = () => {
@@ -98,7 +106,7 @@ const TornCard = ({ mentor }) => {
       setIsLoginOpen(true);
       return;
     }
-    callMentor({ _id: mentor._id, fullName: mentor.fullName });
+    callMentor({ _id: mentor._id, fullName: mentor.fullName }, { callingNo, callingMode });
   };
 
   return (

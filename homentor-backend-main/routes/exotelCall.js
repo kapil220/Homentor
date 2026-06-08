@@ -3,6 +3,7 @@ const axios = require("axios");
 const CallIntent = require("../models/CallIntent");
 const MentorLead = require("../models/MentorLead");
 const ParentLead = require("../models/ParentLead");
+const Admin = require("../models/Admin");
 
 const CallLog = require("../models/CallLog");
 const router = express.Router();
@@ -133,6 +134,10 @@ router.get("/get-mentor-number", async (req, res) => {
   }).sort({ createdAt: -1 });
   console.log("intent ", intent)
 
+  // Fetch Exotel platform number so both parent and mentor see it as caller ID
+  const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
+  const exotelCallerId = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+
   let lead = await MentorLead.findOne({
     phone: intent.mentorPhone
   })
@@ -157,7 +162,7 @@ router.get("/get-mentor-number", async (req, res) => {
   res.set("Content-Type", "text/xml");
   res.send(`
     <Response>
-      <Dial>${intent.mentorPhone}</Dial>
+      <Dial callerId="${exotelCallerId}">${intent.mentorPhone}</Dial>
     </Response>
   `);
 });

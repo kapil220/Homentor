@@ -237,7 +237,10 @@ const MentorDetails = () => {
     // Route all student → mentor calls through the masked-calling endpoint.
     // Never read mentor.phone client-side — the backend resolves the dial target
     // based on the admin's configured callingMode (exotel vs direct).
-    callMentor({ _id: mentorData?._id, fullName: mentorData?.fullName });
+    callMentor(
+      { _id: mentorData?._id, fullName: mentorData?.fullName },
+      { callingNo, callingMode }
+    );
   };
 
   const sendCallRequest = () => {

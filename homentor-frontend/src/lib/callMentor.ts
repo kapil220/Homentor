@@ -5,15 +5,23 @@ type Mentor = {
   fullName?: string;
 };
 
+type CallConfig = {
+  callingNo?: string | number;
+  callingMode?: string;
+};
+
 /**
  * Universal mentor-call entry point for student-facing UI.
  *
- * The student never sees the mentor's phone in browse responses. On click we
- * ask the backend to (a) log a CallIntent and (b) return the correct dial
- * target — the platform Exotel number in exotel mode, or the mentor's phone
- * in direct mode. The phone surfaces only at this moment, not in any list.
+ * In Exotel mode: navigates synchronously (preserves the user gesture so the
+ * browser won't block the tel: link) and fires the intent log in the background.
+ * The Exotel webhook won't fire until the user manually confirms the call in
+ * their phone app, so the intent will always be recorded in time.
+ *
+ * In direct mode: still uses an async API call to fetch the mentor's phone
+ * server-side (never exposed in browse responses).
  */
-export async function callMentor(mentor: Mentor): Promise<void> {
+export function callMentor(mentor: Mentor, config?: CallConfig): void {
   if (!mentor?._id) {
     alert("Mentor information is unavailable.");
     return;
@@ -25,26 +33,34 @@ export async function callMentor(mentor: Mentor): Promise<void> {
     return;
   }
 
-  let dialNumber = "";
+  const exotelNo = config?.callingNo ? String(config.callingNo) : "";
 
-  // Race the network with a 1.5s timeout — slow API must not block the dial.
-  try {
-    const res = await Promise.race([
-      axios.post<{ success: boolean; dialNumber: string; callingMode: string }>(
-        `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}/initiate-call`,
-        { parentPhone }
-      ),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500)),
-    ]);
-    if (res && "data" in res) {
-      dialNumber = res.data?.dialNumber || "";
-    }
-  } catch (err) {
-    console.warn("initiate-call failed", err);
+  if (config?.callingMode === "exotel" && exotelNo) {
+    // Fire intent log in background — no await, so the user gesture is preserved.
+    axios
+      .post(`${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}/initiate-call`, {
+        parentPhone,
+      })
+      .catch((err) => console.warn("initiate-call background failed", err));
+
+    // Synchronous navigation — browser allows tel: because we're still in the
+    // original click handler with no await before this line.
+    window.location.href = `tel:${exotelNo}`;
+    return;
   }
 
-  // Fallback so the user can still dial something even if the server hiccups.
-  if (!dialNumber) dialNumber = "07314852387";
-
-  window.location.href = `tel:${dialNumber}`;
+  // Direct mode or config not yet loaded: fetch dial target from server.
+  axios
+    .post<{ success: boolean; dialNumber: string; callingMode: string }>(
+      `${import.meta.env.VITE_API_BASE_URL}/mentor/${mentor._id}/initiate-call`,
+      { parentPhone }
+    )
+    .then((res) => {
+      const dialNumber = res.data?.dialNumber || "07314852387";
+      window.location.href = `tel:${dialNumber}`;
+    })
+    .catch((err) => {
+      console.warn("initiate-call failed", err);
+      window.location.href = `tel:07314852387`;
+    });
 }
