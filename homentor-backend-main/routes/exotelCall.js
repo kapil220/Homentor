@@ -120,51 +120,68 @@ function normalizePhone(phone) {
 }
 
 router.get("/get-mentor-number", async (req, res) => {
-  const rawParentNumber =
-    req.body.From ||
-    req.query.From ||
-    req.body.from;
+  try {
+    const rawParentNumber =
+      req.query.From ||
+      req.body.From ||
+      req.body.from ||
+      "";
 
-  const parentNumber = normalizePhone(rawParentNumber);
-  console.log("Parent calling number:", parentNumber);
+    const parentNumber = normalizePhone(rawParentNumber); // last 10 digits
+    console.log("Exotel webhook — raw:", rawParentNumber, "normalised:", parentNumber);
 
-  // Find latest intent (within 5 minutes)
-  const intent = await CallIntent.findOne({
-    parentPhone: rawParentNumber
-  }).sort({ createdAt: -1 });
-  console.log("intent ", intent)
+    // Exotel may send +919876543210, 09876543210, or 9876543210.
+    // We store intents with a leading-0 prefix (09876543210).
+    // Match any of the three formats so we never miss an intent.
+    const intent = await CallIntent.findOne({
+      parentPhone: {
+        $in: [
+          rawParentNumber,
+          parentNumber,
+          `0${parentNumber}`,
+        ],
+      },
+    }).sort({ createdAt: -1 });
 
-  // Fetch Exotel platform number so both parent and mentor see it as caller ID
-  const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
-  const exotelCallerId = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+    console.log("intent found:", intent?._id || "NONE");
 
-  let lead = await MentorLead.findOne({
-    phone: intent.mentorPhone
-  })
-  let parentLead = await ParentLead.findOne({
-    phone: parentNumber
-  })
-  if (parentLead){
-    parentLead.isCalled = true
-    parentLead.status = "call_done"
-    parentLead.lastActive = new Date(),
-    parentLead.lastActivityText = "Called Mentor"
-    await parentLead.save()
+    if (!intent) {
+      console.error("No CallIntent found for", rawParentNumber);
+      // Return a safe fallback so Exotel doesn't get a 500
+      res.set("Content-Type", "text/xml");
+      return res.send(`<Response><Reject/></Response>`);
+    }
+
+    // Fetch Exotel platform number so mentor sees it as caller ID
+    const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
+    const exotelCallerId = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+
+    // Update lead statuses (non-fatal if they don't exist)
+    const [lead, parentLead] = await Promise.all([
+      MentorLead.findOne({ phone: intent.mentorPhone }),
+      ParentLead.findOne({ phone: parentNumber }),
+    ]);
+
+    if (parentLead) {
+      parentLead.isCalled = true;
+      parentLead.status = "call_done";
+      parentLead.lastActive = new Date();
+      parentLead.lastActivityText = "Called Mentor";
+      await parentLead.save();
+    }
+    if (lead) {
+      lead.isCalled = true;
+      lead.status = "call_done";
+      await lead.save();
+    }
+
+    res.set("Content-Type", "text/xml");
+    res.send(`<Response><Dial callerId="${exotelCallerId}">${intent.mentorPhone}</Dial></Response>`);
+  } catch (err) {
+    console.error("get-mentor-number webhook error:", err.message);
+    res.set("Content-Type", "text/xml");
+    res.send(`<Response><Reject/></Response>`);
   }
-  if (lead) {
-    lead.isCalled = true
-    lead.status = "call_done"
-    await lead.save()
-  }
-
-  console.log(intent)
-
-  res.set("Content-Type", "text/xml");
-  res.send(`
-    <Response>
-      <Dial callerId="${exotelCallerId}">${intent.mentorPhone}</Dial>
-    </Response>
-  `);
 });
 
 router.post("/call-status", async (req, res) => {
