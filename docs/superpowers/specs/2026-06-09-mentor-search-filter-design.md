@@ -49,9 +49,17 @@ Rework `GET /api/mentor/visible-mentors` (keep the same path; extend it). Query 
 | `page` | number | 1-based, default 1 |
 | `limit` | number | page size, default 20 |
 
+### The "display on" source set
+
+The display toggle is the `showOnWebsite` boolean (Mentor.js:107, **default `false`**), set by an admin in `homentor-admin panel/src/pages/AllMentor.jsx` via `PUT /mentor/:id`. Mentors do not set it themselves.
+
+`showOnWebsite: true` is the **primary gate**: the endpoint returns *every* such mentor that passes the active filters (paginated, no artificial cap). The total is therefore bounded by how many mentors have the toggle on — if only ~12 have it on, only ~12 can appear. Removing the cap does not invent mentors; raising the visible count beyond that requires turning the toggle on for more mentors in the admin panel.
+
+Note: the current `mode: "city"` path filters on `isActive: true`, a field that does **not** exist in the schema, so it always returns 0 — one reason the live behavior looks broken. The rework removes that path.
+
 ### Hard filters (mentor must pass ALL)
 
-Base (always): `status: "Approved"`, `showOnWebsite: true`.
+Base (always): `showOnWebsite: true` (primary display gate) AND `status: "Approved"` (a rejected mentor never shows even if the toggle is on).
 
 | Filter | Rule |
 |---|---|
