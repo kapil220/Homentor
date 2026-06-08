@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Banknote, Wallet, X, CheckCircle2 } from "lucide-react";
 
@@ -8,6 +8,10 @@ type Props = {
   onlinePaymentMode: "gateway" | "manual";
   onlineEnabled?: boolean;
   cashEnabled?: boolean;
+  /** Disable actions while the parent is loading config or processing a payment. */
+  loading?: boolean;
+  /** Inline error to show instead of a blocking alert; keeps the modal usable for retry. */
+  errorMessage?: string;
   onClose: () => void;
   onPayOnline: () => void;
   onPayManual: () => void;
@@ -22,21 +26,45 @@ const PaymentMethodModal = ({
   onlinePaymentMode,
   onlineEnabled = true,
   cashEnabled = true,
+  loading = false,
+  errorMessage = "",
   onClose,
   onPayOnline,
   onPayManual,
   onPayCash,
 }: Props) => {
-  const initialChoice: Choice =
-    onlinePaymentMode === "manual" ? "manual" : "online";
-  const [selected, setSelected] = useState<Choice>(initialChoice);
+  // The set of choices actually shown to the user, in display order.
+  const availableChoices: Choice[] = [];
+  if (onlineEnabled && onlinePaymentMode === "gateway") availableChoices.push("online");
+  if (onlineEnabled && onlinePaymentMode === "manual") availableChoices.push("manual");
+  if (cashEnabled) availableChoices.push("cash");
+
+  const [selected, setSelected] = useState<Choice>(availableChoices[0] ?? "cash");
+
+  // Keep `selected` pointing at a currently-visible option. Without this, the
+  // choice initialized on first mount (while admin config was still loading and
+  // the mode defaulted to "gateway") stays stale as "online" — and clicking
+  // Continue would fire the unconfigured online gateway path. Re-sync whenever
+  // the modal opens or the available options change.
+  useEffect(() => {
+    if (!open) return;
+    if (!availableChoices.includes(selected)) {
+      setSelected(availableChoices[0] ?? "cash");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, onlinePaymentMode, onlineEnabled, cashEnabled]);
 
   if (!open) return null;
 
   const proceed = () => {
-    if (selected === "online") onPayOnline();
-    else if (selected === "manual") onPayManual();
-    else if (selected === "cash") onPayCash();
+    if (loading) return;
+    // Only ever act on a choice that is actually visible to the user.
+    const choice = availableChoices.includes(selected)
+      ? selected
+      : availableChoices[0];
+    if (choice === "online") onPayOnline();
+    else if (choice === "manual") onPayManual();
+    else if (choice === "cash") onPayCash();
   };
 
   const Option = ({
@@ -55,7 +83,8 @@ const PaymentMethodModal = ({
       <button
         type="button"
         onClick={() => setSelected(value)}
-        className={`w-full text-left flex items-center gap-3 border rounded-xl px-4 py-3 transition ${
+        disabled={loading}
+        className={`w-full text-left flex items-center gap-3 border rounded-xl px-4 py-3 transition disabled:opacity-60 ${
           active
             ? "border-yellow-500 bg-yellow-50"
             : "border-gray-200 hover:border-gray-300 bg-white"
@@ -98,6 +127,12 @@ const PaymentMethodModal = ({
           </button>
         </div>
 
+        {errorMessage ? (
+          <div className="mx-5 mt-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            {errorMessage}
+          </div>
+        ) : null}
+
         <div className="px-5 py-4 space-y-3">
           {onlineEnabled && onlinePaymentMode === "gateway" && (
             <Option
@@ -126,14 +161,15 @@ const PaymentMethodModal = ({
         </div>
 
         <div className="px-5 py-4 border-t flex gap-2 justify-end">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button
             onClick={proceed}
+            disabled={loading || availableChoices.length === 0}
             className="bg-yellow-600 hover:bg-yellow-700 text-white"
           >
-            Continue
+            {loading ? "Please wait…" : "Continue"}
           </Button>
         </div>
       </div>

@@ -55,6 +55,13 @@ export function usePaymentFlow(options: Options = {}) {
   const [manualOpen, setManualOpen] = useState(false);
   const [pending, setPending] = useState<PaymentParams | null>(null);
 
+  // True once the admin config fetch settles (success or failure). Until then we
+  // don't let the user act on the default "gateway" mode, which would otherwise
+  // route a manual/cash setup into the unconfigured online gateway.
+  const [configLoaded, setConfigLoaded] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
   const [onlinePaymentMode, setOnlinePaymentMode] = useState<"gateway" | "manual">("gateway");
   const [adminPaymentDetails, setAdminPaymentDetails] = useState<AdminPaymentDetails>({
     upiId: "",
@@ -87,6 +94,9 @@ export function usePaymentFlow(options: Options = {}) {
       })
       .catch(() => {
         /* leave defaults; user can still pay cash / online */
+      })
+      .finally(() => {
+        setConfigLoaded(true);
       });
   }, []);
 
@@ -103,6 +113,8 @@ export function usePaymentFlow(options: Options = {}) {
       alert("Invalid amount.");
       return;
     }
+    setErrorMsg("");
+    setProcessing(false);
     setPending({ ...params, customerPhone: phone });
     setMethodOpen(true);
   };
@@ -110,6 +122,8 @@ export function usePaymentFlow(options: Options = {}) {
   const payOnline = async () => {
     if (!pending) return;
     const provider = pending.onlineProvider || defaultOnlineProvider;
+    setErrorMsg("");
+    setProcessing(true);
     try {
       if (provider === "payu") {
         await initiateCheckout({
@@ -123,6 +137,8 @@ export function usePaymentFlow(options: Options = {}) {
           classBookingId: pending.classBookingId,
           teachingMode: pending.teachingMode,
         });
+        // initiateCheckout redirects the page to the PayU gateway; the modal
+        // unmounts on navigation, so nothing more to do here.
         return;
       }
 
@@ -142,7 +158,10 @@ export function usePaymentFlow(options: Options = {}) {
         throw new Error("Online payment is currently unavailable. Please try UPI / Bank Transfer or Cash.");
       }
       localStorage.setItem("orderId", data.order_id);
+      localStorage.setItem("paymentProvider", "cashfree");
       const cashfree = await load({ mode: "production" });
+      // Order is confirmed and the SDK is ready — hand off to the gateway modal.
+      setMethodOpen(false);
       const result: any = await cashfree.checkout({
         paymentSessionId: data.payment_session_id,
         redirectTarget: "_modal",
@@ -152,14 +171,21 @@ export function usePaymentFlow(options: Options = {}) {
       }
       if (result?.paymentDetails) {
         window.location.href = `/payment-status?orderId=${data.order_id}`;
+        return;
       }
+      // User dismissed the gateway modal without completing — reopen the
+      // selector so they aren't left on a blank screen.
+      setMethodOpen(true);
     } catch (err: any) {
       const msg =
         err?.response?.data?.message ||
         err?.response?.data?.error?.message ||
         err?.message ||
         "Failed to initiate online payment. Please try UPI / Bank Transfer or Cash instead.";
-      alert(msg);
+      setErrorMsg(msg);
+      setMethodOpen(true);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -169,6 +195,8 @@ export function usePaymentFlow(options: Options = {}) {
       `Place a CASH booking for ₹${Math.round(pending.amount)}?\n\nThe booking will remain pending until an admin approves it.`
     );
     if (!proceed) return;
+    setErrorMsg("");
+    setProcessing(true);
     try {
       await createCashBooking({
         amount: Math.round(pending.amount),
@@ -180,10 +208,16 @@ export function usePaymentFlow(options: Options = {}) {
         classBookingId: pending.classBookingId,
         teachingMode: pending.teachingMode,
       });
+      setMethodOpen(false);
       alert("Cash booking placed! You'll see it as 'Pending Approval' in your bookings.");
       pending.onSuccess?.();
     } catch (error: any) {
-      alert(error?.response?.data?.message || "Failed to create cash booking");
+      // Keep the selector open with an inline error so the user can retry or
+      // switch method without refreshing.
+      setErrorMsg(error?.response?.data?.message || "Failed to create cash booking. Please try again.");
+      setMethodOpen(true);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -224,17 +258,23 @@ export function usePaymentFlow(options: Options = {}) {
         onlinePaymentMode={onlinePaymentMode}
         onlineEnabled={true}
         cashEnabled={true}
-        onClose={() => setMethodOpen(false)}
-        onPayOnline={() => {
+        loading={!configLoaded || processing}
+        errorMessage={errorMsg}
+        onClose={() => {
           setMethodOpen(false);
+          setErrorMsg("");
+        }}
+        onPayOnline={() => {
+          // Keep the selector mounted; payOnline closes it only once the gateway
+          // is ready, and reopens it (with an inline error) on failure.
           void payOnline();
         }}
         onPayManual={() => {
+          setErrorMsg("");
           setMethodOpen(false);
           setManualOpen(true);
         }}
         onPayCash={() => {
-          setMethodOpen(false);
           void payCash();
         }}
       />
