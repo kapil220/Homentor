@@ -58,6 +58,9 @@ export default function ClassInfoCardParent({ classBooking }) {
   // ------------- PAYMENT FLOW (popup → online / UPI+screenshot / cash) -------------
   const { start: startPayment, ui: paymentUI } = usePaymentFlow({ defaultOnlineProvider: "payu" });
   const payNow = () => {
+    // Close the session popup first so the payment popup isn't stacked on top of
+    // this dialog's focus trap (which makes its buttons unresponsive).
+    setOpenModal(false);
     startPayment({
       amount: sessionType === "hourly" ? totalHourlyPrice : monthlyPrice,
       mentorId: mentor._id,
