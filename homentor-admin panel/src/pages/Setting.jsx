@@ -17,7 +17,7 @@ const Setting = () => {
         const cfg = res.data.data?.[0] || {};
         setAdminData(cfg);
         setCallingNo(cfg.callingNo || "");
-        setCallingMode(cfg.callingMode || "direct");
+        setCallingMode(cfg.callingMode || "exotel");
         setOnlinePaymentMode(cfg.onlinePaymentMode || "gateway");
         setUpiId(cfg.upiId || "");
         setBankAccountName(cfg.bankAccountName || "");
@@ -29,7 +29,7 @@ const Setting = () => {
   };
 
   const [callingNo, setCallingNo] = useState("")
-  const [callingMode, setCallingMode] = useState("direct")
+  const [callingMode, setCallingMode] = useState("exotel")
   const [onlinePaymentMode, setOnlinePaymentMode] = useState("gateway")
   const [upiId, setUpiId] = useState("")
   const [bankAccountName, setBankAccountName] = useState("")

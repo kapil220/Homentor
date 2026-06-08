@@ -324,7 +324,7 @@ router.post("/:id/initiate-call", async (req, res) => {
       return res.status(404).json({ success: false, message: "Mentor not found" });
     }
 
-    const adminDoc = await Admin.findOne().lean();
+    const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
     const adminMode = adminDoc?.callingMode === "exotel" ? "exotel" : "direct";
     const adminNumber = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
 
