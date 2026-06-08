@@ -326,7 +326,7 @@ router.post("/:id/initiate-call", async (req, res) => {
 
     const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
     const adminMode = adminDoc?.callingMode === "exotel" ? "exotel" : "direct";
-    const adminNumber = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+    const adminNumber = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314626521";
 
     // Per-mentor override: if mentor.callRouting.mode === "mentor", direct route to mentor.
     const callingMode = mentor?.callRouting?.mode === "mentor" ? "direct" : adminMode;

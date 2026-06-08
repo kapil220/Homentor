@@ -154,7 +154,7 @@ router.get("/get-mentor-number", async (req, res) => {
 
     // Fetch Exotel platform number so mentor sees it as caller ID
     const adminDoc = await Admin.findOne().sort({ _id: -1 }).lean();
-    const exotelCallerId = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314852387";
+    const exotelCallerId = adminDoc?.callingNo ? String(adminDoc.callingNo) : "07314626521";
 
     // Update lead statuses (non-fatal if they don't exist)
     const [lead, parentLead] = await Promise.all([

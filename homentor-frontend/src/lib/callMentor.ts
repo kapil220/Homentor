@@ -56,11 +56,11 @@ export function callMentor(mentor: Mentor, config?: CallConfig): void {
       { parentPhone }
     )
     .then((res) => {
-      const dialNumber = res.data?.dialNumber || "07314852387";
+      const dialNumber = res.data?.dialNumber || "07314626521";
       window.location.href = `tel:${dialNumber}`;
     })
     .catch((err) => {
       console.warn("initiate-call failed", err);
-      window.location.href = `tel:07314852387`;
+      window.location.href = `tel:07314626521`;
     });
 }
