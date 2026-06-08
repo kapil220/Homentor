@@ -172,4 +172,43 @@ router.post("/admin/reset-password", async (req, res) => {
   }
 });
 
+// Admin-only: update name/email/phone (NOT password) for a User or Mentor.
+// Password changes go through /admin/reset-password so hashing + WhatsApp stay in one place.
+router.put("/admin/update-credentials", async (req, res) => {
+  try {
+    const { userId, userType, name, email, phone } = req.body;
+    if (!userId || !userType) {
+      return res.status(400).json({ success: false, message: "userId and userType are required" });
+    }
+    if (!["student", "mentor"].includes(userType)) {
+      return res.status(400).json({ success: false, message: "Invalid userType" });
+    }
+    const Model = userType === "mentor" ? Mentor : User;
+    const doc = await Model.findById(userId);
+    if (!doc) return res.status(404).json({ success: false, message: "Not found" });
+
+    // Phone change: normalize per model type and reject collisions.
+    if (phone !== undefined && phone !== null && String(phone).trim() !== "" && String(phone) !== String(doc.phone)) {
+      const normalizedPhone = userType === "mentor" ? String(phone) : Number(phone);
+      const existing = await Model.findOne({ phone: normalizedPhone });
+      if (existing && String(existing._id) !== String(doc._id)) {
+        return res.status(409).json({ success: false, message: "Phone already in use" });
+      }
+      doc.phone = normalizedPhone;
+    }
+
+    if (name !== undefined) {
+      if (userType === "mentor") doc.fullName = name;
+      else doc.parentName = name;
+    }
+    if (email !== undefined) doc.email = email;
+
+    await doc.save();
+    return res.json({ success: true });
+  } catch (err) {
+    console.error("admin update-credentials error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 module.exports = router;
