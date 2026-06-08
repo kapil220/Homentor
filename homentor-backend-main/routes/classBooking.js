@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Mentor = require("../models/Mentor");
 const MentorLead = require("../models/MentorLead");
-const { maskParentForMentor } = require("../utils/maskBookingParent");
+const { maskParentForMentor, fillStudentInfoFromParent } = require("../utils/maskBookingParent");
 
 // Get all class bookings
 router.get("/booking-record", async (req, res) => {
@@ -223,15 +223,16 @@ router.get("/mentor/:id", async (req, res) => {
       return res.status(400).json({ success: false, message: "Invalid mentor ID" });
     }
 
-    // 1️⃣ Active bookings (current mentor). Surface every booking — pending
-    // admin approval included — so the mentor's Schedule page reflects
-    // reality. The booking's own `status` and `adminApproved` flags carry
-    // the verification state to the UI.
+    // 1️⃣ Active bookings (current mentor). Only surface bookings the admin
+    // has approved — unapproved bookings must NOT appear on the mentor's
+    // Schedule page. (Online payments auto-set adminApproved; cash/manual
+    // bookings appear once the admin ticks approve.)
     const activeBookings = await ClassBooking.find({
       mentor: id,
       sessionContinued: false,
+      adminApproved: true,
     })
-      .populate("parent", "phone address")
+      .populate("parent", "phone address parentName children")
       .sort({ createdAt: -1 });
 
     const mentorObjectId = new mongoose.Types.ObjectId(id);
@@ -244,11 +245,14 @@ router.get("/mentor/:id", async (req, res) => {
         }
       },
       sessionContinued: false,
+      adminApproved: true,
     })
-      .populate("parent", "phone address")
+      .populate("parent", "phone address parentName children")
       .sort({ createdAt: -1 });
 
-    const merged = [...activeBookings, ...historyBookings].map(maskParentForMentor);
+    const merged = [...activeBookings, ...historyBookings]
+      .map(maskParentForMentor)
+      .map(fillStudentInfoFromParent);
 
     res.status(200).json({
       success: true,
