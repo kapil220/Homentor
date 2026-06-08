@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const AdminCreationSchema = new mongoose.Schema({
-  callingNo : Number,
+  callingNo : { type: String, default: "" },
   callingMode: { type: String, enum: ["exotel", "direct"], default: "exotel" },
 
   // Online payment routing: "gateway" = use PayU, "manual" = show UPI/bank details to user
