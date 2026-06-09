@@ -244,10 +244,10 @@ router.get('/visible-mentors', async (req, res) => {
     if (city) {
       const mentors = await Mentor.find({
         "location.city": city,
-        isActive: true,
+        status: "Approved",
+        showOnWebsite: true,
       })
-        .sort({ rating: -1, lastShownAt: 1 })
-        .limit(8);
+        .sort({ rating: -1, lastShownAt: 1 });
 
       return res.json({
         success: true,
@@ -264,8 +264,7 @@ router.get('/visible-mentors', async (req, res) => {
       status: "Approved",
       showOnWebsite: true
     })
-      .sort({ rating: -1, lastShownAt: 1 })
-      .limit(8);
+      .sort({ rating: -1, lastShownAt: 1 });
 
     res.json({
       success: true,
@@ -757,17 +756,17 @@ function buildRecommendationPipeline({
         gold: [
           { $match: { category: "gold" } },
           { $sort: { priorityScore: -1 } },
-          { $limit: 2 },
+          { $limit: 50 },
         ],
         silver: [
           { $match: { category: "silver" } },
           { $sort: { priorityScore: -1 } },
-          { $limit: 2 },
+          { $limit: 200 },
         ],
         budget: [
           { $match: { category: "budget" } },
           { $sort: { priorityScore: -1 } },
-          { $limit: 4 },
+          { $limit: 100 },
         ],
       },
     },
