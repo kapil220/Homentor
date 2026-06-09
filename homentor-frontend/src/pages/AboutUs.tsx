@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
@@ -49,6 +50,7 @@ const milestones = [
 ];
 
 function AboutUs() {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
@@ -57,9 +59,9 @@ function AboutUs() {
     <Layout>
       <PageHero
         variant="dark"
-        eyebrow="About Homentor"
-        title="A mentor for every child — not just a tutor for the syllabus."
-        subtitle="We pair parents with verified, vetted mentors who teach the way each child actually learns. Less boilerplate, more outcomes."
+        eyebrow={t('about.pageTitle')}
+        title={t('about.pageTitle')}
+        subtitle={t('about.subtitle')}
         imageUrl="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80"
         imageAlt="Mentor and student studying together"
       />

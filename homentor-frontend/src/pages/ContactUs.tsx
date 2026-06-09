@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
@@ -41,6 +42,7 @@ const ContactCard = ({
 };
 
 function ContactUs() {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -84,9 +86,9 @@ function ContactUs() {
     <Layout>
       <PageHero
         variant="dark"
-        eyebrow="Get in touch"
-        title="We're a phone call away — and we actually pick up."
-        subtitle="Tell us what you need. Most parents hear back within 30 minutes during working hours."
+        eyebrow={t('contact.pageTitle')}
+        title={t('contact.pageTitle')}
+        subtitle={t('contact.subtitle')}
       />
 
       <section className="py-20 bg-white">
@@ -192,14 +194,14 @@ function ContactUs() {
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                            Your name
+                            {t('contact.name')}
                           </label>
                           <input
                             type="text"
                             autoComplete="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Full name"
+                            placeholder={t('contact.name')}
                             className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
                             required
                           />
@@ -230,13 +232,13 @@ function ContactUs() {
 
                       <div>
                         <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                          Message <span className="text-slate-400 font-normal">(optional)</span>
+                          {t('contact.message')} <span className="text-slate-400 font-normal">(optional)</span>
                         </label>
                         <textarea
                           rows={5}
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
-                          placeholder="Tell us what you're looking for — class, subject, location, anything else."
+                          placeholder={t('contact.message')}
                           className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition resize-none"
                         />
                       </div>
@@ -252,7 +254,7 @@ function ContactUs() {
                         disabled={submitting}
                         className="w-full h-12 bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 inline-flex items-center justify-center"
                       >
-                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Send message"}
+                        {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : t('contact.send')}
                       </button>
 
                       <p className="text-[11px] text-slate-500 text-center">

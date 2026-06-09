@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import PageHero from "@/comp/PageHero";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   IndianRupee,
   CalendarCheck,
@@ -48,6 +49,7 @@ const steps = [
 ];
 
 const ForMentors = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
@@ -56,9 +58,9 @@ const ForMentors = () => {
     <Layout>
       <PageHero
         variant="dark"
-        eyebrow="For mentors"
-        title="Teach more. Earn more. Skip the chasing."
-        subtitle="Homentor brings parents to you, handles payments and admin, and only sends families who match your subject and area."
+        eyebrow={t('forMentors.pageTitle')}
+        title={t('forMentors.pageTitle')}
+        subtitle={t('forMentors.subtitle')}
         imageUrl="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1200&q=80"
         imageAlt="Mentor teaching at home"
       />
@@ -184,7 +186,7 @@ const ForMentors = () => {
               to="/signup"
               className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-white text-homentor-blue font-semibold whitespace-nowrap"
             >
-              Apply now
+              {t('forMentors.applyNow')}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -236,7 +238,7 @@ const ForMentors = () => {
               to="/signup"
               className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-gold hover:bg-homentor-darkGold text-homentor-ink font-semibold shadow-xl"
             >
-              Apply now
+              {t('forMentors.applyNow')}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
