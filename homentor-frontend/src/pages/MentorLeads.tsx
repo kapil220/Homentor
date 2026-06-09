@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import LeadsTab from "@/comp/LeadsTab";
 
 const MentorLeads = () => {
+  const { t } = useLanguage();
   const phone = localStorage.getItem("mentor");
 
   useEffect(() => {
@@ -18,8 +20,8 @@ const MentorLeads = () => {
   return (
     <DashboardLayout
       role="mentor"
-      title="Leads"
-      subtitle="Pay the commission to reveal a parent's phone number and address"
+      title={t('mentorDashboard.leads')}
+      subtitle={t('mentorDashboard.leadsSubtitle')}
     >
       <div className="bg-white rounded-xl border border-gray-200">
         <LeadsTab mentorPhone={phone} />

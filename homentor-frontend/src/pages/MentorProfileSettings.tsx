@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ const Field = ({ label, value }: { label: string; value?: string | number | null
 );
 
 const MentorProfileSettings = () => {
+  const { t } = useLanguage();
   const phone = localStorage.getItem("mentor");
   const [mentor, setMentor] = useState<any>(null);
   const [editOpen, setEditOpen] = useState(false);
@@ -55,15 +57,15 @@ const MentorProfileSettings = () => {
 
   const handleChangePassword = async () => {
     if (!oldPassword || !newPassword) {
-      alert("Enter current and new password");
+      alert(t('mentorDashboard.pwEnterBoth'));
       return;
     }
     if (newPassword !== confirmPassword) {
-      alert("New password and confirmation do not match");
+      alert(t('mentorDashboard.pwMismatch'));
       return;
     }
     if (newPassword.length < 6) {
-      alert("New password must be at least 6 characters");
+      alert(t('mentorDashboard.pwTooShort'));
       return;
     }
     setPwLoading(true);
@@ -72,7 +74,7 @@ const MentorProfileSettings = () => {
         `${import.meta.env.VITE_API_BASE_URL}/mentor/change-password`,
         { phone, oldPassword, newPassword }
       );
-      alert("Password updated");
+      alert(t('mentorDashboard.pwUpdated'));
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -84,7 +86,7 @@ const MentorProfileSettings = () => {
   };
 
   return (
-    <DashboardLayout role="mentor" title="Profile" subtitle="Mentor details, visibility and security">
+    <DashboardLayout role="mentor" title={t('mentorDashboard.profile')} subtitle="Mentor details, visibility and security">
       <div className="space-y-6 max-w-3xl">
         {/* Personal info */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -102,7 +104,7 @@ const MentorProfileSettings = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={() => setEditOpen(true)}>
-                Edit Form
+                {t('mentorDashboard.editForm')}
               </Button>
               {mentor && (
                 <MentorSecondForm mentorId={mentor._id} phone={mentor.phone} />
@@ -110,16 +112,16 @@ const MentorProfileSettings = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Field label="Email" value={mentor?.email} />
-            <Field label="Gender" value={mentor?.gender} />
-            <Field label="Experience" value={mentor?.experience} />
-            <Field label="Rating" value={mentor?.rating} />
+            <Field label={t('mentorDashboard.fieldEmail')} value={mentor?.email} />
+            <Field label={t('mentorDashboard.fieldGender')} value={mentor?.gender} />
+            <Field label={t('mentorDashboard.fieldExperience')} value={mentor?.experience} />
+            <Field label={t('mentorDashboard.fieldRating')} value={mentor?.rating} />
             <Field
-              label="Subjects"
+              label={t('mentorDashboard.fieldSubjects')}
               value={Array.isArray(mentor?.subjects) ? mentor.subjects.join(", ") : ""}
             />
             <Field
-              label="Monthly Price"
+              label={t('mentorDashboard.fieldMonthlyPrice')}
               value={
                 mentor?.teachingModes?.homeTuition?.monthlyPrice
                   ? `₹${mentor.teachingModes.homeTuition.monthlyPrice}`
@@ -133,9 +135,9 @@ const MentorProfileSettings = () => {
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Website Visibility</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('mentorDashboard.websiteVisibility')}</h2>
               <p className="text-sm text-gray-500 mt-0.5">
-                Toggle whether parents can find you in mentor search.
+                {t('mentorDashboard.visibilityDesc')}
               </p>
             </div>
             <button
@@ -155,25 +157,25 @@ const MentorProfileSettings = () => {
 
         {/* Change password */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Change Password</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('mentorDashboard.changePassword')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <input
               type="password"
-              placeholder="Current password"
+              placeholder={t('mentorDashboard.currentPassword')}
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               className="border rounded-lg px-3 py-2 text-sm"
             />
             <input
               type="password"
-              placeholder="New password"
+              placeholder={t('mentorDashboard.newPassword')}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="border rounded-lg px-3 py-2 text-sm"
             />
             <input
               type="password"
-              placeholder="Confirm new password"
+              placeholder={t('mentorDashboard.confirmPassword')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="border rounded-lg px-3 py-2 text-sm"
@@ -181,7 +183,7 @@ const MentorProfileSettings = () => {
           </div>
           <div className="mt-3">
             <Button onClick={handleChangePassword} disabled={pwLoading}>
-              {pwLoading ? "Updating…" : "Update Password"}
+              {pwLoading ? t('mentorDashboard.updating') : t('mentorDashboard.updatePassword')}
             </Button>
           </div>
         </div>
