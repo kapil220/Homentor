@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import TutorApplicationForm from '@/pages/TutorApplicationForm';
@@ -6,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CheckCircle, ShieldCheck, Users } from 'lucide-react';
 
 const TutorApplicationPage: React.FC = () => {
+  const { t } = useLanguage();
   useEffect(() => {
       window.scrollTo(0, 0);
     }, []);
@@ -18,7 +20,7 @@ const TutorApplicationPage: React.FC = () => {
           {!showForm ? (
             <>
               <header className="text-center mb-12">
-                <h1 className="text-5xl font-extrabold text-blue-700">Become a HOMENTOR Tutor</h1>
+                <h1 className="text-5xl font-extrabold text-blue-700">{t('forMentors.applyNow')}</h1>
                 <p className="mt-4 text-xl text-blue-600">
                   Join our community of passionate educators and make a difference in students' lives.
                 </p>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ type UserType = "student" | "mentor";
 type Mode = "login" | "signup";
 
 const Login = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -40,11 +42,11 @@ const Login = () => {
   const handleSubmit = async () => {
     setErrorMsg("");
     if (phoneNumber.length !== 10) {
-      setErrorMsg("Enter a valid 10-digit mobile number");
+      setErrorMsg(t('auth.invalidPhone'));
       return;
     }
     if (!password || password.length < 4) {
-      setErrorMsg("Password must be at least 4 characters");
+      setErrorMsg(t('auth.invalidPassword'));
       return;
     }
 
@@ -85,18 +87,18 @@ const Login = () => {
   const renderForm = () => (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Phone Number</Label>
+        <Label>{t('auth.phone')}</Label>
         <Input
           type="text"
           maxLength={10}
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
-          placeholder="Enter 10-digit number"
+          placeholder={t('auth.phone')}
         />
       </div>
 
       <div className="space-y-2">
-        <Label>Password</Label>
+        <Label>{t('auth.password')}</Label>
         <Input
           type="password"
           value={password}
@@ -115,31 +117,29 @@ const Login = () => {
         disabled={isLoading}
       >
         {isLoading
-          ? mode === "signup" ? "Creating account..." : "Logging in..."
-          : mode === "signup" ? "Sign Up" : "Login"}
+          ? "..."
+          : mode === "signup" ? t('auth.signupBtn') : t('auth.loginBtn')}
       </Button>
 
       <p className="text-sm text-center text-gray-600">
         {mode === "login" ? (
           <>
-            Don't have an account?{" "}
             <button
               type="button"
               className="text-homentor-blue underline"
               onClick={() => { setMode("signup"); setErrorMsg(""); }}
             >
-              Sign up
+              {t('auth.signupTab')}
             </button>
           </>
         ) : (
           <>
-            Already have an account?{" "}
             <button
               type="button"
               className="text-homentor-blue underline"
               onClick={() => { setMode("login"); setErrorMsg(""); }}
             >
-              Login
+              {t('auth.loginTab')}
             </button>
           </>
         )}
@@ -152,7 +152,7 @@ const Login = () => {
       <Card className="max-w-md mx-auto mt-12">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">
-            {mode === "signup" ? "Sign up to Homentor" : "Login to Homentor"}
+            {mode === "signup" ? t('auth.signupTitle') : t('auth.loginTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -167,8 +167,8 @@ const Login = () => {
             }}
           >
             <TabsList className="grid grid-cols-2 mb-6">
-              <TabsTrigger value="student">Student</TabsTrigger>
-              <TabsTrigger value="mentor">Mentor</TabsTrigger>
+              <TabsTrigger value="student">{t('auth.parent')}</TabsTrigger>
+              <TabsTrigger value="mentor">{t('auth.mentor')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="student">{renderForm()}</TabsContent>
