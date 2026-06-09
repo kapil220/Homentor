@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 import NoBookingCard from "@/comp/NoBookingCard";
 import axios from "axios";
@@ -16,6 +17,7 @@ import {
 } from "@/lib/dashboardStats";
 
 const StudentDashboard = () => {
+  const { t } = useLanguage();
   const studentNumber = localStorage.getItem("usernumber");
   const [studentDetail, setStudentDetail] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -78,33 +80,33 @@ const StudentDashboard = () => {
   return (
     <DashboardLayout
       role="student"
-      title="Overview"
+      title={t('parentDashboard.overview')}
       subtitle="Your classes and bookings at a glance"
     >
       <div className="space-y-6">
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatTile
-            label="Active Classes"
+            label={t('parentDashboard.activeClasses')}
             value={activeCount}
             icon={<BookOpen className="w-5 h-5" />}
             accent="blue"
           />
           <StatTile
-            label="Pending Approval"
+            label={t('parentDashboard.pendingApproval')}
             value={pendingCount}
             icon={<AlarmClock className="w-5 h-5" />}
             accent="yellow"
             hint={pendingCount ? "Awaiting admin approval" : "All clear"}
           />
           <StatTile
-            label="Hours Done"
+            label={t('parentDashboard.hoursDone')}
             value={hoursDone}
             icon={<Clock className="w-5 h-5" />}
             accent="green"
           />
           <StatTile
-            label="Money Spent"
+            label={t('parentDashboard.moneySpent')}
             value={`₹${spent.toLocaleString()}`}
             icon={<Wallet className="w-5 h-5" />}
             accent="purple"
@@ -115,13 +117,13 @@ const StudentDashboard = () => {
         {/* Recent classes preview */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Recent Classes</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('parentDashboard.recentClasses')}</h2>
             <Button
               variant="outline"
               size="sm"
               onClick={() => navigate("/dashboard/student/classes")}
             >
-              View My Classes
+              {t('parentDashboard.viewMyClasses')}
             </Button>
           </div>
           {recent.length === 0 ? (
@@ -137,17 +139,17 @@ const StudentDashboard = () => {
 
         {/* Quick actions */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Quick Actions</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('parentDashboard.quickActions')}</h2>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={() => navigate("/mentors")}>Find a Mentor</Button>
+            <Button onClick={() => navigate("/mentors")}>{t('parentDashboard.findMentor')}</Button>
             <Button variant="outline" onClick={() => navigate("/parent/bookings")}>
-              All Bookings
+              {t('parentDashboard.allBookings')}
             </Button>
             <Button variant="outline" onClick={() => navigate("/dashboard/student/payments")}>
-              Payment History
+              {t('parentDashboard.paymentHistory')}
             </Button>
             <Button variant="outline" onClick={() => navigate("/dashboard/student/profile")}>
-              Edit Profile
+              {t('parentDashboard.editProfile')}
             </Button>
           </div>
         </div>
@@ -193,7 +195,7 @@ const StudentDashboard = () => {
           onClick={() => setShowDisclaimer(true)}
           className="text-sm text-gray-500 hover:text-blue-600 underline"
         >
-          Disclaimer
+          {t('parentDashboard.disclaimer')}
         </button>
       </div>
 

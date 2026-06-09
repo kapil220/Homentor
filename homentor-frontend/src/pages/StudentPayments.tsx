@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatTile from "@/comp/StatTile";
@@ -34,6 +35,7 @@ const statusPill = (status: string) => {
 };
 
 const StudentPayments = () => {
+  const { t } = useLanguage();
   const studentNumber = localStorage.getItem("usernumber");
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,23 +69,23 @@ const StudentPayments = () => {
     .reduce((s, o) => s + (Number(o.amount) || 0), 0);
 
   return (
-    <DashboardLayout role="student" title="Payments" subtitle="Order and transaction history">
+    <DashboardLayout role="student" title={t('parentDashboard.payments')} subtitle="Order and transaction history">
       <div className="space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <StatTile
-            label="Total Paid"
+            label={t('parentDashboard.totalPaid')}
             value={`₹${totalPaid.toLocaleString()}`}
             icon={<Wallet className="w-5 h-5" />}
             accent="green"
           />
           <StatTile
-            label="Pending Verification"
+            label={t('parentDashboard.pendingVerification')}
             value={`₹${pendingAmount.toLocaleString()}`}
             icon={<Clock className="w-5 h-5" />}
             accent="yellow"
           />
           <StatTile
-            label="Orders"
+            label={t('parentDashboard.orders')}
             value={orders.length}
             icon={<Receipt className="w-5 h-5" />}
             accent="blue"
@@ -92,12 +94,12 @@ const StudentPayments = () => {
 
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-4 sm:px-5 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">Order History</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('parentDashboard.orderHistory')}</h2>
           </div>
           {loading ? (
-            <div className="p-8 text-center text-gray-500">Loading…</div>
+            <div className="p-8 text-center text-gray-500">{t('parentDashboard.loading')}</div>
           ) : orders.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">No payments yet.</div>
+            <div className="p-8 text-center text-gray-500">{t('parentDashboard.noPayments')}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import ClassCard from "@/comp/ClassCard";
@@ -10,6 +11,7 @@ import { isActiveBooking, isPendingBooking } from "@/lib/dashboardStats";
 type Tab = "running" | "scheduled" | "pending";
 
 const StudentClasses = () => {
+  const { t } = useLanguage();
   const studentNumber = localStorage.getItem("usernumber");
   const [bookings, setBookings] = useState<any[]>([]);
   const [tab, setTab] = useState<Tab>("running");
@@ -53,23 +55,23 @@ const StudentClasses = () => {
   const tabs: { key: Tab; label: string; count: number }[] = [
     {
       key: "running",
-      label: "Running",
+      label: t('parentDashboard.running'),
       count: bookings.filter((b) => b.status === "running").length,
     },
     {
       key: "scheduled",
-      label: "Scheduled",
+      label: t('parentDashboard.scheduled'),
       count: bookings.filter((b) => b.status === "scheduled").length,
     },
     {
       key: "pending",
-      label: "Pending Approval",
+      label: t('parentDashboard.pendingApproval'),
       count: bookings.filter(isPendingBooking).length,
     },
   ];
 
   return (
-    <DashboardLayout role="student" title="My Classes" subtitle="Active and upcoming sessions">
+    <DashboardLayout role="student" title={t('parentDashboard.myClasses')} subtitle="Active and upcoming sessions">
       <div className="space-y-4">
         <div className="flex flex-wrap gap-2 border-b border-gray-200">
           {tabs.map((t) => (
@@ -102,7 +104,7 @@ const StudentClasses = () => {
 
         <div className="pt-2">
           <Button variant="outline" onClick={() => navigate("/parent/bookings")}>
-            View Full Booking History
+            {t('parentDashboard.viewFullHistory')}
           </Button>
         </div>
       </div>

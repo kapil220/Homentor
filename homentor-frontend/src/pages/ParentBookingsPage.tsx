@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
@@ -11,6 +12,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import AllBookingsPage from './AllBookingsPage';
 
 const ParentBookingsPage = () => {
+  const { t } = useLanguage();
   const studentNumber = localStorage.getItem("usernumber");
   const [studentDetail, setStudentDetail] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -47,7 +49,7 @@ const ParentBookingsPage = () => {
   
 
   return (
-    <DashboardLayout role="student" title="Your Bookings" subtitle="All classes you've booked">
+    <DashboardLayout role="student" title={t('parentDashboard.yourBookings')} subtitle="All classes you've booked">
       { !studentDetail ? <p className="text-gray-500">Loading...</p> :
         <AllBookingsPage userType="parent" userId={studentDetail._id}></AllBookingsPage>  }
     </DashboardLayout>
