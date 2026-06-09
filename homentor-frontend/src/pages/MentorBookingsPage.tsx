@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
@@ -11,6 +12,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import AllBookingsPage from './AllBookingsPage';
 
 const MentorBookingsPage = () => {
+  const { t } = useLanguage();
   const mentorNumber = localStorage.getItem("mentor");
   const [mentorData, setMentorData] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -48,7 +50,7 @@ const MentorBookingsPage = () => {
 
 
   return (
-    <DashboardLayout role="mentor" title="Your Bookings" subtitle="All classes assigned to you">
+    <DashboardLayout role="mentor" title={t('mentorDashboard.bookings')} subtitle="All classes assigned to you">
       {!mentorData ? <p className="text-gray-500">Loading...</p> :
         <AllBookingsPage userData={mentorData} userType="mentor" userId={mentorData._id}></AllBookingsPage>}
     </DashboardLayout>
