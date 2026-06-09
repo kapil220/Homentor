@@ -4,8 +4,10 @@ import { useRef } from "react";
 import { Sparkles, Star, ArrowRight, BadgeCheck, ShieldCheck, Users } from "lucide-react";
 import LeadCaptureForm from "@/comp/LeadCaptureForm";
 import MagneticButton from "@/comp/MagneticButton";
+import { useLanguage } from "@/context/LanguageContext";
 
 const HeroSection = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
@@ -36,13 +38,13 @@ const HeroSection = () => {
                 <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
                 <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" />
               </span>
-              <span>Now booking demos for this week</span>
+              <span>{t('hero.badge')}</span>
             </motion.span>
 
             {/* Headline */}
             <h1 className="font-heading font-extrabold tracking-tight text-white leading-[0.98] [font-size:clamp(2.75rem,6vw+0.5rem,5.75rem)]">
-              <Word delay={0.05}>Your child</Word>{" "}
-              <Word delay={0.1}>deserves a</Word>{" "}
+              <Word delay={0.05}>{t('hero.headline1')}</Word>{" "}
+              <Word delay={0.1}>{t('hero.headline2')}</Word>{" "}
               <span className="relative inline-block">
                 <motion.span
                   initial={{ opacity: 0, y: 24 }}
@@ -50,7 +52,7 @@ const HeroSection = () => {
                   transition={{ delay: 0.18, duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
                   className="text-gradient-brand"
                 >
-                  mentor
+                  {t('hero.headlineAccent')}
                 </motion.span>
                 <motion.span
                   initial={{ scaleX: 0 }}
@@ -60,8 +62,8 @@ const HeroSection = () => {
                 />
               </span>
               <br />
-              <Word delay={0.25}>not just a</Word>{" "}
-              <Word delay={0.3} className="text-white/70">teacher.</Word>
+              <Word delay={0.25}>{t('hero.headline3')}</Word>{" "}
+              <Word delay={0.3} className="text-white/70">{t('hero.headline4')}</Word>
             </h1>
 
             <motion.p
@@ -70,9 +72,8 @@ const HeroSection = () => {
               transition={{ delay: 0.45, duration: 0.4 }}
               className="text-lg sm:text-xl text-slate-300 max-w-xl leading-relaxed"
             >
-              Get matched with verified, hand-picked home tutors who craft a plan
-              around your child's pace, exam dates and weak topics.{" "}
-              <span className="text-white font-semibold">Free demo · 100% refund on the first session.</span>
+              {t('hero.subtext')}{" "}
+              <span className="text-white font-semibold">{t('hero.subtextHighlight')}</span>
             </motion.p>
 
             <motion.div
@@ -85,7 +86,7 @@ const HeroSection = () => {
                 onClick={() => navigate("/mentors")}
                 className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-gold hover:bg-homentor-darkGold text-homentor-ink font-semibold shadow-xl shadow-amber-900/30 transition-colors"
               >
-                Find a Mentor
+                {t('hero.findMentor')}
                 <ArrowRight className="w-4 h-4" />
               </MagneticButton>
 
@@ -95,7 +96,7 @@ const HeroSection = () => {
                 }}
                 className="inline-flex items-center h-12 px-5 rounded-xl border border-white/20 hover:bg-white/10 text-white font-medium backdrop-blur"
               >
-                How it works
+                {t('hero.howItWorks')}
               </button>
             </motion.div>
 
@@ -123,11 +124,11 @@ const HeroSection = () => {
               </div>
               <div className="flex items-center gap-2 text-sm text-slate-300">
                 <BadgeCheck className="w-4 h-4 text-blue-300" />
-                Verified mentors only
+                {t('hero.verified')}
               </div>
               <div className="flex items-center gap-2 text-sm text-slate-300">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                100% refund guarantee
+                {t('hero.refund')}
               </div>
             </motion.div>
           </motion.div>

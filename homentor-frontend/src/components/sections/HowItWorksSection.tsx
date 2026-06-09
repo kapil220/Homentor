@@ -1,27 +1,17 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ClipboardList, UserCheck, GraduationCap, ArrowRight } from "lucide-react";
-
-const steps = [
-  {
-    icon: ClipboardList,
-    title: "Tell us about your child",
-    body: "Share your child's class, subject and what you're hoping to achieve. Takes 60 seconds.",
-  },
-  {
-    icon: UserCheck,
-    title: "Get matched with a verified mentor",
-    body: "We hand-pick mentors based on your area, budget and goals. You see profiles and ratings before you decide.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Start with a free demo",
-    body: "Book a free demo class first. If it's not the right fit, we refund your first session — no questions asked.",
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const HowItWorksSection = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
+
+  const steps = [
+    { icon: ClipboardList, title: t('home.step1Title'), body: t('home.step1Body') },
+    { icon: UserCheck,    title: t('home.step2Title'), body: t('home.step2Body') },
+    { icon: GraduationCap, title: t('home.step3Title'), body: t('home.step3Body') },
+  ];
 
   return (
     <section id="how-it-works" className="py-20 bg-homentor-mist">
@@ -33,9 +23,9 @@ const HowItWorksSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-12 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">How it works</p>
+          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.howItWorksLabel')}</p>
           <h2 className="mt-2 text-3xl md:text-4xl font-heading font-bold text-homentor-ink tracking-tight">
-            Three steps from "we need a tutor" to your child's first class
+            {t('home.howItWorksHeading')}
           </h2>
         </motion.div>
 
@@ -75,7 +65,7 @@ const HowItWorksSection = () => {
             onClick={() => navigate("/mentors")}
             className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold shadow-lg shadow-blue-600/20"
           >
-            Get matched in 60 seconds
+            {t('home.bookFreeDemo')}
             <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>

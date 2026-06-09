@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Phone, MessageCircle, Sparkles } from "lucide-react";
 import LeadCaptureForm from "@/comp/LeadCaptureForm";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FinalCTASection = () => {
+  const { t } = useLanguage();
   return (
     <section
       id="final-cta"
@@ -28,13 +30,13 @@ const FinalCTASection = () => {
           >
             <span className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium rounded-full bg-white/15 border border-white/20">
               <Sparkles className="w-3.5 h-3.5" />
-              Free demo · No commitment
+              {t('home.ctaButton')}
             </span>
             <h2 className="mt-4 text-3xl md:text-5xl font-heading font-bold tracking-tight leading-tight">
-              Book a free demo class this week
+              {t('home.ctaHeading')}
             </h2>
             <p className="mt-4 text-blue-100 max-w-xl text-lg">
-              Tell us your child's class and a phone number — we'll match you with a verified mentor and confirm a demo within 24 hours.
+              {t('home.ctaSubheading')}
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">

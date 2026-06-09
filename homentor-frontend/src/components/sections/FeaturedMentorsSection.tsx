@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, ArrowRight, BadgeCheck } from "lucide-react";
 import TiltCard from "@/comp/TiltCard";
+import { useLanguage } from "@/context/LanguageContext";
 
 type Mentor = {
   _id: string;
@@ -18,6 +19,7 @@ type Mentor = {
 };
 
 const FeaturedMentorsSection = () => {
+  const { t } = useLanguage();
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,12 +58,12 @@ const FeaturedMentorsSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Featured Mentors</p>
+          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.featuredMentorsLabel')}</p>
           <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
-            Top-rated, hand-picked, verified
+            {t('home.featuredMentorsHeading')}
           </h2>
           <p className="mt-4 text-slate-600 text-lg">
-            A small sample from our curated mentor network.
+            {t('home.featuredMentorsSubheading')}
           </p>
         </motion.div>
 
@@ -95,7 +97,7 @@ const FeaturedMentorsSection = () => {
               size="lg"
               className="bg-homentor-ink hover:bg-slate-800 text-white rounded-xl shadow-xl h-12 px-7"
             >
-              Browse all mentors
+              {t('home.viewAllMentors')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>

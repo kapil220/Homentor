@@ -5,6 +5,7 @@ import {
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 import { Plus, Minus } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface FAQItem {
   question: string;
@@ -18,10 +19,13 @@ interface FAQSectionProps {
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
-  title = "Frequently Asked Questions",
-  description = "Answers to the questions parents ask us most.",
+  title,
+  description,
   items,
 }) => {
+  const { t } = useLanguage();
+  const resolvedTitle = title ?? t('home.faqTitle');
+  const resolvedDescription = description ?? "Answers to the questions parents ask us most.";
   const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
   const toggleItem = (index: number) => {
@@ -36,9 +40,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
             FAQ
           </span>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-            {title}
+            {resolvedTitle}
           </h2>
-          <p className="mt-3 text-slate-600">{description}</p>
+          <p className="mt-3 text-slate-600">{resolvedDescription}</p>
         </div>
 
         <div className="space-y-3">
