@@ -27,7 +27,7 @@ export default function AllBookingsPage({ userType, userData , userId }) {
       const url =
         userType === "parent"
           ? `/api/class-bookings/parent/${userId}`
-          : `/api/class-bookings/mentor/${userId}`;
+          : `/api/class-bookings/mentor-bookings/${userId}`;
 
       const res = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${url}`
@@ -46,6 +46,7 @@ export default function AllBookingsPage({ userType, userData , userId }) {
       activeStatus === "all" || b.status === activeStatus;
 
     const matchSearch =
+      !search ||
       b.subject?.toLowerCase().includes(search.toLowerCase()) ||
       b.mentorName?.toLowerCase().includes(search.toLowerCase()) ||
       b.studentName?.toLowerCase().includes(search.toLowerCase());

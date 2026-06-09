@@ -346,7 +346,9 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                         )}
 
                         <div className="flex flex-col gap-2">
-                            {classItem.status === "pending_schedule" && (
+                            {(classItem.status === "pending_schedule" || classItem.status === "scheduled") &&
+                                !classItem.scheduledDate &&
+                                classItem.mentorViewType !== "REPLACED" && (
                                 <ScheduleModal
                                     classBooking={classItem}
                                     getBookings={fetchBookings}

@@ -296,7 +296,10 @@ router.get("/mentor-bookings/:id", async (req, res) => {
   try {
     const booking = await ClassBooking.find({
       mentor: req.params.id
-    }).populate("mentor", "fullName profilePhoto phone teachingModes backupTeachers").sort({ createdAt: -1 });;
+    })
+      .populate("mentor", "fullName profilePhoto phone teachingModes backupTeachers")
+      .populate("parent", "phone address parentName children")
+      .sort({ createdAt: -1 });
     if (!booking)
       return res.status(404).json({ success: false, message: "Not found" });
     res.status(200).json({ success: true, data: booking });
@@ -349,12 +352,9 @@ router.post("/:id/admin-approve", async (req, res) => {
 
     booking.adminApproved = !booking.adminApproved;
 
-    // For cash / manual UPI bookings, approving activates the booking (pending_schedule -> scheduled)
-    if (
-      (booking.paymentMethod === "cash" || booking.paymentMethod === "manual") &&
-      booking.adminApproved &&
-      booking.status === "pending_schedule"
-    ) {
+    // Any booking in pending_schedule moves to scheduled when admin approves,
+    // regardless of payment method (online payments don't set paymentMethod on the booking).
+    if (booking.adminApproved && booking.status === "pending_schedule") {
       booking.status = "scheduled";
     }
     await booking.save();

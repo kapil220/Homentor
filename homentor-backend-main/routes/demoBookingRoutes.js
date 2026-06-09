@@ -44,9 +44,9 @@ router.post("/", async (req, res) => {
       demoStatus: "running"
     });
 
-    let lead = await MentorLead.findOne({
-      phone: req.body.mentorPhone
-    })
+    let lead = req.body.mentorPhone
+      ? await MentorLead.findOne({ phone: req.body.mentorPhone })
+      : null
 
     if (lead) {
       lead.demoBooked = true

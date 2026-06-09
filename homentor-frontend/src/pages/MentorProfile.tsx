@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import SuccessModal from "@/comp/SuccessModal";
 import { useParams, Link } from "react-router-dom";
 import {
   Star,
@@ -154,6 +155,7 @@ const MentorDetails = () => {
   const mentorData = JSON.parse(localStorage.getItem("mentorDetail"));
   const [bookingAmount, setBookingAmount] = useState(0);
   const [isPayment, setIsPayment] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const subjects = [
     ...new Set(
@@ -184,9 +186,17 @@ const MentorDetails = () => {
       return;
     }
     if (!fees || fees <= 0) {
-      // Free demo — no payment, just create a cash-style record (admin to follow up).
-      // Or you can plug in your existing free-demo flow here.
-      alert("Free demo selected. The mentor will reach out shortly.");
+      axios.post(`${import.meta.env.VITE_API_BASE_URL}/demo-booking`, {
+        mentorId: mentorData._id,
+        parentPhone: userNumber,
+        studentName: "Demo Student",
+        address: "Not Provided",
+        fee: 0,
+      }).then(() => {
+        setShowSuccess(true);
+      }).catch(() => {
+        alert("Failed to book demo. Please try again.");
+      });
       return;
     }
     let teachingMode: "online" | "offline";
@@ -398,6 +408,7 @@ const MentorDetails = () => {
             onClose={() => setIsLoginOpen(false)}
           />
           {paymentUI}
+          <SuccessModal open={showSuccess} onClose={() => setShowSuccess(false)} redirectTo="/dashboard/student" />
           {/* Main Content Tabs */}
           <Tabs
             value={activeTab}
