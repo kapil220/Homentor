@@ -484,6 +484,7 @@ router.put("/:id", async (req, res) => {
 function buildRecommendationPipeline({
   parentLat,
   parentLon,
+  parentCity,
   variant,
   parentId,
 }) {
@@ -498,9 +499,9 @@ function buildRecommendationPipeline({
     // 1️⃣ Basic filtering (cheap operations first)
     {
       $match: {
-        "location.city": "Indore",
+        status: "Approved",
         showOnWebsite: true,
-        runningBookingsCount: { $lt: 3 },
+        ...(parentCity ? { "location.city": parentCity } : {}),
       },
     },
 
