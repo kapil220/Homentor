@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import LanguageToggle from './LanguageToggle';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ const Layout: React.FC<LayoutProps> = ({ children, fullWidth = false }) => {
         {children}
       </main>
       <Footer />
+      <LanguageToggle />
     </div>
   );
 };

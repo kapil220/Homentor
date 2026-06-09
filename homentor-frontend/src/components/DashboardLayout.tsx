@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import LanguageToggle from './LanguageToggle';
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -255,6 +256,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           <div className="max-w-7xl mx-auto">{children}</div>
         </main>
       </div>
+      <LanguageToggle />
     </div>
   );
 };
