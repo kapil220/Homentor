@@ -242,6 +242,7 @@ const Mentors = () => {
     selectedSubject,
     priceRange,
     sortBy,
+    selectedState,
     selectedCity,
     selectedArea,
     selectedClass,
@@ -535,15 +536,37 @@ const Mentors = () => {
         );
       });
     }
+    // Filter by state
+    if (selectedState) {
+      result = result.filter(
+        (mentor) =>
+          mentor.location?.state?.toLowerCase() === selectedState.toLowerCase()
+      );
+      goldMentorList = goldMentorList.filter(
+        (mentor) =>
+          mentor.location?.state?.toLowerCase() === selectedState.toLowerCase()
+      );
+    }
     // Filter by city
     if (selectedCity) {
       result = result.filter(
         (mentor) =>
           mentor.location?.city?.toLowerCase() === selectedCity.toLowerCase()
       );
+      goldMentorList = goldMentorList.filter(
+        (mentor) =>
+          mentor.location?.city?.toLowerCase() === selectedCity.toLowerCase()
+      );
     }
-    // Filter by area
-    if (selectedLocation) {
+    // Filter by area — exclude mentors whose teaching range doesn't reach selected location
+    if (selectedLocation && userLocation) {
+      result = result.filter((mentor) => {
+        const lat = mentor.location?.lat || 0;
+        const lon = mentor.location?.lon || 0;
+        const distance = getDistance(userLocation.lat, userLocation.lon, lat, lon);
+        const range = parseTeachingRange(mentor.teachingRange);
+        return distance <= range;
+      });
       result = filterAndSortMentors(result, userLocation);
     }
 
@@ -590,6 +613,7 @@ const Mentors = () => {
     setSelectedState(undefined);
     setSelectedArea(undefined);
     setSelectedClass(undefined);
+    setSelectedLocation("");
   };
 
   const handlePlaceSelect = () => {
