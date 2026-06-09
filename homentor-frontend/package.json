@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve -s dist -l $PORT"
+    "start": "serve -s dist -p $PORT"
   },
   "dependencies": {
     "@cashfreepayments/cashfree-js": "^1.0.7",
