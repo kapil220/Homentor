@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import { ClassBookingCard } from "@/comp/ClassBookingCard";
 import ClassCard from "@/comp/ClassCard";
 import MentorClassCard from "@/comp/MentorClassCard";
 
-const STATUS_TABS = [
-  { label: "All", value: "all" },
-  { label: "Running", value: "running" },
-  { label: "Completed", value: "completed" },
-  { label: "Terminated", value: "terminated" },
-  { label: "Demo", value: "demo" },
-];
-
 export default function AllBookingsPage({ userType, userData , userId }) {
+  const { t } = useLanguage();
+  const STATUS_TABS = [
+    { label: t('mentors.statusAll'), value: "all" },
+    { label: t('mentors.statusRunning'), value: "running" },
+    { label: t('mentors.statusCompleted'), value: "completed" },
+    { label: t('mentors.statusTerminated'), value: "terminated" },
+    { label: t('mentors.statusDemo'), value: "demo" },
+  ];
   const [bookings, setBookings] = useState([]);
   const [activeStatus, setActiveStatus] = useState("all");
   const [search, setSearch] = useState("");
@@ -71,7 +72,7 @@ export default function AllBookingsPage({ userType, userData , userId }) {
         <div className="relative w-full md:w-1/3">
           <input
             type="text"
-            placeholder="Search by subject, mentor, or student"
+            placeholder={t('mentors.searchBookings')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border border-gray-300 rounded-lg px-10 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import SuccessModal from "@/comp/SuccessModal";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -146,6 +147,7 @@ const teacherData = {
 };
 
 const MentorDetails = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -288,7 +290,7 @@ const MentorDetails = () => {
                   </Avatar>
                   <div className="flex flex-col justify-evenly">
                     <div className="flex items-center gap-1 bg-blue-50 border text-blue-700 hover:bg-blue-100 border-blue-500 py-1 px-2 rounded-[10px]">
-                      <label>Rating -</label>
+                      <label>{t('mentorProfile.ratingLabel')}</label>
                       {/* Stars */}
                       {[...Array(5)].map((_, index) => (
                         <Star
@@ -302,7 +304,7 @@ const MentorDetails = () => {
                       ))}
                     </div>
                     <div className="flex items-center gap-1 bg-blue-50 border text-blue-700 hover:bg-blue-100 border-blue-500 py-1 px-2 rounded-[10px]">
-                      <label>Experience -</label>
+                      <label>{t('mentorProfile.experienceLabel')}</label>
 
                       {mentorData.experience}
                     </div>
@@ -317,10 +319,10 @@ const MentorDetails = () => {
 
                       {!mentorData?.qualifications?.display ? (
                         <p className="text-lg text-slate-600 mb-2">
-                          Qualification -
+                          {t('mentorProfile.qualification')} -
                           {mentorData?.postGraduation?.degree
-                            ? "Post Graduation"
-                            : "Graduation"}
+                            ? t('mentorProfile.postGraduation')
+                            : t('mentorProfile.graduation')}
                         </p>
                       ) : (
                         <p className="text-lg text-slate-600 mb-2 capitalize">
@@ -380,7 +382,7 @@ const MentorDetails = () => {
                         className="border-blue-500 text-blue-600 hover:bg-blue-50"
                       >
                         <MessageCircle className="h-4 w-4 mr-2" />
-                        Send Message
+                        {t('mentorProfile.sendMessage')}
                       </Button>
                       <a
                         onClick={(e) => { e.preventDefault(); sendCallRequest(); initiateCall(); }}
@@ -393,7 +395,7 @@ const MentorDetails = () => {
                           className="border-blue-500 w-full text-blue-600 hover:bg-blue-50"
                         >
                           <PhoneCall className="h-4 w-4 mr-2" />
-                          Call
+                          {t('mentorProfile.call')}
                         </Button>
                       </a>
                     </div>
@@ -420,20 +422,20 @@ const MentorDetails = () => {
                 value="overview"
                 className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
               >
-                Overview
+                {t('mentorProfile.tabOverview')}
               </TabsTrigger>
 
               <TabsTrigger
                 value="availability"
                 className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
               >
-                Availability
+                {t('mentorProfile.tabAvailability')}
               </TabsTrigger>
               <TabsTrigger
                 value="contact"
                 className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
               >
-                Contact
+                {t('mentorProfile.tabContact')}
               </TabsTrigger>
             </TabsList>
 
@@ -444,7 +446,7 @@ const MentorDetails = () => {
                     <CardHeader className="bg-white border-b border-slate-100">
                       <CardTitle className="text-slate-800 flex items-center gap-2">
                         <Home className="h-5 w-5 text-blue-600" />
-                        About Our Home Tutor
+                        {t('mentorProfile.aboutTutor')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="lg:p-6 bg-white">

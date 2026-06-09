@@ -1,6 +1,8 @@
-import { BookOpen } from "lucide-react"; // Icon better suited for "No Booking"
+import { BookOpen } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NoBookingCard() {
+  const { t } = useLanguage();
   return (
     <div className="w-full max-w-xl mx-auto p-6 bg-white rounded-2xl shadow-md border border-gray-200 text-center">
       <div className="flex justify-center mb-4">
@@ -9,13 +11,13 @@ export default function NoBookingCard() {
         </div>
       </div>
       <h2 className="text-xl font-semibold text-gray-800 mb-2">
-        No Classes Booked Yet
+        {t('home.noClassesYet')}
       </h2>
       <p className="text-gray-500 mb-4">
-        You haven’t booked any classes for your child yet. Once a booking is made, it will be shown here.
+        {t('home.noClassesDesc')}
       </p>
       <button className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-        Book a Class Now
+        {t('home.bookClassNow')}
       </button>
     </div>
   );

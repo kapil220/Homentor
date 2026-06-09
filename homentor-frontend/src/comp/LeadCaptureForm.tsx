@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) => {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [classes, setClasses] = useState("");
@@ -39,7 +41,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) {
-      setError("Please fill name, a valid 10-digit mobile number and your child's class.");
+      setError(t('home.leadFormFillRequired'));
       return;
     }
     setError("");
@@ -88,12 +90,12 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <h3 className="text-lg font-heading font-semibold text-homentor-ink">
-              {success.duplicate ? "We already have your details" : "Thanks! We'll call you shortly"}
+              {success.duplicate ? t('home.leadFormDuplicate') : t('home.leadFormSuccess')}
             </h3>
             <p className="text-sm text-slate-600 mt-1">
               {success.duplicate
-                ? "Our team will reach out to you within a day."
-                : "Expect a call from our team within 30 minutes."}
+                ? t('home.leadFormDuplicateBody')
+                : t('home.leadFormSuccessBody')}
             </p>
           </motion.div>
         ) : (
@@ -108,11 +110,11 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
           >
             <div className="flex items-center gap-2 text-xs font-semibold text-homentor-blue uppercase tracking-wide">
               <Sparkles className="w-3.5 h-3.5" />
-              Free demo · No commitment
+              {t('home.leadFormBadge')}
             </div>
 
             <h3 className="text-xl sm:text-2xl font-heading font-semibold text-homentor-ink leading-tight">
-              Get matched with the right mentor
+              {t('home.leadFormTitle')}
             </h3>
 
             <div className="space-y-3">
@@ -122,7 +124,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                   id="lead-name"
                   type="text"
                   autoComplete="name"
-                  placeholder="Parent's full name"
+                  placeholder={t('home.leadFormName')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
@@ -141,7 +143,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                     type="tel"
                     inputMode="tel"
                     autoComplete="tel-national"
-                    placeholder="10-digit mobile number"
+                    placeholder={t('home.leadFormPhone')}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
                     className="flex-1 px-4 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none"
@@ -149,7 +151,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                   />
                 </div>
                 {phone.length > 0 && !validPhone && (
-                  <p className="text-xs text-amber-600 mt-1">Enter a valid 10-digit number</p>
+                  <p className="text-xs text-amber-600 mt-1">{t('home.leadFormValidPhone')}</p>
                 )}
               </div>
 
@@ -162,7 +164,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                   className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
                   required
                 >
-                  <option value="">Child's class</option>
+                  <option value="">{t('home.leadFormClass')}</option>
                   {CLASS_OPTIONS.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -174,7 +176,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                 onClick={() => setShowOptional((v) => !v)}
                 className="text-xs text-homentor-blue font-medium hover:underline"
               >
-                {showOptional ? "Hide optional details" : "Add subject / area (optional)"}
+                {showOptional ? t('home.leadFormHideOptional') : t('home.leadFormAddOptional')}
               </button>
 
               <AnimatePresence>
@@ -190,14 +192,14 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                       onChange={(e) => setSubjects(e.target.value)}
                       className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue"
                     >
-                      <option value="">Subject (optional)</option>
+                      <option value="">{t('home.leadFormSubject')}</option>
                       {SUBJECT_OPTIONS.map((s) => (
                         <option key={s} value={s}>{s}</option>
                       ))}
                     </select>
                     <input
                       type="text"
-                      placeholder="Area / locality (optional)"
+                      placeholder={t('home.leadFormArea')}
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
                       className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue"
@@ -221,12 +223,12 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
               {submitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                "Book a free demo"
+                t('home.leadFormSubmit')
               )}
             </Button>
 
             <p className="text-[11px] text-slate-500 text-center">
-              By submitting you agree to be contacted by our team. No spam, promise.
+              {t('home.leadFormConsent')}
             </p>
           </motion.form>
         )}
