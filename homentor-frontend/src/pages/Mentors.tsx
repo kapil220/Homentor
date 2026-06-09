@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -141,6 +142,7 @@ const FilterField = ({ label, children }: { label: string; children: React.React
 );
 
 const Mentors = () => {
+  const { t } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -743,7 +745,7 @@ const Mentors = () => {
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search by mentor name, subject or city…"
+                    placeholder={t('mentors.searchPlaceholder')}
                     className="flex-1 h-14 bg-transparent text-slate-900 placeholder:text-slate-400 focus:outline-none text-base"
                   />
                   {searchTerm && (
@@ -767,11 +769,11 @@ const Mentors = () => {
               <span className="text-2xl font-heading font-bold text-homentor-ink mr-2 align-middle">
                 {filteredMentors.length}
               </span>
-              <span className="align-middle">mentors</span>
+              <span className="align-middle">{t('mentors.mentorsLabel')}</span>
               {activeFilterCount > 0 && (
                 <span className="ml-3 align-middle inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-homentor-blue text-xs font-semibold">
                   <Filter className="w-3 h-3" />
-                  {activeFilterCount} {activeFilterCount === 1 ? "filter" : "filters"} on
+                  {activeFilterCount} {activeFilterCount === 1 ? t('mentors.filterOn') : t('mentors.filtersOn')}
                 </span>
               )}
             </p>
@@ -780,7 +782,7 @@ const Mentors = () => {
                 onClick={resetFilters}
                 className="text-sm font-medium text-homentor-blue hover:text-homentor-darkBlue"
               >
-                Clear all
+                {t('mentors.clearAll')}
               </button>
             )}
           </div>
@@ -794,17 +796,17 @@ const Mentors = () => {
               <div className="lg:sticky lg:top-32 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-5">
                 <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
                   <Filter className="w-4 h-4 text-homentor-blue" />
-                  <p className="font-heading font-semibold text-homentor-ink">Filters</p>
+                  <p className="font-heading font-semibold text-homentor-ink">{t('mentors.filtersHeading')}</p>
                 </div>
 
-                <FilterField label="Class">
+                <FilterField label={t('mentors.filterClass')}>
                   <ClassSelect
                     selectedSubjects={selectedClass}
                     handleClassChange={handleClassChange}
                   />
                 </FilterField>
 
-                <FilterField label="Subjects">
+                <FilterField label={t('mentors.filterSubject')}>
                   <MultiSubjectSelect
                     selectedSubjects={selectedSubject}
                     subjects={subjects}
@@ -812,7 +814,7 @@ const Mentors = () => {
                   />
                 </FilterField>
 
-                <FilterField label="State">
+                <FilterField label={t('mentors.filterState')}>
                   <StateSelect
                     selectedState={selectedState}
                     allStates={allStates}
@@ -820,7 +822,7 @@ const Mentors = () => {
                   />
                 </FilterField>
 
-                <FilterField label="City">
+                <FilterField label={t('mentors.filterCity')}>
                   <Select
                     disabled={!selectedState}
                     onValueChange={setSelectedCity}
@@ -854,7 +856,7 @@ const Mentors = () => {
                   </FilterField>
                 )}
 
-                <FilterField label="Mode">
+                <FilterField label={t('mentors.filterMode')}>
                   <Select
                     value={teachingModeFilter}
                     onValueChange={(v) =>
@@ -866,13 +868,13 @@ const Mentors = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="any">Any</SelectItem>
-                      <SelectItem value="online">Online</SelectItem>
-                      <SelectItem value="offline">Offline</SelectItem>
+                      <SelectItem value="online">{t('mentors.modeOnline')}</SelectItem>
+                      <SelectItem value="offline">{t('mentors.modeOffline')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </FilterField>
 
-                <FilterField label="Monthly fee">
+                <FilterField label={t('mentors.filterBudget')}>
                   <p className="text-xs text-slate-500 mb-2">
                     ₹{priceRange[0].toLocaleString()} – ₹{priceRange[1].toLocaleString()}
                   </p>
@@ -892,9 +894,9 @@ const Mentors = () => {
                     </div>
                     <div>
                       <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
-                        Gold Mentors
+                        {t('mentors.goldMentor')}
                       </h2>
-                      <p className="text-xs text-slate-500">Premium · Top-rated educators</p>
+                      <p className="text-xs text-slate-500">{t('mentors.goldMentorsPremium')}</p>
                     </div>
                   </div>
 
@@ -914,9 +916,9 @@ const Mentors = () => {
                   </div>
                   <div>
                     <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
-                      All mentors
+                      {t('mentors.allMentors')}
                     </h2>
-                    <p className="text-xs text-slate-500">Verified educators across your area</p>
+                    <p className="text-xs text-slate-500">{t('mentors.verifiedAcrossArea')}</p>
                   </div>
                 </div>
 
@@ -943,31 +945,31 @@ const Mentors = () => {
                 ) : mentorsData.length === 0 ? (
                   <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
                     <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
-                      Unable to load mentors
+                      {t('mentors.unableToLoad')}
                     </h3>
                     <p className="text-slate-600 mb-4">
-                      Please check your internet connection and try again.
+                      {t('mentors.checkConnection')}
                     </p>
                     <Button
                       className="bg-homentor-blue hover:bg-homentor-darkBlue"
                       onClick={fetchMentors}
                     >
-                      Retry
+                      {t('mentors.retry')}
                     </Button>
                   </div>
                 ) : (
                   <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
                     <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
-                      No mentors match your filters
+                      {t('mentors.noMatchFilters')}
                     </h3>
                     <p className="text-slate-600 mb-4">
-                      Try widening your search or clearing some filters.
+                      {t('mentors.tryWidening')}
                     </p>
                     <Button
                       className="bg-homentor-blue hover:bg-homentor-darkBlue"
                       onClick={resetFilters}
                     >
-                      Clear filters
+                      {t('mentors.clearFilters')}
                     </Button>
                   </div>
                 )}
