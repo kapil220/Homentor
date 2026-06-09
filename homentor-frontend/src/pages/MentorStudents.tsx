@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +20,7 @@ type StudentRow = {
 const REVEALED = new Set(["scheduled", "running", "completed"]);
 
 const MentorStudents = () => {
+  const { t } = useLanguage();
   const phone = localStorage.getItem("mentor");
   const [bookings, setBookings] = useState<any[]>([]);
   const [search, setSearch] = useState("");
@@ -97,13 +99,13 @@ const MentorStudents = () => {
   return (
     <DashboardLayout
       role="mentor"
-      title="My Students"
+      title={t('mentorDashboard.myStudents')}
       subtitle="Parents and children across all your bookings"
     >
       <div className="space-y-4">
         <input
           type="text"
-          placeholder="Search by parent, student, or phone…"
+          placeholder={t('mentorDashboard.searchStudents')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full sm:max-w-md border rounded-lg px-3 py-2 text-sm"
@@ -111,7 +113,7 @@ const MentorStudents = () => {
 
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {filtered.length === 0 ? (
-            <p className="p-6 text-sm text-gray-500 text-center">No students yet.</p>
+            <p className="p-6 text-sm text-gray-500 text-center">{t('mentorDashboard.noStudents')}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">

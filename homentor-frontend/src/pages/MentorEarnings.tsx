@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatTile from "@/comp/StatTile";
@@ -20,6 +21,7 @@ const formatDate = (iso?: string) =>
     : "—";
 
 const MentorEarnings = () => {
+  const { t } = useLanguage();
   const phone = localStorage.getItem("mentor");
   const [bookings, setBookings] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -99,30 +101,30 @@ const MentorEarnings = () => {
   );
 
   return (
-    <DashboardLayout role="mentor" title="Earnings" subtitle="Per-booking breakdown and totals">
+    <DashboardLayout role="mentor" title={t('mentorDashboard.earnings')} subtitle="Per-booking breakdown and totals">
       <div className="space-y-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatTile
-            label="Total Earned"
+            label={t('mentorDashboard.totalEarned')}
             value={`₹${earned.toLocaleString()}`}
             icon={<Wallet className="w-5 h-5" />}
             accent="green"
           />
           <StatTile
-            label="This Month"
+            label={t('mentorDashboard.thisMonth')}
             value={`₹${month.toLocaleString()}`}
             icon={<TrendingUp className="w-5 h-5" />}
             accent="blue"
           />
           <StatTile
-            label="In progress"
+            label={t('mentorDashboard.inProgress')}
             value={`₹${activeBookingValue.toLocaleString()}`}
             icon={<Clock className="w-5 h-5" />}
             accent="yellow"
             hint="Earned from running bookings (classes done so far)"
           />
           <StatTile
-            label="Completed Bookings"
+            label={t('mentorDashboard.completedBookings')}
             value={completedCount}
             icon={<CheckCircle2 className="w-5 h-5" />}
             accent="purple"
@@ -131,12 +133,12 @@ const MentorEarnings = () => {
 
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-4 sm:px-5 py-4 border-b border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-900">Per-Booking Breakdown</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('mentorDashboard.perBookingBreakdown')}</h2>
           </div>
           {loading ? (
-            <p className="p-6 text-center text-gray-500 text-sm">Loading…</p>
+            <p className="p-6 text-center text-gray-500 text-sm">{t('mentorDashboard.loading')}</p>
           ) : rows.length === 0 ? (
-            <p className="p-6 text-center text-gray-500 text-sm">No bookings yet.</p>
+            <p className="p-6 text-center text-gray-500 text-sm">{t('mentorDashboard.noBookings')}</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">

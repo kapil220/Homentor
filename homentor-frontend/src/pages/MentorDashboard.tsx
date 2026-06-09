@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ import {
 } from "@/lib/dashboardStats";
 
 const MentorDashboard = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [mentorDetail, setMentorDetail] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -104,16 +106,16 @@ const MentorDashboard = () => {
               <div>
                 <p className="font-semibold text-gray-900">{mentorDetail?.fullName}</p>
                 <p className="text-xs text-gray-500">
-                  {mentorDetail?.showOnWebsite ? "Visible on website" : "Hidden from website"}
+                  {mentorDetail?.showOnWebsite ? t('mentorDashboard.visibleOnWebsite') : t('mentorDashboard.hiddenFromWebsite')}
                 </p>
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => navigate("/dashboard/mentor/profile")}>
-                Edit Profile
+                {t('mentorDashboard.editProfile')}
               </Button>
               <Button onClick={() => navigate("/dashboard/mentor/schedule")}>
-                View Schedule
+                {t('mentorDashboard.viewSchedule')}
               </Button>
             </div>
           </div>
@@ -122,25 +124,25 @@ const MentorDashboard = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatTile
-            label="Active Students"
+            label={t('mentorDashboard.activeStudents')}
             value={activeStudents}
             icon={<Users className="w-5 h-5" />}
             accent="blue"
           />
           <StatTile
-            label="Upcoming (7 days)"
+            label={t('mentorDashboard.upcomingWeek')}
             value={upcoming.length}
             icon={<Calendar className="w-5 h-5" />}
             accent="green"
           />
           <StatTile
-            label="Earned this Month"
+            label={t('mentorDashboard.earnedThisMonth')}
             value={`₹${earnedMonth.toLocaleString()}`}
             icon={<Wallet className="w-5 h-5" />}
             accent="purple"
           />
           <StatTile
-            label="Avg Rating"
+            label={t('mentorDashboard.avgRating')}
             value={rating ? rating.toFixed(1) : "—"}
             icon={<Star className="w-5 h-5" />}
             accent="yellow"
@@ -151,17 +153,17 @@ const MentorDashboard = () => {
         {/* Today's classes */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">Today's Classes</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('mentorDashboard.todaysClasses')}</h2>
             <Button
               variant="outline"
               size="sm"
               onClick={() => navigate("/dashboard/mentor/schedule")}
             >
-              View Schedule
+              {t('mentorDashboard.viewSchedule')}
             </Button>
           </div>
           {todayItems.length === 0 ? (
-            <p className="text-sm text-gray-500">No classes scheduled for today.</p>
+            <p className="text-sm text-gray-500">{t('mentorDashboard.noTodayClasses')}</p>
           ) : (
             <div className="space-y-2">
               {todayItems.map((c) => (
@@ -190,19 +192,19 @@ const MentorDashboard = () => {
 
         {/* Quick actions */}
         <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3">Quick Actions</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-3">{t('mentorDashboard.quickActions')}</h2>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => navigate("/dashboard/mentor/students")}>
               <Users className="w-4 h-4 mr-2" />
-              My Students
+              {t('mentorDashboard.myStudents')}
             </Button>
             <Button variant="outline" onClick={() => navigate("/mentor/bookings")}>
               <BookOpen className="w-4 h-4 mr-2" />
-              All Bookings
+              {t('mentorDashboard.allBookings')}
             </Button>
             <Button variant="outline" onClick={() => navigate("/dashboard/mentor/earnings")}>
               <Wallet className="w-4 h-4 mr-2" />
-              Earnings
+              {t('mentorDashboard.earnings')}
             </Button>
           </div>
         </div>
@@ -212,7 +214,7 @@ const MentorDashboard = () => {
             onClick={() => setShowDisclaimer(true)}
             className="text-sm text-gray-500 hover:text-blue-600 underline"
           >
-            Disclaimer
+            {t('mentorDashboard.disclaimer')}
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import axios from "axios";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +19,7 @@ const formatTime = (iso?: string) =>
     : "—";
 
 const MentorSchedule = () => {
+  const { t } = useLanguage();
   const phone = localStorage.getItem("mentor");
   const [bookings, setBookings] = useState<any[]>([]);
 
@@ -89,20 +91,30 @@ const MentorSchedule = () => {
           {items.map((b) => (
             <div
               key={b._id}
-              className="px-4 sm:px-5 py-3 flex flex-wrap items-center gap-3 justify-between"
+              className="px-4 sm:px-5 py-3 flex flex-wrap items-start gap-3 justify-between"
             >
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="font-medium text-sm">
-                  {b.studentName || "Student"} · {b.subject || "—"}
+                  {b.studentName || b.parent?.parentName || "Student"}
+                  {(b.subject || b.class) ? ` · ${b.subject || b.class}` : ""}
                 </p>
-                <p className="text-xs text-gray-500">{formatTime(b.scheduledDate)}</p>
+                {b.parent?.phone && (
+                  <p className="text-xs text-gray-500">📞 {b.parent.phone}</p>
+                )}
+                <p className="text-xs text-gray-500">
+                  Session {b.session} · {b.duration} classes · ₹{b.price || 0}
+                </p>
+                {b.scheduledDate && (
+                  <p className="text-xs text-gray-500">{formatTime(b.scheduledDate)}</p>
+                )}
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge className="bg-blue-100 text-blue-700">{b.status}</Badge>
-                {b.status === "pending_schedule" && (
+                {(b.status === "pending_schedule" ||
+                  (b.status === "scheduled" && !b.scheduledDate)) && (
                   <ScheduleModal classBooking={b} getBookings={load} />
                 )}
-                {(b.status === "scheduled" || b.status === "running") && (
+                {(b.status === "scheduled" || b.status === "running") && b.scheduledDate && (
                   <AttendanceModal classBooking={b} />
                 )}
               </div>
@@ -114,15 +126,15 @@ const MentorSchedule = () => {
   );
 
   return (
-    <DashboardLayout role="mentor" title="Schedule" subtitle="Upcoming and past classes">
+    <DashboardLayout role="mentor" title={t('mentorDashboard.schedule')} subtitle="Upcoming and past classes">
       <div className="space-y-6">
         <Section
-          title="Awaiting Schedule"
+          title={t('mentorDashboard.pendingSchedule')}
           items={pendingSchedule}
-          empty="No bookings waiting to be scheduled."
+          empty={t('mentorDashboard.noAwaitingSchedule')}
         />
-        <Section title="Upcoming" items={upcoming} empty="Nothing on the calendar." />
-        <Section title="Recent (last 20)" items={past} empty="No past classes yet." />
+        <Section title={t('mentorDashboard.upcoming')} items={upcoming} empty={t('mentorDashboard.nothingCalendar')} />
+        <Section title={t('mentorDashboard.recent')} items={past} empty={t('mentorDashboard.noPastClasses')} />
       </div>
     </DashboardLayout>
   );

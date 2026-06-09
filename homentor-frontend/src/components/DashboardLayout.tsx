@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import LanguageToggle from './LanguageToggle';
+import { useLanguage } from '@/context/LanguageContext';
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -29,7 +30,8 @@ interface DashboardLayoutProps {
 }
 
 interface NavItem {
-  label: string;
+  id: string;
+  labelKey: string;
   path: string;
   icon: React.ComponentType<{ className?: string }>;
 }
@@ -37,21 +39,21 @@ interface NavItem {
 const navForRole = (role: Role): NavItem[] => {
   if (role === "mentor") {
     return [
-      { label: "Overview", path: "/dashboard/mentor", icon: LayoutDashboard },
-      { label: "Schedule", path: "/dashboard/mentor/schedule", icon: CalendarDays },
-      { label: "My Students", path: "/dashboard/mentor/students", icon: Users },
-      { label: "Leads", path: "/dashboard/mentor/leads", icon: Inbox },
-      { label: "Bookings", path: "/mentor/bookings", icon: BookOpen },
-      { label: "Earnings", path: "/dashboard/mentor/earnings", icon: Wallet },
-      { label: "Profile", path: "/dashboard/mentor/profile", icon: UserIcon },
+      { id: "overview", labelKey: "mentorDashboard.overview", path: "/dashboard/mentor", icon: LayoutDashboard },
+      { id: "schedule", labelKey: "mentorDashboard.schedule", path: "/dashboard/mentor/schedule", icon: CalendarDays },
+      { id: "students", labelKey: "mentorDashboard.myStudents", path: "/dashboard/mentor/students", icon: Users },
+      { id: "leads", labelKey: "mentorDashboard.leads", path: "/dashboard/mentor/leads", icon: Inbox },
+      { id: "bookings", labelKey: "mentorDashboard.bookings", path: "/mentor/bookings", icon: BookOpen },
+      { id: "earnings", labelKey: "mentorDashboard.earnings", path: "/dashboard/mentor/earnings", icon: Wallet },
+      { id: "profile", labelKey: "mentorDashboard.profile", path: "/dashboard/mentor/profile", icon: UserIcon },
     ];
   }
   return [
-    { label: "Overview", path: "/dashboard/student", icon: LayoutDashboard },
-    { label: "My Classes", path: "/dashboard/student/classes", icon: BookOpen },
-    { label: "Bookings", path: "/parent/bookings", icon: CalendarDays },
-    { label: "Payments", path: "/dashboard/student/payments", icon: Receipt },
-    { label: "Profile", path: "/dashboard/student/profile", icon: UserIcon },
+    { id: "overview", labelKey: "parentDashboard.overview", path: "/dashboard/student", icon: LayoutDashboard },
+    { id: "classes", labelKey: "parentDashboard.myClasses", path: "/dashboard/student/classes", icon: BookOpen },
+    { id: "bookings", labelKey: "parentDashboard.bookings", path: "/parent/bookings", icon: CalendarDays },
+    { id: "payments", labelKey: "parentDashboard.payments", path: "/dashboard/student/payments", icon: Receipt },
+    { id: "profile", labelKey: "parentDashboard.profile", path: "/dashboard/student/profile", icon: UserIcon },
   ];
 };
 
@@ -61,6 +63,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   subtitle,
   children,
 }) => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -126,13 +129,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                   ? "bg-homentor-blue text-white"
                   : "text-gray-700 hover:bg-gray-100"
               } ${collapsed ? "justify-center" : ""}`}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? t(item.labelKey) : undefined}
             >
               <Icon className="w-5 h-5 shrink-0" />
               {!collapsed && (
                 <span className="flex-1 flex items-center justify-between">
-                  {item.label}
-                  {item.label === "Leads" && unseenLeadCount > 0 && (
+                  {t(item.labelKey)}
+                  {item.id === "leads" && unseenLeadCount > 0 && (
                     <span className="ml-2 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
                       {unseenLeadCount > 99 ? "99+" : unseenLeadCount}
                     </span>
@@ -156,10 +159,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <button
           onClick={handleLogout}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors ${collapsed ? "justify-center" : ""}`}
-          title={collapsed ? "Logout" : undefined}
+          title={collapsed ? t(role === 'mentor' ? 'mentorDashboard.logout' : 'parentDashboard.logout') : undefined}
         >
           <LogOut className="w-5 h-5 shrink-0" />
-          {!collapsed && <span>Logout</span>}
+          {!collapsed && <span>{t(role === 'mentor' ? 'mentorDashboard.logout' : 'parentDashboard.logout')}</span>}
         </button>
       </div>
     </div>
