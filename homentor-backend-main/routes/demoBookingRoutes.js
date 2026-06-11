@@ -7,6 +7,7 @@ const ParentLead = require("../models/ParentLead");
 const Mentor = require("../models/Mentor");
 const TeacherLead = require("../models/TeacherLead");
 const resolveCommission = require("../utils/resolveCommission");
+const approveDemoBookingForLead = require("../utils/approveDemoBookingForLead");
 
 const router = express.Router();
 
@@ -67,13 +68,23 @@ router.post("/", async (req, res) => {
 
     // Upsert TeacherLead so the booking appears on the teacher's Leads tab
     // immediately, locked until they pay the platform commission.
+    let leadCreated = false;
     try {
       const mentor = await Mentor.findById(mentorId).select("category commissionOverride commissionType teachingModes");
+      if (!mentor) {
+        console.warn(
+          `Demo booking: Mentor.findById("${mentorId}") returned null — TeacherLead NOT created, lead will not appear in mentor's Leads tab.`
+        );
+      }
       if (mentor) {
         const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
         if (existingLead) {
           existingLead.lastCalledAt = new Date();
+          // Link the existing (e.g. call-originated) lead to this demo booking
+          // so admin approval can cascade into it.
+          existingLead.classBookingId = newBooking._id;
           await existingLead.save();
+          leadCreated = true;
         } else {
           const commissionAmount = await resolveCommission(mentor);
 
@@ -104,8 +115,9 @@ router.post("/", async (req, res) => {
             parentArea = typeof address === "string" ? address : "";
           }
 
-          await TeacherLead.create({
+          const createdLead = await TeacherLead.create({
             mentorId,
+            classBookingId: newBooking._id,
             parentPhone,
             parentName,
             parentClass,
@@ -115,6 +127,14 @@ router.post("/", async (req, res) => {
             commissionPaid: commissionAmount === 0,
             paymentStatus: commissionAmount === 0 ? "approved" : "pending",
           });
+          leadCreated = true;
+
+          // Zero-commission demos are auto-approved at creation (they never go
+          // through the admin payment-approval endpoint), so cascade the booking
+          // approval now — otherwise it could never reach the Bookings section.
+          if (commissionAmount === 0) {
+            await approveDemoBookingForLead(createdLead);
+          }
         }
       }
     } catch (leadErr) {
@@ -124,6 +144,8 @@ router.post("/", async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Booking created successfully",
+      leadCreated,
+      bookingId: newBooking._id,
       data: {
         demoBooking: booking,
         classBooking: newBooking,

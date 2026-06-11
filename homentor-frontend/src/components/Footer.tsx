@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
   return (
     <footer className="bg-homentor-mist border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -16,7 +18,7 @@ const Footer = () => {
               />
             </Link>
             <p className="mt-4 text-sm text-slate-600 leading-relaxed max-w-sm">
-              Verified home tutors and subject mentors, hand-picked for your child's pace and goals.
+              {t('home.footerTagline')}
             </p>
             <div className="flex items-center gap-3 mt-5">
               <a
@@ -46,18 +48,18 @@ const Footer = () => {
 
           {/* Links */}
           <div className="md:col-span-3">
-            <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-slate-500">Product</h3>
+            <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-slate-500">{t('home.footerProduct')}</h3>
             <ul className="mt-3 space-y-2 text-sm">
-              <li><Link to="/mentors" className="text-slate-700 hover:text-homentor-blue transition-colors">Find a mentor</Link></li>
-              <li><Link to="/for-mentors" className="text-slate-700 hover:text-homentor-blue transition-colors">Become a mentor</Link></li>
-              <li><Link to="/about-us" className="text-slate-700 hover:text-homentor-blue transition-colors">About</Link></li>
-              <li><Link to="/contact-us" className="text-slate-700 hover:text-homentor-blue transition-colors">Contact</Link></li>
+              <li><Link to="/mentors" className="text-slate-700 hover:text-homentor-blue transition-colors">{t('home.footerFindMentor')}</Link></li>
+              <li><Link to="/for-mentors" className="text-slate-700 hover:text-homentor-blue transition-colors">{t('home.footerBecomeMentor')}</Link></li>
+              <li><Link to="/about-us" className="text-slate-700 hover:text-homentor-blue transition-colors">{t('home.footerAbout')}</Link></li>
+              <li><Link to="/contact-us" className="text-slate-700 hover:text-homentor-blue transition-colors">{t('home.footerContact')}</Link></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div className="md:col-span-4">
-            <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-slate-500">Get in touch</h3>
+            <h3 className="font-heading font-semibold text-sm uppercase tracking-wider text-slate-500">{t('home.footerGetInTouch')}</h3>
             <ul className="mt-3 space-y-2 text-sm">
               <li className="flex items-center gap-2 text-slate-700">
                 <Phone className="w-4 h-4 text-homentor-blue shrink-0" />
@@ -81,12 +83,12 @@ const Footer = () => {
 
         <div className="mt-10 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} Homentor. All rights reserved.
+            © {new Date().getFullYear()} Homentor. {t('home.footerRights')}
           </p>
           <div className="flex items-center gap-5 text-xs text-slate-500">
-            <Link to="/terms-conditions" className="hover:text-homentor-blue transition-colors">Terms</Link>
-            <Link to="/privacy-policy" className="hover:text-homentor-blue transition-colors">Privacy</Link>
-            <Link to="/refund" className="hover:text-homentor-blue transition-colors">Refund</Link>
+            <Link to="/terms-conditions" className="hover:text-homentor-blue transition-colors">{t('home.footerTerms')}</Link>
+            <Link to="/privacy-policy" className="hover:text-homentor-blue transition-colors">{t('home.footerPrivacy')}</Link>
+            <Link to="/refund" className="hover:text-homentor-blue transition-colors">{t('home.footerRefund')}</Link>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Phone } from 'lucide-react';
 import axios from 'axios';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface LoginPopupProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface LoginPopupProps {
 type Mode = 'login' | 'signup';
 
 const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingAction, pendingAction }) => {
+  const { t } = useLanguage();
   const [mode, setMode] = useState<Mode>('login');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
@@ -77,7 +79,7 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingActi
                 <Phone className="w-5 h-5 text-primary" />
               </div>
               <h2 className="text-xl font-semibold text-gray-900">
-                {mode === 'signup' ? 'Sign up' : 'Login'}
+                {mode === 'signup' ? t('auth.signupTitle') : t('auth.loginTitle')}
               </h2>
             </div>
           </div>
@@ -91,24 +93,24 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingActi
 
         <div className="lg:p-6 p-3 space-y-4">
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Phone Number</label>
+            <label className="text-sm font-medium text-gray-700">{t('auth.phone')}</label>
             <input
               type="text"
               maxLength={10}
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
-              placeholder="Enter 10-digit number"
+              placeholder={t('auth.phone')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700">Password</label>
+            <label className="text-sm font-medium text-gray-700">{t('auth.password')}</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder={mode === 'signup' ? 'Create a password' : 'Enter password'}
+              placeholder={t('auth.password')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
@@ -121,33 +123,27 @@ const LoginPopup: React.FC<LoginPopupProps> = ({ isOpen, onClose, setPendingActi
             className="w-full py-2 bg-primary text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
           >
             {isLoading
-              ? mode === 'signup' ? 'Creating account...' : 'Logging in...'
-              : mode === 'signup' ? 'Sign Up' : 'Login'}
+              ? '...'
+              : mode === 'signup' ? t('auth.signupBtn') : t('auth.loginBtn')}
           </button>
 
           <p className="text-sm text-center text-gray-600">
             {mode === 'login' ? (
-              <>
-                Don't have an account?{' '}
-                <button
-                  type="button"
-                  className="text-primary underline"
-                  onClick={() => { setMode('signup'); setErrorMsg(''); }}
-                >
-                  Sign up
-                </button>
-              </>
+              <button
+                type="button"
+                className="text-primary underline"
+                onClick={() => { setMode('signup'); setErrorMsg(''); }}
+              >
+                {t('auth.signupTab')}
+              </button>
             ) : (
-              <>
-                Already have an account?{' '}
-                <button
-                  type="button"
-                  className="text-primary underline"
-                  onClick={() => { setMode('login'); setErrorMsg(''); }}
-                >
-                  Login
-                </button>
-              </>
+              <button
+                type="button"
+                className="text-primary underline"
+                onClick={() => { setMode('login'); setErrorMsg(''); }}
+              >
+                {t('auth.loginTab')}
+              </button>
             )}
           </p>
         </div>

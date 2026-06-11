@@ -346,7 +346,17 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                         )}
 
                         <div className="flex flex-col gap-2">
-                            {(classItem.status === "pending_schedule" || classItem.status === "scheduled") &&
+                            {!classItem.adminApproved &&
+                                classItem.mentorViewType !== "REPLACED" &&
+                                classItem.status !== "completed" &&
+                                classItem.status !== "terminated" && (
+                                <span className="w-fit px-2 py-[2px] rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300">
+                                    Awaiting Admin Approval
+                                </span>
+                            )}
+
+                            {classItem.adminApproved &&
+                                (classItem.status === "pending_schedule" || classItem.status === "scheduled") &&
                                 !classItem.scheduledDate &&
                                 classItem.mentorViewType !== "REPLACED" && (
                                 <ScheduleModal
@@ -355,7 +365,7 @@ export default function MentorClassCard({ classItem, mentorDetail, userType }) {
                                 ></ScheduleModal>
                             )}
 
-                            {(classItem.status === "scheduled" || classItem.status === "running") && classItem.mentorViewType != "REPLACED" ?
+                            {classItem.adminApproved && (classItem.status === "scheduled" || classItem.status === "running") && classItem.mentorViewType != "REPLACED" ?
                                 <AttendanceModal
                                     classBooking={classItem}
 

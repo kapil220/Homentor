@@ -1,34 +1,37 @@
 import { motion } from "framer-motion";
 import Parallax from "@/comp/Parallax";
-
-const cards = [
-  {
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
-    metric: "Grade C → A+",
-    label: "Mathematics, Class 9",
-    quote: "Three months. One mentor. Best decision I made for my son.",
-    accent: "from-blue-500 to-indigo-600",
-    parallax: -50,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=900&q=80",
-    metric: "JEE Advanced cleared",
-    label: "Physics + Chemistry, Class 12",
-    quote: "Personalised plan around her exam dates. She felt prepared.",
-    accent: "from-amber-500 to-orange-600",
-    parallax: 30,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=900&q=80",
-    metric: "Reads aloud confidently",
-    label: "English, Class 4",
-    quote: "From shy to story-telling in the classroom — in two months.",
-    accent: "from-emerald-500 to-teal-600",
-    parallax: -40,
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const OutcomesSection = () => {
+  const { t } = useLanguage();
+
+  const cards = [
+    {
+      img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80",
+      metric: t('home.outcomesMetric1'),
+      label: t('home.outcomesLabel1'),
+      quote: t('home.outcomesQuote1'),
+      accent: "from-blue-500 to-indigo-600",
+      parallax: -50,
+    },
+    {
+      img: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=900&q=80",
+      metric: t('home.outcomesMetric2'),
+      label: t('home.outcomesLabel2'),
+      quote: t('home.outcomesQuote2'),
+      accent: "from-amber-500 to-orange-600",
+      parallax: 30,
+    },
+    {
+      img: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=900&q=80",
+      metric: t('home.outcomesMetric3'),
+      label: t('home.outcomesLabel3'),
+      quote: t('home.outcomesQuote3'),
+      accent: "from-emerald-500 to-teal-600",
+      parallax: -40,
+    },
+  ];
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       <div
@@ -43,12 +46,12 @@ const OutcomesSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Outcomes</p>
+          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.outcomesLabel')}</p>
           <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
-            What changes when the mentor is the right fit
+            {t('home.outcomesTitle')}
           </h2>
           <p className="mt-4 text-slate-600 text-lg">
-            A small sample of what families have written to us this year.
+            {t('home.outcomesSubtitle')}
           </p>
         </motion.div>
 

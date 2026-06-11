@@ -122,7 +122,7 @@ router.get('/verify-order/:id', async (req, res) => {
 
                 newBooking.isDemo = false
                 newBooking.status = "scheduled"
-                newBooking.adminApproved = true
+                newBooking.adminApproved = false
                 newBooking.class = oldBooking.class
                 newBooking.studentName = oldBooking.studentName
                 newBooking.school = oldBooking.school
@@ -150,7 +150,7 @@ router.get('/verify-order/:id', async (req, res) => {
                 })
                 newBooking.isDemo = false
                 newBooking.status = "scheduled"
-                newBooking.adminApproved = true
+                newBooking.adminApproved = false
                 newBooking.class = oldClassBooking.class
                 newBooking.studentName = oldClassBooking.studentName
                 newBooking.school = oldClassBooking.school
@@ -173,7 +173,7 @@ router.get('/verify-order/:id', async (req, res) => {
                     currentPerClassPrice: oldOrder?.mentor?.teachingModes?.homeTuition?.monthlyPrice / oldOrder?.duration,
                     remainingClasses: oldOrder.duration ? oldOrder.duration : 22,
                     teachingMode: oldOrder.teachingMode || "offline",
-                    adminApproved: true
+                    adminApproved: false
                 })
                 await newBooking.save()
             }

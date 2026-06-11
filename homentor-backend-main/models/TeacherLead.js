@@ -8,6 +8,14 @@ const teacherLeadSchema = new mongoose.Schema(
       ref: "Mentor",
       required: true,
     },
+    // Set when this lead originated from (or was matched to) a demo booking.
+    // Used to cascade admin payment approval into the linked ClassBooking so it
+    // surfaces in the mentor's Bookings section. Absent for call-only leads.
+    classBookingId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ClassBooking",
+      default: null,
+    },
     parentPhone: {
       type: String,
       required: true,

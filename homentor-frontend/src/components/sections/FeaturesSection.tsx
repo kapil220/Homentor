@@ -8,8 +8,11 @@ import {
   Repeat,
   Phone,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FeaturesSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,24 +23,22 @@ const FeaturesSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Why Homentor</p>
+          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.featuresLabel')}</p>
           <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
-            Built around what parents actually want
+            {t('home.featuresTitle')}
           </h2>
           <p className="mt-4 text-slate-600 text-lg">
-            No surprise fees, no fly-by-night tutors, no awkward contracts.
+            {t('home.featuresDesc')}
           </p>
         </motion.div>
 
-        {/* Bento grid: 6 tiles in a 12-col system, varied widths/heights */}
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-5">
-          {/* Tile 1 — large, signature */}
           <Tile
             colSpan="md:col-span-3 md:row-span-2"
             accent="blue"
             icon={<BadgeCheck className="w-6 h-6" />}
-            title="Only the top 15% make it onto Homentor"
-            body="Every mentor passes background checks, credential verification and a teaching audit. We reject 85% of applicants — your child only meets the survivors."
+            title={t('home.featuresTile1Title')}
+            body={t('home.featuresTile1Body')}
             highlight={
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex -space-x-2">
@@ -49,59 +50,53 @@ const FeaturesSection = () => {
                   ))}
                 </div>
                 <p className="text-sm text-slate-600">
-                  <span className="font-semibold text-homentor-ink">100+</span> verified mentors
+                  <span className="font-semibold text-homentor-ink">{t('home.featuresTile1Highlight')}</span>
                 </p>
               </div>
             }
           />
 
-          {/* Tile 2 — wide */}
           <Tile
             colSpan="md:col-span-3"
             accent="amber"
             icon={<Sparkles className="w-5 h-5" />}
-            title="Personalised plans, not a fixed syllabus"
-            body="Mentors build a plan around your child's pace, exam dates and weak topics."
+            title={t('home.featuresTile2Title')}
+            body={t('home.featuresTile2Body')}
           />
 
-          {/* Tile 3 — small */}
           <Tile
             colSpan="md:col-span-3"
             accent="coral"
             icon={<Home className="w-5 h-5" />}
-            title="Comes to your home"
-            body="Real person, real kitchen-table tuition. No commute, no distractions."
+            title={t('home.featuresTile3Title')}
+            body={t('home.featuresTile3Body')}
           />
 
-          {/* Tile 4 — full width hero card */}
           <Tile
             colSpan="md:col-span-2"
             accent="emerald"
             icon={<Gift className="w-5 h-5" />}
-            title="Free demo class"
-            body="Try before you pay. No card upfront, no auto-renew."
+            title={t('home.featuresTile4Title')}
+            body={t('home.featuresTile4Body')}
           />
 
-          {/* Tile 5 */}
           <Tile
             colSpan="md:col-span-2"
             accent="indigo"
             icon={<ShieldCheck className="w-5 h-5" />}
-            title="100% refund guarantee"
-            body="If the first paid session doesn't work, we refund it. One phone call."
+            title={t('home.featuresTile5Title')}
+            body={t('home.featuresTile5Body')}
           />
 
-          {/* Tile 6 */}
           <Tile
             colSpan="md:col-span-2"
             accent="blue"
             icon={<Repeat className="w-5 h-5" />}
-            title="Switch mentors anytime"
-            body="Not the right fit? Tell us. We'll match you again at no extra cost."
+            title={t('home.featuresTile6Title')}
+            body={t('home.featuresTile6Body')}
           />
         </div>
 
-        {/* Footer hint */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,9 +106,9 @@ const FeaturesSection = () => {
         >
           <Phone className="w-4 h-4 text-homentor-blue" />
           <span>
-            Prefer to talk first?{" "}
+            {t('home.featuresTalkFirst')}{" "}
             <a href="tel:+919203149956" className="font-semibold text-homentor-blue hover:underline">
-              Call +91 9203149956
+              +91 9203149956
             </a>
           </span>
         </motion.div>
@@ -160,7 +155,6 @@ const Tile = ({
     </h3>
     <p className="text-slate-600 text-sm sm:text-base mt-2.5 leading-relaxed">{body}</p>
     {highlight}
-    {/* Decorative gradient on hover */}
     <div
       aria-hidden
       className="absolute -bottom-20 -right-20 w-44 h-44 bg-gradient-to-tr from-homentor-blue/10 via-amber-200/20 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"

@@ -1,14 +1,17 @@
 import React from "react";
 import ScrollReveal from "@/components/ScrollReveal";
 import AnimatedCounter from "@/components/AnimatedCounter";
-
-const items = [
-  { end: 100, suffix: "+", label: "Verified Mentors" },
-  { end: 1000, suffix: "+", label: "Happy Students" },
-  { end: 30, suffix: "+", label: "Subjects Covered" },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const StatsSection = () => {
+  const { t } = useLanguage();
+
+  const items = [
+    { end: 100, suffix: "+", label: t('home.statsVerifiedMentors') },
+    { end: 1000, suffix: "+", label: t('home.statsHappyStudents') },
+    { end: 30, suffix: "+", label: t('home.statsSubjectsCovered') },
+  ];
+
   return (
     <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

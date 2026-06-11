@@ -12,8 +12,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import Confetti from "@/components/Confetti";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 
 const PaymentSuccessful = () => {
+  const { t } = useLanguage();
   const orderId = localStorage.getItem("orderId");
   const [orderStatus, setOrderStatus] = useState("");
   const [orderDetail, setOrderDetail] = useState(null);
@@ -96,10 +98,10 @@ const PaymentSuccessful = () => {
             ></path>
           </svg>
           <h2 className="text-xl font-semibold text-muted-foreground">
-            Fetching your payment status...
+            {t('payment.fetching')}
           </h2>
           <p className="text-sm text-muted-foreground">
-            Please wait while we verify your transaction
+            {t('payment.pleaseWait')}
           </p>
         </div>
       </div>
@@ -141,34 +143,32 @@ const PaymentSuccessful = () => {
                     : "text-red-600"
                 } `}
             >
-              Payment{" "}
               {orderStatus == "Success"
-                ? "Successful"
+                ? t('payment.successful')
                 : orderStatus == "Pending"
-                  ? "Pending"
-                  : "Failed"}
-              !
+                  ? t('payment.pending')
+                  : t('payment.failed')}
             </h1>
 
             {/* Order Details */}
             {orderStatus == "Success" && (
               <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left animate-fade-in">
                 <h3 className="font-semibold text-gray-900 mb-4">
-                  Order Summary
+                  {t('payment.orderSummary')}
                 </h3>
                 <div className="space-y-2">
                   <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-4">
-                    <span className="text-gray-600">Order Number:</span>
+                    <span className="text-gray-600">{t('payment.orderNumber')}</span>
                     <span className="font-mono text-sm break-all sm:text-right">
                       {orderId}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Date:</span>
+                    <span className="text-gray-600">{t('payment.date')}</span>
                     <span className="font-medium">{orderDetails?.date}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Amount:</span>
+                    <span className="text-gray-600">{t('payment.amount')}</span>
                     <span className="font-bold text-green-600 text-lg">
                       {orderDetail?.order_amount}
                     </span>
@@ -185,7 +185,7 @@ const PaymentSuccessful = () => {
                   className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
                 >
                   <Download className="w-5 h-5 mr-2" />
-                  Download Receipt
+                  {t('payment.downloadReceipt')}
                 </Button>
                 <Button
                   variant="outline"
@@ -193,7 +193,7 @@ const PaymentSuccessful = () => {
                   className="border-gray-300 hover:bg-gray-50 px-8 py-3 rounded-lg font-medium transition-all duration-200 hover:scale-105"
                 >
                   <Mail className="w-5 h-5 mr-2" />
-                  Email Receipt
+                  {t('payment.emailReceipt')}
                 </Button>
               </div>
             )}
@@ -206,7 +206,7 @@ const PaymentSuccessful = () => {
           size="lg"
           className="mt-8 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-12 py-4 rounded-full font-medium transition-all duration-200 hover:scale-105 animate-fade-in"
         >
-          Continue to Dashboard
+          {t('payment.continueDashboard')}
           <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
 
@@ -215,33 +215,33 @@ const PaymentSuccessful = () => {
           <Card className="w-full max-w-2xl mt-6 bg-white/60 backdrop-blur-sm border-0 shadow-lg animate-fade-in">
             <CardContent className="p-6">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">
-                What's Next?
+                {t('payment.whatsNext')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div className="p-4 rounded-lg bg-white/50">
                   <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
                   <p className="text-sm font-medium text-gray-700">
-                    Check your email
+                    {t('payment.checkEmail')}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Confirmation sent
+                    {t('payment.confirmationSent')}
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-white/50">
                   <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
                   <p className="text-sm font-medium text-gray-700">
-                    Access your account
+                    {t('payment.accessAccount')}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Features unlocked
+                    {t('payment.featuresUnlocked')}
                   </p>
                 </div>
                 <div className="p-4 rounded-lg bg-white/50">
                   <CheckCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
                   <p className="text-sm font-medium text-gray-700">
-                    Get support
+                    {t('payment.getSupport')}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">24/7 assistance</p>
+                  <p className="text-xs text-gray-500 mt-1">{t('payment.support247')}</p>
                 </div>
               </div>
             </CardContent>

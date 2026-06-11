@@ -1,21 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { BadgeCheck, Users, BookOpen, ShieldCheck } from "lucide-react";
-
-type Item = {
-  icon: React.ReactNode;
-  end: number;
-  suffix?: string;
-  prefix?: string;
-  label: string;
-};
-
-const items: Item[] = [
-  { icon: <BadgeCheck className="w-5 h-5" />, end: 100, suffix: "+", label: "Verified Mentors" },
-  { icon: <Users className="w-5 h-5" />, end: 1000, suffix: "+", label: "Happy Students" },
-  { icon: <BookOpen className="w-5 h-5" />, end: 30, suffix: "+", label: "Subjects Covered" },
-  { icon: <ShieldCheck className="w-5 h-5" />, end: 100, suffix: "%", label: "First-class Refund Guarantee" },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 const Counter = ({ end, suffix = "", prefix = "" }: { end: number; suffix?: string; prefix?: string }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -51,6 +37,15 @@ const Counter = ({ end, suffix = "", prefix = "" }: { end: number; suffix?: stri
 };
 
 const TrustStripSection = () => {
+  const { t } = useLanguage();
+
+  const items = [
+    { icon: <BadgeCheck className="w-5 h-5" />, end: 100, suffix: "+", label: t('home.statsVerifiedMentors') },
+    { icon: <Users className="w-5 h-5" />, end: 1000, suffix: "+", label: t('home.statsHappyStudents') },
+    { icon: <BookOpen className="w-5 h-5" />, end: 30, suffix: "+", label: t('home.statsSubjectsCovered') },
+    { icon: <ShieldCheck className="w-5 h-5" />, end: 100, suffix: "%", label: t('home.statsRefundGuarantee') },
+  ];
+
   return (
     <section className="py-12 sm:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,7 +64,7 @@ const TrustStripSection = () => {
                   {it.icon}
                 </div>
                 <p className="text-3xl sm:text-4xl font-heading font-bold text-homentor-ink tracking-tight">
-                  <Counter end={it.end} suffix={it.suffix} prefix={it.prefix} />
+                  <Counter end={it.end} suffix={it.suffix} />
                 </p>
                 <p className="text-sm text-slate-600 mt-1">{it.label}</p>
               </motion.div>

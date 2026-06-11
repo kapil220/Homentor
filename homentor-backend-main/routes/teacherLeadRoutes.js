@@ -4,6 +4,7 @@ const router = express.Router();
 const TeacherLead = require("../models/TeacherLead");
 const Mentor = require("../models/Mentor");
 const PaymentScreenshot = require("../models/PaymentScreenshot");
+const approveDemoBookingForLead = require("../utils/approveDemoBookingForLead");
 
 const SCREENSHOT_PREFIX = "screenshot:";
 
@@ -203,6 +204,15 @@ router.put("/admin/:id/approve", async (req, res) => {
     lead.commissionPaid = true;
     lead.paymentStatus = "approved";
     await lead.save();
+
+    // Cascade: push the linked demo booking into the mentor's Bookings section
+    // (sets adminApproved: true). No-ops for call-only leads with no booking.
+    try {
+      await approveDemoBookingForLead(lead);
+    } catch (cascadeErr) {
+      console.error("approveDemoBookingForLead cascade failed:", cascadeErr);
+    }
+
     res.json({ success: true, data: lead });
   } catch (err) {
     console.error("PUT /teacher-leads/admin/:id/approve error:", err);

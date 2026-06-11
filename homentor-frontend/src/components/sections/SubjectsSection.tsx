@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import { useLanguage } from "@/context/LanguageContext";
 
 const subjects = [
   "Mathematics",
@@ -19,18 +20,20 @@ const subjects = [
 ];
 
 const SubjectsSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-20 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-12 max-w-2xl mx-auto">
           <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
-            Subjects
+            {t('home.subjectsLabel')}
           </span>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-            Mentors for every subject
+            {t('home.subjectsTitle')}
           </h2>
           <p className="mt-3 text-slate-600">
-            Browse by subject or open the mentor directory for the full list.
+            {t('home.subjectsDesc')}
           </p>
         </ScrollReveal>
 
@@ -55,7 +58,7 @@ const SubjectsSection = () => {
             to="/mentors"
             className="inline-flex items-center gap-2 text-sm font-medium text-homentor-blue hover:text-homentor-darkBlue"
           >
-            Browse all mentors
+            {t('home.subjectsBrowseAll')}
             <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
