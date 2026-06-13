@@ -42,12 +42,12 @@ const SubjectsSection = () => {
             <ScrollReveal key={subject} delay={index * 0.03}>
               <Link
                 to={`/mentors?subject=${encodeURIComponent(subject)}`}
-                className="group flex items-center justify-between rounded-xl bg-white border border-slate-200 px-4 py-3 hover:border-homentor-blue hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between rounded-xl bg-white border border-slate-200 px-4 py-3 hover:border-hommentor-blue hover:shadow-md transition-all duration-200"
               >
-                <span className="text-sm font-medium text-slate-800 group-hover:text-homentor-blue">
+                <span className="text-sm font-medium text-slate-800 group-hover:text-hommentor-blue">
                   {subject}
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-homentor-blue transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-hommentor-blue transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </ScrollReveal>
           ))}
@@ -56,7 +56,7 @@ const SubjectsSection = () => {
         <div className="text-center mt-10">
           <Link
             to="/mentors"
-            className="inline-flex items-center gap-2 text-sm font-medium text-homentor-blue hover:text-homentor-darkBlue"
+            className="inline-flex items-center gap-2 text-sm font-medium text-hommentor-blue hover:text-hommentor-darkBlue"
           >
             {t('home.subjectsBrowseAll')}
             <ArrowUpRight className="w-4 h-4" />

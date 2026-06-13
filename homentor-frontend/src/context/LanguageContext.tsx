@@ -11,14 +11,14 @@ const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<Lang>(() => {
-    const stored = localStorage.getItem('homentor_lang');
+    const stored = localStorage.getItem('hommentor_lang');
     return stored === 'hi' ? 'hi' : 'en';
   });
 
   const toggleLang = () => {
     setLang(prev => {
       const next: Lang = prev === 'en' ? 'hi' : 'en';
-      localStorage.setItem('homentor_lang', next);
+      localStorage.setItem('hommentor_lang', next);
       return next;
     });
   };

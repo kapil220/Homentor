@@ -8,7 +8,7 @@ const FinalCTASection = () => {
   return (
     <section
       id="final-cta"
-      className="relative py-20 overflow-hidden bg-gradient-to-br from-homentor-blue via-[#0a86d8] to-homentor-darkBlue"
+      className="relative py-20 overflow-hidden bg-gradient-to-br from-hommentor-blue via-[#0a86d8] to-hommentor-darkBlue"
     >
       <div
         aria-hidden
@@ -42,13 +42,13 @@ const FinalCTASection = () => {
             <div className="mt-7 flex flex-wrap gap-3">
               <a
                 href="tel:+919203149956"
-                className="inline-flex items-center gap-2 h-12 px-5 rounded-xl bg-white text-homentor-blue font-semibold hover:bg-amber-50 transition-colors"
+                className="inline-flex items-center gap-2 h-12 px-5 rounded-xl bg-white text-hommentor-blue font-semibold hover:bg-amber-50 transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 Call +91 9203149956
               </a>
               <a
-                href="https://wa.me/919203149956?text=Hi%20Homentor%2C%20I%27d%20like%20to%20book%20a%20free%20demo"
+                href="https://wa.me/919203149956?text=Hi%20hommentor%2C%20I%27d%20like%20to%20book%20a%20free%20demo"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 h-12 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition-colors"

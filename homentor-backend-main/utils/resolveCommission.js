@@ -1,4 +1,4 @@
-// homentor-backend-main/utils/resolveCommission.js
+// hommentor-backend-main/utils/resolveCommission.js
 const Admin = require("../models/Admin");
 
 /**

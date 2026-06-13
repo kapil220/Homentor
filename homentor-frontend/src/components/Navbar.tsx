@@ -35,7 +35,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center">
             <img
               src="/lovable-uploads/logo-name.png"
-              alt="Homentor Logo"
+              alt="hommentor Logo"
               className="h-12"
             />
           </Link>
@@ -45,24 +45,24 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-6">
 
           <div className="relative group">
-            <button className="flex items-center text-gray-700 hover:text-homentor-blue transition-colors font-medium">
+            <button className="flex items-center text-gray-700 hover:text-hommentor-blue transition-colors font-medium">
               <Link to='/mentors'>{t('nav.findTutors')}</Link>
               <ChevronDown className="ml-1 h-4 w-4" />
             </button>
             <div className="absolute left-0 mt-2 w-48 rounded-lg bg-white shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-              <Link to="/mentors" className="block px-4 py-2 text-gray-700 hover:bg-homentor-lightBlue transition-colors">
+              <Link to="/mentors" className="block px-4 py-2 text-gray-700 hover:bg-hommentor-lightBlue transition-colors">
                 {t('nav.browseTutors')}
               </Link>
-              <Link to="/mentors?subject=mathematics" className="block px-4 py-2 text-gray-700 hover:bg-homentor-lightBlue transition-colors">
+              <Link to="/mentors?subject=mathematics" className="block px-4 py-2 text-gray-700 hover:bg-hommentor-lightBlue transition-colors">
                 {t('nav.mathematics')}
               </Link>
-              <Link to="/mentors?subject=physics" className="block px-4 py-2 text-gray-700 hover:bg-homentor-lightBlue transition-colors">
+              <Link to="/mentors?subject=physics" className="block px-4 py-2 text-gray-700 hover:bg-hommentor-lightBlue transition-colors">
                 {t('nav.physics')}
               </Link>
-              <Link to="/mentors?subject=english" className="block px-4 py-2 text-gray-700 hover:bg-homentor-lightBlue transition-colors">
+              <Link to="/mentors?subject=english" className="block px-4 py-2 text-gray-700 hover:bg-hommentor-lightBlue transition-colors">
                 {t('nav.english')}
               </Link>
-              <Link to="/mentors?mode=online" className="block px-4 py-2 text-gray-700 hover:bg-homentor-lightBlue transition-colors">
+              <Link to="/mentors?mode=online" className="block px-4 py-2 text-gray-700 hover:bg-hommentor-lightBlue transition-colors">
                 {t('nav.onlineTutoring')}
               </Link>
             </div>
@@ -70,19 +70,19 @@ const Navbar = () => {
 
           <Link
             to="/for-mentors"
-            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/for-mentors' ? 'text-homentor-blue' : ''}`}
+            className={`text-gray-700 hover:text-hommentor-blue transition-colors font-medium ${location.pathname === '/for-mentors' ? 'text-hommentor-blue' : ''}`}
           >
             {t('nav.forMentors')}
           </Link>
           <Link
             to="/about-us"
-            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/about-us' ? 'text-homentor-blue' : ''}`}
+            className={`text-gray-700 hover:text-hommentor-blue transition-colors font-medium ${location.pathname === '/about-us' ? 'text-hommentor-blue' : ''}`}
           >
             {t('nav.about')}
           </Link>
           <Link
             to="/contact-us"
-            className={`text-gray-700 hover:text-homentor-blue transition-colors font-medium ${location.pathname === '/contact-us' ? 'text-homentor-blue' : ''}`}
+            className={`text-gray-700 hover:text-hommentor-blue transition-colors font-medium ${location.pathname === '/contact-us' ? 'text-hommentor-blue' : ''}`}
           >
             {t('nav.contact')}
           </Link>
@@ -93,7 +93,7 @@ const Navbar = () => {
             localStorage.getItem("usernumber") ?
               <Link
                 to="/dashboard/student"
-                className="block px-4 py-2 text-homentor-blue hover:bg-homentor-lightBlue rounded-lg"
+                className="block px-4 py-2 text-hommentor-blue hover:bg-hommentor-lightBlue rounded-lg"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.parentDashboard')}
@@ -102,12 +102,12 @@ const Navbar = () => {
               localStorage.getItem("mentor") ?
             <Link
               to="/dashboard/mentor"
-              className="block px-4 py-2 text-homentor-blue hover:bg-homentor-lightBlue rounded-lg"
+              className="block px-4 py-2 text-hommentor-blue hover:bg-hommentor-lightBlue rounded-lg"
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.mentorDashboard')}
             </Link> :
-              <Link to="/login" className="text-homentor-blue hover:text-homentor-darkBlue font-medium transition-colors">
+              <Link to="/login" className="text-hommentor-blue hover:text-hommentor-darkBlue font-medium transition-colors">
                 {t('nav.login')}
               </Link>
           }
@@ -120,7 +120,7 @@ const Navbar = () => {
           </Link>
 
           <Link to="/#hero">
-            <Button className="bg-homentor-coral hover:bg-[#ff5944] text-white shadow-md font-semibold">
+            <Button className="bg-hommentor-coral hover:bg-[#ff5944] text-white shadow-md font-semibold">
               {t('nav.freeDemo')}
             </Button>
           </Link>
@@ -128,7 +128,7 @@ const Navbar = () => {
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden text-gray-700 hover:text-homentor-blue transition-colors"
+          className="md:hidden text-gray-700 hover:text-hommentor-blue transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
@@ -142,7 +142,7 @@ const Navbar = () => {
           <div className="container-tight space-y-3">
             <Link
               to="/"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/' ? 'bg-hommentor-lightBlue text-hommentor-blue' : 'text-gray-700 hover:bg-gray-50'
                 }`}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -158,21 +158,21 @@ const Navbar = () => {
 
             <Link
               to="/for-mentors"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/for-mentors' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/for-mentors' ? 'bg-hommentor-lightBlue text-hommentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.forMentors')}
             </Link>
             <Link
               to="/about-us"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/about-us' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/about-us' ? 'bg-hommentor-lightBlue text-hommentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.about')}
             </Link>
             <Link
               to="/contact-us"
-              className={`block px-4 py-2 rounded-lg ${location.pathname === '/contact-us' ? 'bg-homentor-lightBlue text-homentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
+              className={`block px-4 py-2 rounded-lg ${location.pathname === '/contact-us' ? 'bg-hommentor-lightBlue text-hommentor-blue' : 'text-gray-700 hover:bg-gray-50'}`}
               onClick={() => setIsMenuOpen(false)}
             >
               {t('nav.contact')}
@@ -182,7 +182,7 @@ const Navbar = () => {
                 localStorage.getItem("usernumber") ?
                   <Link
                     to="/dashboard/student"
-                    className="block px-4 py-2 text-homentor-blue hover:bg-homentor-lightBlue rounded-lg"
+                    className="block px-4 py-2 text-hommentor-blue hover:bg-hommentor-lightBlue rounded-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {t('nav.parentDashboard')}
@@ -190,21 +190,21 @@ const Navbar = () => {
                   localStorage.getItem("mentor") ?
                 <Link
                   to="/dashboard/mentor"
-                  className="block px-4 py-2 text-homentor-blue hover:bg-homentor-lightBlue rounded-lg"
+                  className="block px-4 py-2 text-hommentor-blue hover:bg-hommentor-lightBlue rounded-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {t('nav.mentorDashboard')}
                 </Link> :
                   <Link
                     to="/login"
-                    className="block px-4 py-2 text-homentor-blue hover:bg-homentor-lightBlue rounded-lg"
+                    className="block px-4 py-2 text-hommentor-blue hover:bg-hommentor-lightBlue rounded-lg"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {t('nav.login')}
                   </Link>}
               <Link
                 to="/signup"
-                className="block px-4 py-2 bg-homentor-blue text-white hover:bg-homentor-darkBlue rounded-lg text-center shadow-soft"
+                className="block px-4 py-2 bg-hommentor-blue text-white hover:bg-hommentor-darkBlue rounded-lg text-center shadow-soft"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.joinAsMentor')}

@@ -91,7 +91,7 @@ router.post("/", async (req, res) => {
         const mentor = await Mentor.findById(classBooking.mentor).lean();
         const parentPhone = parent?.phone ? `91${String(parent.phone).slice(-10)}` : null;
         const monthlyPrice = mentor?.teachingModes?.homeTuition?.finalPrice || classBooking.price;
-        const baseUrl = process.env.FRONTEND_URL || "https://homentor.in";
+        const baseUrl = process.env.FRONTEND_URL || "https://hommentor.in";
         const paymentLink = `${baseUrl}/dashboard/student?rebook=${classBooking._id}`;
         const studentName = classBooking.studentName || parent?.parentName || "Student";
         const monthName = new Date().toLocaleString("en-IN", { month: "long", year: "numeric" });

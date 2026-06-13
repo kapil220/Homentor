@@ -43,7 +43,7 @@ const values = [
 ];
 
 const milestones = [
-  { year: "2023", title: "Homentor begins", body: "Built in Indore for parents who couldn't find a tutor they trusted." },
+  { year: "2023", title: "hommentor begins", body: "Built in Indore for parents who couldn't find a tutor they trusted." },
   { year: "2024", title: "100+ verified mentors", body: "First batch of mentors onboarded across MP, after a 6-step audit." },
   { year: "2025", title: "1,000+ families served", body: "Expanded across India with home tuition and exam prep cohorts." },
   { year: "Today", title: "Free demo on every booking", body: "Every parent gets to try before they pay. Refund on the first session, no questions." },
@@ -83,8 +83,8 @@ function AboutUs() {
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Our mission</p>
-              <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
+              <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">Our mission</p>
+              <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight leading-tight">
                 Bring the best teachers home — and make sure they actually teach.
               </h2>
               <p className="mt-5 text-slate-600 text-lg leading-relaxed">
@@ -98,7 +98,7 @@ function AboutUs() {
               </p>
               <Link
                 to="/mentors"
-                className="mt-7 inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold shadow-lg shadow-blue-600/20"
+                className="mt-7 inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-hommentor-blue hover:bg-hommentor-darkBlue text-white font-semibold shadow-lg shadow-blue-600/20"
               >
                 Find a mentor
                 <ArrowRight className="w-4 h-4" />
@@ -126,7 +126,7 @@ function AboutUs() {
                 </div>
                 <div>
                   <p className="text-xs text-slate-500">Acceptance rate</p>
-                  <p className="font-heading font-bold text-homentor-ink">15% of applicants</p>
+                  <p className="font-heading font-bold text-hommentor-ink">15% of applicants</p>
                 </div>
               </div>
             </motion.div>
@@ -135,7 +135,7 @@ function AboutUs() {
       </section>
 
       {/* Values */}
-      <section className="py-24 bg-homentor-mist">
+      <section className="py-24 bg-hommentor-mist">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -144,8 +144,8 @@ function AboutUs() {
             transition={{ duration: 0.4 }}
             className="text-center mb-14 max-w-2xl mx-auto"
           >
-            <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">What we value</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight">
+            <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">What we value</p>
+            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight">
               Four rules we don't break
             </h2>
           </motion.div>
@@ -160,17 +160,17 @@ function AboutUs() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ delay: i * 0.06, duration: 0.45 }}
-                  className="group bg-white border border-slate-200 rounded-3xl p-7 hover:border-homentor-gold hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                  className="group bg-white border border-slate-200 rounded-3xl p-7 hover:border-hommentor-gold hover:shadow-xl hover:-translate-y-0.5 transition-all"
                 >
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-5 ${
-                    v.accent === "blue" ? "bg-blue-50 text-homentor-blue" :
+                    v.accent === "blue" ? "bg-blue-50 text-hommentor-blue" :
                     v.accent === "amber" ? "bg-amber-50 text-amber-600" :
                     v.accent === "emerald" ? "bg-emerald-50 text-emerald-600" :
                     "bg-indigo-50 text-indigo-600"
                   }`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-heading font-bold text-xl text-homentor-ink">{v.title}</h3>
+                  <h3 className="font-heading font-bold text-xl text-hommentor-ink">{v.title}</h3>
                   <p className="text-slate-600 mt-2 leading-relaxed">{v.body}</p>
                 </motion.div>
               );
@@ -189,8 +189,8 @@ function AboutUs() {
             transition={{ duration: 0.4 }}
             className="text-center mb-14 max-w-2xl mx-auto"
           >
-            <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Our story</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight">
+            <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">Our story</p>
+            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight">
               From one anxious parent to thousands
             </h2>
           </motion.div>
@@ -208,10 +208,10 @@ function AboutUs() {
                   i % 2 === 0 ? "sm:justify-start" : "sm:justify-end"
                 }`}
               >
-                <div className="absolute left-5 sm:left-1/2 -translate-x-1/2 -top-1 sm:top-1/2 sm:-translate-y-1/2 w-3 h-3 rounded-full bg-homentor-blue ring-4 ring-blue-100" />
+                <div className="absolute left-5 sm:left-1/2 -translate-x-1/2 -top-1 sm:top-1/2 sm:-translate-y-1/2 w-3 h-3 rounded-full bg-hommentor-blue ring-4 ring-blue-100" />
                 <div className={`pl-12 sm:pl-0 ${i % 2 === 0 ? "sm:pr-[52%]" : "sm:pl-[52%]"} sm:w-full`}>
-                  <span className="text-xs font-semibold text-homentor-blue uppercase tracking-wider">{m.year}</span>
-                  <h3 className="font-heading font-bold text-xl text-homentor-ink mt-1">{m.title}</h3>
+                  <span className="text-xs font-semibold text-hommentor-blue uppercase tracking-wider">{m.year}</span>
+                  <h3 className="font-heading font-bold text-xl text-hommentor-ink mt-1">{m.title}</h3>
                   <p className="text-slate-600 mt-1.5 leading-relaxed">{m.body}</p>
                 </div>
               </motion.div>
@@ -221,7 +221,7 @@ function AboutUs() {
       </section>
 
       {/* Founder */}
-      <section className="py-24 bg-homentor-mist">
+      <section className="py-24 bg-hommentor-mist">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -231,19 +231,19 @@ function AboutUs() {
             className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 shadow-sm flex flex-col md:flex-row items-center gap-8"
           >
             <div className="shrink-0">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-homentor-blue to-indigo-600 text-white flex items-center justify-center font-heading font-extrabold text-4xl shadow-xl">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-hommentor-blue to-indigo-600 text-white flex items-center justify-center font-heading font-extrabold text-4xl shadow-xl">
                 PP
               </div>
             </div>
             <div className="text-center md:text-left">
-              <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Founder</p>
-              <h3 className="mt-1 font-heading font-bold text-2xl text-homentor-ink">Prashant Pansey</h3>
+              <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">Founder</p>
+              <h3 className="mt-1 font-heading font-bold text-2xl text-hommentor-ink">Prashant Pansey</h3>
               <p className="text-slate-500 text-sm">Founder & CEO</p>
               <blockquote className="mt-5 text-slate-700 leading-relaxed">
-                "I started Homentor because no parent should have to gamble on their child's tutor.
+                "I started hommentor because no parent should have to gamble on their child's tutor.
                 If we won't put a mentor in front of our own kids, they don't make it onto the platform."
               </blockquote>
-              <div className="mt-5 inline-flex items-center gap-2 text-sm text-homentor-blue font-medium">
+              <div className="mt-5 inline-flex items-center gap-2 text-sm text-hommentor-blue font-medium">
                 <Compass className="w-4 h-4" />
                 Based in Indore · Working across India
               </div>
@@ -270,7 +270,7 @@ function AboutUs() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/mentors"
-              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-gold hover:bg-homentor-darkGold text-homentor-ink font-semibold shadow-xl"
+              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-hommentor-gold hover:bg-hommentor-darkGold text-hommentor-ink font-semibold shadow-xl"
             >
               Find a mentor
               <ArrowRight className="w-4 h-4" />

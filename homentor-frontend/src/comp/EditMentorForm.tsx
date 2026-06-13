@@ -135,7 +135,7 @@ const educationLevels = {
                   // Example: Upload to Cloudinary (replace with your API)
                   const formDataUpload = new FormData();
                   formDataUpload.append("file", file);
-                  formDataUpload.append("upload_preset", "homentor"); // Replace with your preset
+                  formDataUpload.append("upload_preset", "hommentor"); // Replace with your preset
                   try {
                     const res = await fetch(
                       "https://api.cloudinary.com/v1_1/dpveehhtq/image/upload",

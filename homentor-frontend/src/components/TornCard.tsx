@@ -174,7 +174,7 @@ const TornCard = ({ mentor }) => {
         <div className="mt-2 flex items-center justify-between lg:gap-2 gap-1">
           {/* <Button
             onClick={handleChatClick}
-            className="flex-1 bg-gradient-to-r from-homentor-chat to-homentor-chatHover hover:opacity-90 text-xs gap-1"
+            className="flex-1 bg-gradient-to-r from-hommentor-chat to-hommentor-chatHover hover:opacity-90 text-xs gap-1"
           >
             <MessageCircle className="w-4 h-4" />
             Chat
@@ -182,7 +182,7 @@ const TornCard = ({ mentor }) => {
 
           <Button
             onClick={initiateCall}
-            className="flex-1 bg-gradient-to-r from-homentor-call to-homentor-callHover hover:opacity-90 text-xs gap-1"
+            className="flex-1 bg-gradient-to-r from-hommentor-call to-hommentor-callHover hover:opacity-90 text-xs gap-1"
           >
             <PhoneCall className="w-4 h-4" />
           </Button>

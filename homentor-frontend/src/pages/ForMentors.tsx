@@ -75,7 +75,7 @@ const ForMentors = () => {
             { n: "4.9★", l: "Mentor rating" },
           ].map((s) => (
             <div key={s.l}>
-              <p className="font-heading font-extrabold text-3xl sm:text-4xl text-homentor-ink tracking-tight">
+              <p className="font-heading font-extrabold text-3xl sm:text-4xl text-hommentor-ink tracking-tight">
                 {s.n}
               </p>
               <p className="text-sm text-slate-500 mt-1">{s.l}</p>
@@ -85,7 +85,7 @@ const ForMentors = () => {
       </section>
 
       {/* Benefits */}
-      <section className="py-24 bg-homentor-mist">
+      <section className="py-24 bg-hommentor-mist">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -94,8 +94,8 @@ const ForMentors = () => {
             transition={{ duration: 0.4 }}
             className="text-center mb-12 max-w-2xl mx-auto"
           >
-            <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Why teach on Homentor</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
+            <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">Why teach on hommentor</p>
+            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight leading-tight">
               Built to make teaching your full income, not a side hustle
             </h2>
           </motion.div>
@@ -110,17 +110,17 @@ const ForMentors = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ delay: i * 0.06, duration: 0.45 }}
-                  className="bg-white rounded-3xl border border-slate-200 p-7 hover:border-homentor-gold hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                  className="bg-white rounded-3xl border border-slate-200 p-7 hover:border-hommentor-gold hover:shadow-xl hover:-translate-y-0.5 transition-all"
                 >
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4 ${
-                    b.accent === "blue" ? "bg-blue-50 text-homentor-blue" :
+                    b.accent === "blue" ? "bg-blue-50 text-hommentor-blue" :
                     b.accent === "amber" ? "bg-amber-50 text-amber-600" :
                     b.accent === "emerald" ? "bg-emerald-50 text-emerald-600" :
                     "bg-indigo-50 text-indigo-600"
                   }`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="font-heading font-bold text-xl text-homentor-ink">{b.title}</h3>
+                  <h3 className="font-heading font-bold text-xl text-hommentor-ink">{b.title}</h3>
                   <p className="text-slate-600 mt-2 leading-relaxed">{b.body}</p>
                 </motion.div>
               );
@@ -139,8 +139,8 @@ const ForMentors = () => {
             transition={{ duration: 0.4 }}
             className="text-center mb-14 max-w-2xl mx-auto"
           >
-            <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">How to join</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight">
+            <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">How to join</p>
+            <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight">
               Four steps to your first booking
             </h2>
           </motion.div>
@@ -158,7 +158,7 @@ const ForMentors = () => {
                 <span className="text-4xl font-heading font-extrabold text-slate-100 block leading-none mb-3">
                   {s.n}
                 </span>
-                <h3 className="font-heading font-bold text-lg text-homentor-ink">{s.title}</h3>
+                <h3 className="font-heading font-bold text-lg text-hommentor-ink">{s.title}</h3>
                 <p className="text-sm text-slate-600 mt-1.5 leading-relaxed">{s.body}</p>
               </motion.div>
             ))}
@@ -184,7 +184,7 @@ const ForMentors = () => {
             </div>
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-white text-homentor-blue font-semibold whitespace-nowrap"
+              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-white text-hommentor-blue font-semibold whitespace-nowrap"
             >
               {t('forMentors.applyNow')}
               <ArrowRight className="w-4 h-4" />
@@ -194,7 +194,7 @@ const ForMentors = () => {
       </section>
 
       {/* Testimonial */}
-      <section className="py-20 bg-homentor-mist">
+      <section className="py-20 bg-hommentor-mist">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.figure
             initial={{ opacity: 0, y: 16 }}
@@ -203,20 +203,20 @@ const ForMentors = () => {
             transition={{ duration: 0.5 }}
             className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 shadow-sm"
           >
-            <div className="flex items-center gap-2 text-homentor-gold mb-4">
+            <div className="flex items-center gap-2 text-hommentor-gold mb-4">
               <TrendingUp className="w-5 h-5" />
               <span className="font-heading font-semibold text-sm uppercase tracking-wider">Mentor story</span>
             </div>
-            <blockquote className="text-xl sm:text-2xl text-homentor-ink font-heading font-medium leading-snug">
+            <blockquote className="text-xl sm:text-2xl text-hommentor-ink font-heading font-medium leading-snug">
               "I was teaching 4 students through WhatsApp groups and tired of chasing fees.
-              Homentor brought me 11 paid bookings in my first 2 months — I didn't pitch a single parent."
+              hommentor brought me 11 paid bookings in my first 2 months — I didn't pitch a single parent."
             </blockquote>
             <figcaption className="mt-6 flex items-center gap-3 pt-5 border-t border-slate-100">
               <div className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white flex items-center justify-center font-bold">
                 R
               </div>
               <div>
-                <p className="font-semibold text-homentor-ink">Rekha M.</p>
+                <p className="font-semibold text-hommentor-ink">Rekha M.</p>
                 <p className="text-sm text-slate-500">Mathematics Mentor · Indore</p>
               </div>
             </figcaption>
@@ -236,13 +236,13 @@ const ForMentors = () => {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-gold hover:bg-homentor-darkGold text-homentor-ink font-semibold shadow-xl"
+              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-hommentor-gold hover:bg-hommentor-darkGold text-hommentor-ink font-semibold shadow-xl"
             >
               {t('forMentors.applyNow')}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
-              href="https://wa.me/919203149956?text=Hi%20Homentor%2C%20I%27d%20like%20to%20become%20a%20mentor"
+              href="https://wa.me/919203149956?text=Hi%20hommentor%2C%20I%27d%20like%20to%20become%20a%20mentor"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 h-12 px-5 rounded-xl border border-white/20 hover:bg-white/10 font-medium"

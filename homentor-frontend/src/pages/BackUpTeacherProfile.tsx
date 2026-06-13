@@ -27,7 +27,7 @@ import axios from "axios";
 import LoginPopup from "@/components/LoginPopup";
 import { callMentor } from "@/lib/callMentor";
 
-// Mock teacher data for homentor platform
+// Mock teacher data for hommentor platform
 const teacherData = {
   id: 1,
   name: "Sarah Johnson",

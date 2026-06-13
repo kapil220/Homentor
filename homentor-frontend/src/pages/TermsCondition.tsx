@@ -26,7 +26,7 @@ function TermsCondition() {
             </p>
 
             <p className="text-base md:text-lg leading-relaxed">
-              This document is published in accordance with Rule 3 (1) of the Information Technology (Intermediaries Guidelines) Rules, 2011 that require publishing the rules and regulations, privacy policy, and Terms of Use for access or usage of the domain name <a href="https://homentor.in" className="text-blue-700 underline">https://homentor.in</a> (Website), including the related mobile site (hereinafter referred to as ‘Platform’). The Platform is owned by HOMENTOR EDU (OPC) Private Limited, a company incorporated under the Companies Act, 1956 with its address at 2 - Scheme No. 54, PU-4, Vijay Nagar, Indore - 452010, MP, hereinafter referred to as ‘Platform Owner’, ‘we’, ‘us’, ‘our’.
+              This document is published in accordance with Rule 3 (1) of the Information Technology (Intermediaries Guidelines) Rules, 2011 that require publishing the rules and regulations, privacy policy, and Terms of Use for access or usage of the domain name <a href="https://hommentor.in" className="text-blue-700 underline">https://hommentor.in</a> (Website), including the related mobile site (hereinafter referred to as ‘Platform’). The Platform is owned by hommentor EDU (OPC) Private Limited, a company incorporated under the Companies Act, 1956 with its address at 2 - Scheme No. 54, PU-4, Vijay Nagar, Indore - 452010, MP, hereinafter referred to as ‘Platform Owner’, ‘we’, ‘us’, ‘our’.
             </p>
 
             <p className="text-base md:text-lg leading-relaxed">
@@ -46,7 +46,7 @@ function TermsCondition() {
             </p>
 
             <p className="text-base md:text-lg leading-relaxed">
-              <strong>Refund Policy:</strong> No refunds are accepted by HOMENTOR EDU (OPC) Private Limited.
+              <strong>Refund Policy:</strong> No refunds are accepted by hommentor EDU (OPC) Private Limited.
             </p>
 
           </div>

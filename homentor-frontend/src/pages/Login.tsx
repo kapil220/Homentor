@@ -112,7 +112,7 @@ const Login = () => {
       )}
 
       <Button
-        className="w-full bg-homentor-blue hover:bg-homentor-darkBlue"
+        className="w-full bg-hommentor-blue hover:bg-hommentor-darkBlue"
         onClick={handleSubmit}
         disabled={isLoading}
       >
@@ -126,7 +126,7 @@ const Login = () => {
           <>
             <button
               type="button"
-              className="text-homentor-blue underline"
+              className="text-hommentor-blue underline"
               onClick={() => { setMode("signup"); setErrorMsg(""); }}
             >
               {t('auth.signupTab')}
@@ -136,7 +136,7 @@ const Login = () => {
           <>
             <button
               type="button"
-              className="text-homentor-blue underline"
+              className="text-hommentor-blue underline"
               onClick={() => { setMode("login"); setErrorMsg(""); }}
             >
               {t('auth.loginTab')}

@@ -16,7 +16,7 @@ const testimonials = [
     name: "Rajesh Kumar",
     role: "Father of Aanya, Class 11 · Bhopal",
     quote:
-      "I was sceptical of online tuition for physics. Homentor matched us with a mentor in our own neighbourhood. My daughter actually looks forward to class now.",
+      "I was sceptical of online tuition for physics. hommentor matched us with a mentor in our own neighbourhood. My daughter actually looks forward to class now.",
     rating: 5,
     initials: "RK",
     accent: "from-amber-500 to-orange-600",
@@ -49,12 +49,12 @@ const TestimonialsSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">Loved by parents</p>
-          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
+          <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">Loved by parents</p>
+          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight leading-tight">
             Real outcomes, in real homes
           </h2>
           <p className="mt-4 text-slate-600 text-lg">
-            Just a fraction of the families switching to Homentor across India.
+            Just a fraction of the families switching to hommentor across India.
           </p>
         </motion.div>
 
@@ -98,7 +98,7 @@ const TestimonialsSection = () => {
                     {t.initials}
                   </div>
                   <div>
-                    <p className="font-heading font-semibold text-homentor-ink text-sm">{t.name}</p>
+                    <p className="font-heading font-semibold text-hommentor-ink text-sm">{t.name}</p>
                     <p className="text-xs text-slate-500">{t.role}</p>
                   </div>
                 </figcaption>

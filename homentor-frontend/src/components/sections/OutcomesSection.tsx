@@ -36,7 +36,7 @@ const OutcomesSection = () => {
     <section className="py-24 bg-white relative overflow-hidden">
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-b from-white via-homentor-mist/40 to-white -z-10"
+        className="absolute inset-0 bg-gradient-to-b from-white via-hommentor-mist/40 to-white -z-10"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -46,8 +46,8 @@ const OutcomesSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.outcomesLabel')}</p>
-          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
+          <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">{t('home.outcomesLabel')}</p>
+          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight leading-tight">
             {t('home.outcomesTitle')}
           </h2>
           <p className="mt-4 text-slate-600 text-lg">

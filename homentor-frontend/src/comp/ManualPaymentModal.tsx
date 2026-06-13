@@ -62,7 +62,7 @@ const ManualPaymentModal = ({ open, amount, details, onClose, onSubmit }: Props)
   if (!open) return null;
 
   const waMessage = encodeURIComponent(
-    `Hi, I am a Homentor mentor. I have made the commission payment of ₹${amount}. Please verify and unlock my lead. UTR/Ref: ${reference.trim() || "(will share separately)"}`
+    `Hi, I am a hommentor mentor. I have made the commission payment of ₹${amount}. Please verify and unlock my lead. UTR/Ref: ${reference.trim() || "(will share separately)"}`
   );
   const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
 

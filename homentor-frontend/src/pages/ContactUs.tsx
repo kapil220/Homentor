@@ -25,14 +25,14 @@ const ContactCard = ({
         {icon}
       </div>
       <p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">{label}</p>
-      <p className="mt-1 font-heading font-semibold text-lg text-homentor-ink break-words">{value}</p>
+      <p className="mt-1 font-heading font-semibold text-lg text-hommentor-ink break-words">{value}</p>
     </>
   );
   if (href) {
     return (
       <a
         href={href}
-        className="block bg-white border border-slate-200 rounded-2xl p-6 hover:border-homentor-blue hover:shadow-lg transition-all"
+        className="block bg-white border border-slate-200 rounded-2xl p-6 hover:border-hommentor-blue hover:shadow-lg transition-all"
       >
         {inner}
       </a>
@@ -107,20 +107,20 @@ function ContactUs() {
                 label="Phone"
                 value="+91 9203149956"
                 href="tel:+919203149956"
-                accent="bg-blue-50 text-homentor-blue"
+                accent="bg-blue-50 text-hommentor-blue"
               />
               <ContactCard
                 icon={<MessageCircle className="w-5 h-5" />}
                 label="WhatsApp"
                 value="Chat with our team"
-                href="https://wa.me/919203149956?text=Hi%20Homentor"
+                href="https://wa.me/919203149956?text=Hi%20hommentor"
                 accent="bg-emerald-50 text-emerald-600"
               />
               <ContactCard
                 icon={<Mail className="w-5 h-5" />}
                 label="Email"
-                value="homentorindia@gmail.com"
-                href="mailto:homentorindia@gmail.com"
+                value="hommentorindia@gmail.com"
+                href="mailto:hommentorindia@gmail.com"
                 accent="bg-amber-50 text-amber-600"
               />
               <ContactCard
@@ -130,12 +130,12 @@ function ContactUs() {
                 accent="bg-indigo-50 text-indigo-600"
               />
 
-              <div className="bg-homentor-mist rounded-2xl p-5 flex items-start gap-3 border border-slate-200">
-                <div className="w-10 h-10 rounded-xl bg-white text-homentor-blue inline-flex items-center justify-center shrink-0">
+              <div className="bg-hommentor-mist rounded-2xl p-5 flex items-start gap-3 border border-slate-200">
+                <div className="w-10 h-10 rounded-xl bg-white text-hommentor-blue inline-flex items-center justify-center shrink-0">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-heading font-semibold text-homentor-ink">Working hours</p>
+                  <p className="font-heading font-semibold text-hommentor-ink">Working hours</p>
                   <p className="text-sm text-slate-600 mt-0.5">Mon — Sat · 9:00 AM to 8:00 PM IST</p>
                   <p className="text-xs text-slate-500 mt-0.5">We respond on Sundays for booked demos only.</p>
                 </div>
@@ -163,7 +163,7 @@ function ContactUs() {
                       <div className="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
                         <CheckCircle2 className="w-8 h-8" />
                       </div>
-                      <h3 className="text-2xl font-heading font-bold text-homentor-ink">
+                      <h3 className="text-2xl font-heading font-bold text-hommentor-ink">
                         {success.duplicate ? "We have your details" : "Got it — we'll be in touch"}
                       </h3>
                       <p className="text-slate-600 mt-2 max-w-md mx-auto">
@@ -183,10 +183,10 @@ function ContactUs() {
                       noValidate
                     >
                       <div>
-                        <p className="text-xs font-semibold text-homentor-blue uppercase tracking-wider">
+                        <p className="text-xs font-semibold text-hommentor-blue uppercase tracking-wider">
                           Send a message
                         </p>
-                        <h2 className="mt-1 text-2xl sm:text-3xl font-heading font-bold text-homentor-ink leading-tight">
+                        <h2 className="mt-1 text-2xl sm:text-3xl font-heading font-bold text-hommentor-ink leading-tight">
                           Tell us what you need — we'll handle the rest.
                         </h2>
                       </div>
@@ -202,7 +202,7 @@ function ContactUs() {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder={t('contact.name')}
-                            className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
+                            className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-hommentor-blue focus:border-transparent transition"
                             required
                           />
                         </div>
@@ -210,7 +210,7 @@ function ContactUs() {
                           <label className="block text-xs font-medium text-slate-600 mb-1.5">
                             Phone
                           </label>
-                          <div className="flex items-stretch h-12 rounded-xl border border-slate-200 bg-white focus-within:ring-2 focus-within:ring-homentor-blue focus-within:border-transparent transition">
+                          <div className="flex items-stretch h-12 rounded-xl border border-slate-200 bg-white focus-within:ring-2 focus-within:ring-hommentor-blue focus-within:border-transparent transition">
                             <span className="px-4 inline-flex items-center text-sm font-medium text-slate-500 border-r border-slate-200">
                               +91
                             </span>
@@ -239,7 +239,7 @@ function ContactUs() {
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                           placeholder={t('contact.message')}
-                          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition resize-none"
+                          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-hommentor-blue focus:border-transparent transition resize-none"
                         />
                       </div>
 
@@ -252,14 +252,14 @@ function ContactUs() {
                       <button
                         type="submit"
                         disabled={submitting}
-                        className="w-full h-12 bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 inline-flex items-center justify-center"
+                        className="w-full h-12 bg-hommentor-blue hover:bg-hommentor-darkBlue text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 inline-flex items-center justify-center"
                       >
                         {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : t('contact.send')}
                       </button>
 
                       <p className="text-[11px] text-slate-500 text-center">
                         Or call us directly at{" "}
-                        <a href="tel:+919203149956" className="text-homentor-blue font-medium hover:underline">
+                        <a href="tel:+919203149956" className="text-hommentor-blue font-medium hover:underline">
                           +91 9203149956
                         </a>
                       </p>

@@ -12,14 +12,14 @@ const LanguageToggle: React.FC = () => {
     >
       <span
         className={`px-3 py-2 transition-colors ${
-          lang === 'en' ? 'bg-homentor-blue text-white' : 'text-gray-500 hover:text-gray-700'
+          lang === 'en' ? 'bg-hommentor-blue text-white' : 'text-gray-500 hover:text-gray-700'
         }`}
       >
         EN
       </span>
       <span
         className={`px-3 py-2 transition-colors ${
-          lang === 'hi' ? 'bg-homentor-blue text-white' : 'text-gray-500 hover:text-gray-700'
+          lang === 'hi' ? 'bg-hommentor-blue text-white' : 'text-gray-500 hover:text-gray-700'
         }`}
       >
         हिं

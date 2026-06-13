@@ -128,7 +128,7 @@ export function usePaymentFlow(options: Options = {}) {
       if (provider === "payu") {
         await initiateCheckout({
           amount: Math.round(pending.amount),
-          customerId: `homentor${Date.now()}`,
+          customerId: `hommentor${Date.now()}`,
           customerPhone: pending.customerPhone,
           mentorId: pending.mentorId,
           duration: pending.duration,
@@ -145,7 +145,7 @@ export function usePaymentFlow(options: Options = {}) {
       // Cashfree
       const data = await createOrder({
         amount: Math.round(pending.amount),
-        customerId: `homentor${Date.now()}`,
+        customerId: `hommentor${Date.now()}`,
         customerPhone: pending.customerPhone,
         mentorId: pending.mentorId,
         duration: pending.duration,

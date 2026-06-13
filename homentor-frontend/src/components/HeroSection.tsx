@@ -58,7 +58,7 @@ const HeroSection = () => {
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.55, duration: 0.6 }}
-                  className="absolute -bottom-1 left-0 right-0 h-2 bg-homentor-gold/80 rounded-full origin-left"
+                  className="absolute -bottom-1 left-0 right-0 h-2 bg-hommentor-gold/80 rounded-full origin-left"
                 />
               </span>
               <br />
@@ -84,7 +84,7 @@ const HeroSection = () => {
             >
               <MagneticButton
                 onClick={() => navigate("/mentors")}
-                className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-gold hover:bg-homentor-darkGold text-homentor-ink font-semibold shadow-xl shadow-amber-900/30 transition-colors"
+                className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-hommentor-gold hover:bg-hommentor-darkGold text-hommentor-ink font-semibold shadow-xl shadow-amber-900/30 transition-colors"
               >
                 {t('hero.findMentor')}
                 <ArrowRight className="w-4 h-4" />
@@ -112,7 +112,7 @@ const HeroSection = () => {
                   {[1, 2, 3, 4].map((i) => (
                     <div
                       key={i}
-                      className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 ring-2 ring-homentor-ink"
+                      className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 ring-2 ring-hommentor-ink"
                     />
                   ))}
                 </div>
@@ -155,7 +155,7 @@ const HeroSection = () => {
               </div>
               <div>
                 <p className="text-xs text-slate-500">Last 7 days</p>
-                <p className="text-sm font-semibold text-homentor-ink">142 parents matched</p>
+                <p className="text-sm font-semibold text-hommentor-ink">142 parents matched</p>
               </div>
             </motion.div>
 

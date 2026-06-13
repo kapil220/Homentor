@@ -29,7 +29,7 @@ function Refund() {
       <div className="col-12 py-3">
         <div className="bg-white shadow-md rounded-lg p-6 md:p-8 text-gray-700 space-y-4">
           <p className="text-base md:text-lg">
-            At <strong>Homentor EDU Private Limited</strong>, we aim to provide a smooth learning experience. However, if a refund is requested, it will be processed according to the following policy:
+            At <strong>hommentor EDU Private Limited</strong>, we aim to provide a smooth learning experience. However, if a refund is requested, it will be processed according to the following policy:
           </p>
 
           <ul className="list-disc list-inside text-base md:text-lg space-y-2">
@@ -51,7 +51,7 @@ function Refund() {
           </ul>
 
           <p className="text-base md:text-lg">
-            To request a refund, contact our support team at <strong>contact@homentor.in</strong> or call <strong>7748833998</strong> with your transaction and session details.
+            To request a refund, contact our support team at <strong>contact@hommentor.in</strong> or call <strong>7748833998</strong> with your transaction and session details.
           </p>
         </div>
       </div>

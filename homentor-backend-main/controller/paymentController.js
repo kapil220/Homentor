@@ -22,7 +22,7 @@ const createCashfreeOrder = async (req, res) => {
         customer_phone: customerPhone,
       },
       order_meta: {
-        return_url: `https://homentor.onrender.com/payment-successful?orderId=${customerId}`,
+        return_url: `https://hommentor.onrender.com/payment-successful?orderId=${customerId}`,
       },
       order_note: "Payment for your services",
     };

@@ -53,7 +53,7 @@ export default function MentorSecondForm({mentorId, phone}) {
         // Example: Upload to Cloudinary (replace with your API)
         const formDataUpload = new FormData();
         formDataUpload.append("file", file);
-        formDataUpload.append("upload_preset", "homentor"); // Replace with your preset
+        formDataUpload.append("upload_preset", "hommentor"); // Replace with your preset
         formDataUpload.append("cloud_name", "dpveehhtq")
 
         try {

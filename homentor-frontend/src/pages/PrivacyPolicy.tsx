@@ -25,7 +25,7 @@ function PrivacyPolicy() {
       <div>
         <h3 className="text-xl md:text-2xl font-semibold mb-2">Introduction</h3>
         <p className="text-base md:text-lg leading-relaxed">
-          This Privacy Policy describes how HOMENTOR EDU (OPC) PRIVATE LIMITED and its affiliates (collectively “HOMENTOR EDU (OPC) PRIVATE LIMITED, we, our, us”) collect, use, share, protect or otherwise process your personal data through our website <a href="https://homentor.in" className="text-blue-700 underline">https://homentor.in</a> (“Platform”). By visiting the Platform or availing any product/service, you agree to this Privacy Policy and the applicable Terms of Use.
+          This Privacy Policy describes how hommentor EDU (OPC) PRIVATE LIMITED and its affiliates (collectively “hommentor EDU (OPC) PRIVATE LIMITED, we, our, us”) collect, use, share, protect or otherwise process your personal data through our website <a href="https://hommentor.in" className="text-blue-700 underline">https://hommentor.in</a> (“Platform”). By visiting the Platform or availing any product/service, you agree to this Privacy Policy and the applicable Terms of Use.
         </p>
       </div>
 
@@ -90,9 +90,9 @@ function PrivacyPolicy() {
         <h3 className="text-xl md:text-2xl font-semibold mb-2">Grievance Officer</h3>
         <p className="text-base md:text-lg leading-relaxed">
           PRADHUMN RAGHUWANSHI, Director<br/>
-          HOMENTOR EDU (OPC) PRIVATE LIMITED<br/>
+          hommentor EDU (OPC) PRIVATE LIMITED<br/>
           2 - Scheme No. 54, PU-4, Vijay Nagar, Indore - 452010, MP<br/>
-          <strong>Contact:</strong>+91 9203149956 | <strong>Email:</strong> homentorindia@gmail.com<br/>
+          <strong>Contact:</strong>+91 9203149956 | <strong>Email:</strong> hommentorindia@gmail.com<br/>
           <strong>Timings:</strong> Mon-Fri: 10:00–20:00, Sat-Sun: 10:00–18:00
         </p>
       </div>

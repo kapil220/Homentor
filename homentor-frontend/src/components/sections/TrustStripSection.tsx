@@ -49,7 +49,7 @@ const TrustStripSection = () => {
   return (
     <section className="py-12 sm:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-homentor-mist to-white p-6 sm:p-10">
+        <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-hommentor-mist to-white p-6 sm:p-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {items.map((it, i) => (
               <motion.div
@@ -60,10 +60,10 @@ const TrustStripSection = () => {
                 transition={{ delay: i * 0.06, duration: 0.4 }}
                 className="text-center sm:text-left"
               >
-                <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 text-homentor-blue mb-3">
+                <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-50 text-hommentor-blue mb-3">
                   {it.icon}
                 </div>
-                <p className="text-3xl sm:text-4xl font-heading font-bold text-homentor-ink tracking-tight">
+                <p className="text-3xl sm:text-4xl font-heading font-bold text-hommentor-ink tracking-tight">
                   <Counter end={it.end} suffix={it.suffix} />
                 </p>
                 <p className="text-sm text-slate-600 mt-1">{it.label}</p>

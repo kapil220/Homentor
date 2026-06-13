@@ -182,7 +182,7 @@ const AdminDashboard = () => {
             <Link to="/" className="mr-8">
               <img 
                 src="/lovable-uploads/fd84ccc3-d993-4d2a-b179-a79cbae53518.png" 
-                alt="Homentor Logo" 
+                alt="hommentor Logo" 
                 className="h-8"
               />
             </Link>
@@ -248,7 +248,7 @@ const AdminDashboard = () => {
         <div className="flex-1 p-6">
           <div className="mb-6">
             <h1 className="text-2xl md:text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-gray-600">Monitor and manage the Homentor platform</p>
+            <p className="text-gray-600">Monitor and manage the hommentor platform</p>
           </div>
           
           {/* Stats Overview */}
@@ -332,7 +332,7 @@ const AdminDashboard = () => {
                     {pendingVerifications.length > 0 ? (
                       <div className="space-y-4">
                         {pendingVerifications.map(mentor => (
-                          <div key={mentor.id} className="flex items-start p-4 border border-gray-100 rounded-lg hover:border-homentor-blue transition-colors">
+                          <div key={mentor.id} className="flex items-start p-4 border border-gray-100 rounded-lg hover:border-hommentor-blue transition-colors">
                             <div className="mr-3">
                               <Avatar className="h-10 w-10">
                                 <AvatarImage src={mentor.image} alt={mentor.name} />

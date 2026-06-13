@@ -63,8 +63,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-                // Homentor Brand Colors
-                homentor: {
+                // hommentor Brand Colors
+                hommentor: {
                     blue: '#0074C2',
                     gold: '#F7B500',
                     darkBlue: '#005ea0',

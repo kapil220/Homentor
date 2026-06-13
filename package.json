@@ -1,10 +1,10 @@
 {
-  "name": "homentor-monorepo",
+  "name": "hommentor-monorepo",
   "version": "1.0.0",
-  "description": "Unified runner for Homentor project",
+  "description": "Unified runner for hommentor project",
   "scripts": {
     "start": "bash start-all.sh",
-    "install-all": "npm install --prefix homentor-backend-main && npm install --prefix homentor-frontend && npm install --prefix \"homentor-admin panel\""
+    "install-all": "npm install --prefix hommentor-backend-main && npm install --prefix hommentor-frontend && npm install --prefix \"hommentor-admin panel\""
   },
   "keywords": [],
   "author": "",

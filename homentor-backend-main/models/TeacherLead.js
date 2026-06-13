@@ -1,4 +1,4 @@
-// homentor-backend-main/models/TeacherLead.js
+// hommentor-backend-main/models/TeacherLead.js
 const mongoose = require("mongoose");
 
 const teacherLeadSchema = new mongoose.Schema(

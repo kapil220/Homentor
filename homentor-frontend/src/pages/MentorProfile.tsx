@@ -31,7 +31,7 @@ import LoginPopup from "@/components/LoginPopup";
 import BookingCard from "@/comp/BookingCard";
 import { usePaymentFlow } from "@/hooks/usePaymentFlow";
 
-// Mock teacher data for homentor platform
+// Mock teacher data for hommentor platform
 const teacherData = {
   id: 1,
   name: "Sarah Johnson",

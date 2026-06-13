@@ -174,7 +174,7 @@ export default function AdminSidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <p className="font-semibold text-sm text-gray-800 truncate">Admin</p>
-              <p className="text-xs text-gray-400 truncate">Homentor</p>
+              <p className="text-xs text-gray-400 truncate">hommentor</p>
             </div>
           )}
         </div>

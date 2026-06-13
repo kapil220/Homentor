@@ -70,19 +70,19 @@ const MentorRequest = () => {
   const [selectedMentors, setSelectedMentors] = useState([]);
 
   const getLoginLink = (phone) => {
-    return `https://homentor.in/login?phone=${phone}&type=mentor`;
+    return `https://hommentor.in/login?phone=${phone}&type=mentor`;
   };
 
   const shareOnWhatsApp = (phone) => {
     const link = getLoginLink(phone);
-    const text = `Login to Homentor using this link:\n${link}`;
+    const text = `Login to hommentor using this link:\n${link}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
   const resendLoginLink = (mentor) => {
-    const link = `https://homentor.in/login?phone=${mentor.phone}&type=mentor`;
+    const link = `https://hommentor.in/login?phone=${mentor.phone}&type=mentor`;
     const message = `Hello ${mentor.fullName}, 👋
   
-Please login to Homentor using the link below:
+Please login to hommentor using the link below:
 ${link}
 
 If you face any issue, feel free to contact us.`;

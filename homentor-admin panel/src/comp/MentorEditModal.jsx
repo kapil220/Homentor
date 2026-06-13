@@ -54,7 +54,7 @@ const MentorEditModal = ({
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "homentor"); // replace with your Cloudinary preset
+    formData.append("upload_preset", "hommentor"); // replace with your Cloudinary preset
 
     try {
       const res = await fetch(

@@ -26,7 +26,7 @@ const StatsSection = () => {
                 <AnimatedCounter
                   end={it.end}
                   suffix={it.suffix}
-                  className="block text-3xl md:text-5xl font-bold text-homentor-blue tracking-tight"
+                  className="block text-3xl md:text-5xl font-bold text-hommentor-blue tracking-tight"
                   duration={2200}
                   easing="easeOut"
                 />

@@ -89,7 +89,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
             <div className="w-14 h-14 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-heading font-semibold text-homentor-ink">
+            <h3 className="text-lg font-heading font-semibold text-hommentor-ink">
               {success.duplicate ? t('home.leadFormDuplicate') : t('home.leadFormSuccess')}
             </h3>
             <p className="text-sm text-slate-600 mt-1">
@@ -108,12 +108,12 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
             className="space-y-4"
             noValidate
           >
-            <div className="flex items-center gap-2 text-xs font-semibold text-homentor-blue uppercase tracking-wide">
+            <div className="flex items-center gap-2 text-xs font-semibold text-hommentor-blue uppercase tracking-wide">
               <Sparkles className="w-3.5 h-3.5" />
               {t('home.leadFormBadge')}
             </div>
 
-            <h3 className="text-xl sm:text-2xl font-heading font-semibold text-homentor-ink leading-tight">
+            <h3 className="text-xl sm:text-2xl font-heading font-semibold text-hommentor-ink leading-tight">
               {t('home.leadFormTitle')}
             </h3>
 
@@ -127,14 +127,14 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                   placeholder={t('home.leadFormName')}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
+                  className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-hommentor-blue focus:border-transparent transition"
                   required
                 />
               </div>
 
               <div>
                 <label htmlFor="lead-phone" className="sr-only">Phone</label>
-                <div className="flex items-stretch h-12 rounded-xl border border-slate-200 bg-white focus-within:ring-2 focus-within:ring-homentor-blue focus-within:border-transparent transition">
+                <div className="flex items-stretch h-12 rounded-xl border border-slate-200 bg-white focus-within:ring-2 focus-within:ring-hommentor-blue focus-within:border-transparent transition">
                   <span className="px-4 inline-flex items-center text-sm font-medium text-slate-500 border-r border-slate-200">
                     +91
                   </span>
@@ -161,7 +161,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                   id="lead-class"
                   value={classes}
                   onChange={(e) => setClasses(e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-homentor-blue focus:border-transparent transition"
+                  className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-hommentor-blue focus:border-transparent transition"
                   required
                 >
                   <option value="">{t('home.leadFormClass')}</option>
@@ -174,7 +174,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
               <button
                 type="button"
                 onClick={() => setShowOptional((v) => !v)}
-                className="text-xs text-homentor-blue font-medium hover:underline"
+                className="text-xs text-hommentor-blue font-medium hover:underline"
               >
                 {showOptional ? t('home.leadFormHideOptional') : t('home.leadFormAddOptional')}
               </button>
@@ -190,7 +190,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                     <select
                       value={subjects}
                       onChange={(e) => setSubjects(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue"
+                      className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-hommentor-blue"
                     >
                       <option value="">{t('home.leadFormSubject')}</option>
                       {SUBJECT_OPTIONS.map((s) => (
@@ -202,7 +202,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
                       placeholder={t('home.leadFormArea')}
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-homentor-blue"
+                      className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-hommentor-blue"
                     />
                   </motion.div>
                 )}
@@ -218,7 +218,7 @@ const LeadCaptureForm = ({ variant = "card", source = "landing-hero" }: Props) =
             <Button
               type="submit"
               disabled={submitting}
-              className="w-full h-12 bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 text-base"
+              className="w-full h-12 bg-hommentor-blue hover:bg-hommentor-darkBlue text-white font-semibold rounded-xl shadow-lg shadow-blue-600/20 text-base"
             >
               {submitting ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

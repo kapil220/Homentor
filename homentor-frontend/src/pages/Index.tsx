@@ -51,7 +51,7 @@ const faqItems = [
       "Yes — 100% refund on the first paid session if it isn't a fit. No emails or forms; one phone call and we sort it.",
   },
   {
-    question: "How does Homentor select its mentors?",
+    question: "How does hommentor select its mentors?",
     answer:
       "Every applicant goes through background checks, credential verification and a teaching audit. Only about 15% are accepted onto the platform.",
   },
@@ -61,7 +61,7 @@ const faqItems = [
       "Absolutely. Tell us and we'll match you with someone new at no extra cost. We track switches as a quality signal.",
   },
   {
-    question: "Is Homentor available for all grade levels?",
+    question: "Is hommentor available for all grade levels?",
     answer:
       "We cover Class 1 through Class 12 plus competitive exam prep, across most major subjects. If you don't see your subject in the list, ask — we likely have a mentor for it.",
   },

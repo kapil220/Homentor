@@ -42,7 +42,7 @@ const StickyLeadButton = () => {
             transition={{ type: "spring", stiffness: 220, damping: 22 }}
             onClick={() => setOpen(true)}
             aria-label="Get a free demo"
-            className="lg:hidden fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-homentor-coral hover:bg-[#ff5944] text-white font-semibold px-4 h-12 rounded-full shadow-2xl shadow-orange-900/20"
+            className="lg:hidden fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-hommentor-coral hover:bg-[#ff5944] text-white font-semibold px-4 h-12 rounded-full shadow-2xl shadow-orange-900/20"
           >
             <Sparkles className="w-4 h-4" />
             Free demo

@@ -79,12 +79,21 @@ router.post("/", async (req, res) => {
       if (mentor) {
         const existingLead = await TeacherLead.findOne({ mentorId, parentPhone });
         if (existingLead) {
+          const commissionAmount = await resolveCommission(mentor);
           existingLead.lastCalledAt = new Date();
-          // Link the existing (e.g. call-originated) lead to this demo booking
-          // so admin approval can cascade into it.
           existingLead.classBookingId = newBooking._id;
+          existingLead.callCount = (existingLead.callCount || 1) + 1;
+          existingLead.seenByMentor = false;
+          existingLead.commissionAmount = commissionAmount;
+          existingLead.commissionPaid = commissionAmount === 0;
+          existingLead.paymentStatus = commissionAmount === 0 ? "approved" : "pending";
+          existingLead.paymentRef = "";
           await existingLead.save();
           leadCreated = true;
+
+          if (commissionAmount === 0) {
+            await approveDemoBookingForLead(existingLead);
+          }
         } else {
           const commissionAmount = await resolveCommission(mentor);
 

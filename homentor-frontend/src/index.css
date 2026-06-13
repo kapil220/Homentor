@@ -98,15 +98,15 @@
   }
 
   .btn-primary {
-    @apply bg-homentor-blue text-white hover:bg-homentor-darkBlue transition-colors rounded-lg px-6 py-3 font-medium shadow-soft hover:shadow-hover;
+    @apply bg-hommentor-blue text-white hover:bg-hommentor-darkBlue transition-colors rounded-lg px-6 py-3 font-medium shadow-soft hover:shadow-hover;
   }
 
   .btn-secondary {
-    @apply bg-homentor-gold text-homentor-charcoal hover:bg-homentor-darkGold transition-colors rounded-lg px-6 py-3 font-medium shadow-soft hover:shadow-hover;
+    @apply bg-hommentor-gold text-hommentor-charcoal hover:bg-hommentor-darkGold transition-colors rounded-lg px-6 py-3 font-medium shadow-soft hover:shadow-hover;
   }
 
   .btn-outline {
-    @apply border border-homentor-blue text-homentor-blue hover:bg-homentor-lightBlue transition-colors rounded-lg px-6 py-3 font-medium;
+    @apply border border-hommentor-blue text-hommentor-blue hover:bg-hommentor-lightBlue transition-colors rounded-lg px-6 py-3 font-medium;
   }
 
   .card-hover {
@@ -114,11 +114,11 @@
   }
 
   .input-field {
-    @apply rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-homentor-blue;
+    @apply rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-hommentor-blue;
   }
 
   .hero-gradient {
-    @apply bg-gradient-to-br from-white via-homentor-lightBlue to-blue-50;
+    @apply bg-gradient-to-br from-white via-hommentor-lightBlue to-blue-50;
   }
 
   .glassmorphism {
@@ -134,7 +134,7 @@
   }
 
   .feature-icon {
-    @apply bg-homentor-lightBlue rounded-full p-4 mb-5 text-homentor-blue;
+    @apply bg-hommentor-lightBlue rounded-full p-4 mb-5 text-hommentor-blue;
   }
 
   .testimonial-card {

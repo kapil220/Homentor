@@ -84,7 +84,7 @@ const AllMentor = () => {
     }
   };
   const [shareList, setShareList] = useState([]);
-  const link = "https://homentor.in/selected-mentors?id=" + shareList.join(",");
+  const link = "https://hommentor.in/selected-mentors?id=" + shareList.join(",");
 
   const handleStatus = (mentorId, status) => {
     axios

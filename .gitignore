@@ -7,9 +7,9 @@ yarn-error.log*
 
 # Dependencies
 node_modules/
-/homentor-frontend/node_modules/
-/homentor-backend-main/node_modules/
-/homentor-admin panel/node_modules/
+/hommentor-frontend/node_modules/
+/hommentor-backend-main/node_modules/
+/hommentor-admin panel/node_modules/
 .pnp
 .pnp.js
 

@@ -48,7 +48,7 @@ const sendOtp = async (mobileNumber) => {
     }
 
     const message = await client.messages.create({
-      body: `Your Homentor verification code is: ${otp}. Valid for 5 minutes.`,
+      body: `Your Hommentor verification code is: ${otp}. Valid for 5 minutes.`,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: toNumber,
     });

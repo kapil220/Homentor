@@ -108,11 +108,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const SidebarContent = (
     <div className="flex h-full flex-col">
       <div className={`flex items-center gap-2 px-5 py-5 border-b border-gray-100 ${collapsed ? "justify-center px-2" : ""}`}>
-        <div className="w-9 h-9 rounded-lg bg-homentor-blue text-white flex items-center justify-center font-bold shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-hommentor-blue text-white flex items-center justify-center font-bold shrink-0">
           H
         </div>
         {!collapsed && (
-          <span className="font-semibold text-lg text-gray-900">Homentor</span>
+          <span className="font-semibold text-lg text-gray-900">hommentor</span>
         )}
       </div>
 
@@ -126,7 +126,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               to={item.path}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-homentor-blue text-white"
+                  ? "bg-hommentor-blue text-white"
                   : "text-gray-700 hover:bg-gray-100"
               } ${collapsed ? "justify-center" : ""}`}
               title={collapsed ? t(item.labelKey) : undefined}
@@ -239,7 +239,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100">
-                <div className="w-7 h-7 rounded-full bg-homentor-blue text-white flex items-center justify-center text-xs font-semibold">
+                <div className="w-7 h-7 rounded-full bg-hommentor-blue text-white flex items-center justify-center text-xs font-semibold">
                   {initials}
                 </div>
                 <span className="text-sm text-gray-700">{phone || "—"}</span>

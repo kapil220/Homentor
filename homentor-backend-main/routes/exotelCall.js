@@ -100,7 +100,7 @@ router.post("/call/initiate", async (req, res) => {
       mentorName,
       mode: mode === "direct" ? "direct" : "exotel",
       createdAt: new Date(),
-      statusCallbackUrl: "https://homentor-backend.onrender.com/api/exotel/call-status",
+      statusCallbackUrl: "https://hommentor-backend.onrender.com/api/exotel/call-status",
     });
 
     return res.json({ success: true, data: intent });

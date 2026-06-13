@@ -27,7 +27,7 @@ export default function SuccessModal({ open, onClose, redirectTo }) {
 
           <button
             onClick={handleOk}
-            className="mt-6 px-6 py-2 rounded-lg bg-homentor-blue hover:bg-homentor-darkBlue text-white font-medium transition"
+            className="mt-6 px-6 py-2 rounded-lg bg-hommentor-blue hover:bg-hommentor-darkBlue text-white font-medium transition"
           >
             Okay
           </button>

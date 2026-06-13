@@ -7,7 +7,7 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 RESET='\033[0m'
 
-echo -e "${BLUE}Starting Homentor Application Runner...${RESET}"
+echo -e "${BLUE}Starting hommentor Application Runner...${RESET}"
 echo "=============================="
 
 # Function to check and install dependencies
@@ -35,9 +35,9 @@ check_port() {
 }
 
 # 1. Check Dependencies
-check_npm_install "homentor-backend-main" "Backend"
-check_npm_install "homentor-admin panel" "Admin Panel"
-check_npm_install "homentor-frontend" "Frontend"
+check_npm_install "hommentor-backend-main" "Backend"
+check_npm_install "hommentor-admin panel" "Admin Panel"
+check_npm_install "hommentor-frontend" "Frontend"
 
 # 2. Check Ports
 check_port 5000 "Backend" || exit 1
@@ -52,21 +52,21 @@ echo "=============================="
 
 # 4. Start Backend
 echo -e "${GREEN}Starting Backend on Port 5000...${RESET}"
-cd homentor-backend-main
+cd hommentor-backend-main
 npm start > ../backend.log 2>&1 &
 BACKEND_PID=$!
 cd ..
 
 # 5. Start Admin Panel
 echo -e "${GREEN}Starting Admin Panel on Port 5173...${RESET}"
-cd "homentor-admin panel"
+cd "hommentor-admin panel"
 npm run dev -- --mode development > ../admin.log 2>&1 &
 ADMIN_PID=$!
 cd ..
 
 # 6. Start Frontend
 echo -e "${GREEN}Starting Frontend on Port 3000...${RESET}"
-cd homentor-frontend
+cd hommentor-frontend
 npm run dev -- --mode development > ../frontend.log 2>&1 &
 FRONTEND_PID=$!
 cd ..

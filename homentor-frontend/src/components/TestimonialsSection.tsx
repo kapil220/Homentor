@@ -19,7 +19,7 @@ interface TestimonialsSectionProps {
 
 const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   title = "What Our Students Say",
-  description = "Read what students and parents have to say about their experience with Homentor",
+  description = "Read what students and parents have to say about their experience with hommentor",
   testimonials
 }) => {
   const [scrollY, setScrollY] = useState(0);
@@ -59,11 +59,11 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     <section ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
       {/* Decorative parallax elements */}
       <div
-        className="absolute top-0 left-10 w-40 h-40 bg-homentor-lightBlue rounded-full opacity-20 -z-10"
+        className="absolute top-0 left-10 w-40 h-40 bg-hommentor-lightBlue rounded-full opacity-20 -z-10"
         style={getParallaxStyle(0.05)}
       />
       <div
-        className="absolute bottom-20 right-20 w-64 h-64 bg-homentor-lightGold rounded-full opacity-20 -z-10"
+        className="absolute bottom-20 right-20 w-64 h-64 bg-hommentor-lightGold rounded-full opacity-20 -z-10"
         style={getParallaxStyle(0.08, 'down')}
       />
       
@@ -89,7 +89,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
         >
           <h2 className="section-heading relative inline-block">
             {title}
-            <span className="absolute -z-10 bottom-2 left-0 h-3 bg-homentor-lightGold opacity-40 w-full"></span>
+            <span className="absolute -z-10 bottom-2 left-0 h-3 bg-hommentor-lightGold opacity-40 w-full"></span>
           </h2>
           <p className="section-subheading">{description}</p>
         </div>
@@ -113,16 +113,16 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                       key={starIndex} 
                       className={`h-5 w-5 ${
                         starIndex < testimonial.rating 
-                          ? 'fill-current text-homentor-gold' 
+                          ? 'fill-current text-hommentor-gold' 
                           : 'text-gray-300'
                       }`} 
                     />
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 italic relative">
-                  <span className="absolute -left-2 -top-2 text-4xl text-homentor-lightGold opacity-30">"</span>
+                  <span className="absolute -left-2 -top-2 text-4xl text-hommentor-lightGold opacity-30">"</span>
                   {testimonial.content}
-                  <span className="absolute -right-2 bottom-0 text-4xl text-homentor-lightGold opacity-30">"</span>
+                  <span className="absolute -right-2 bottom-0 text-4xl text-hommentor-lightGold opacity-30">"</span>
                 </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden mr-4 border-2 border-white shadow-md">

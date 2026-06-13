@@ -16,10 +16,10 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground",
         outline: "text-foreground",
-        blue: "border-transparent bg-homentor-blue text-white",
-        gold: "border-transparent bg-homentor-gold text-homentor-charcoal",
-        lightBlue: "border-transparent bg-homentor-lightBlue text-homentor-blue",
-        lightGold: "border-transparent bg-homentor-lightGold text-homentor-darkGold",
+        blue: "border-transparent bg-hommentor-blue text-white",
+        gold: "border-transparent bg-hommentor-gold text-hommentor-charcoal",
+        lightBlue: "border-transparent bg-hommentor-lightBlue text-hommentor-blue",
+        lightGold: "border-transparent bg-hommentor-lightGold text-hommentor-darkGold",
       },
     },
     defaultVariants: {

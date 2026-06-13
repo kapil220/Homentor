@@ -54,9 +54,12 @@ export default function ClassCard({ classItem, userType }) {
   const [sessionType, setSessionType] = useState("monthly"); // "monthly" | "hourly"
   const [selectedHours, setSelectedHours] = useState(1);
 
-  const monthlyPrice = mentor?.teachingModes?.homeTuition?.finalPrice;
+  const monthlyPrice =
+    mentor?.teachingModes?.homeTuition?.finalPrice ||
+    ((mentor?.teachingModes?.homeTuition?.monthlyPrice || 0) +
+      (mentor?.teachingModes?.homeTuition?.margin || 0));
 
-  const hourlyPrice = (mentor?.teachingModes?.homeTuition?.finalPrice/22).toFixed(0) || 500; // default hourly price
+  const hourlyPrice = monthlyPrice ? Math.round(monthlyPrice / 22) : 500;
 
   const totalHourlyPrice = selectedHours * hourlyPrice;
   console.log(JSON.stringify(mentor));

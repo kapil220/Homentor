@@ -766,12 +766,12 @@ const Mentors = () => {
         <div className="sticky top-16 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3">
             <p className="text-sm text-slate-600">
-              <span className="text-2xl font-heading font-bold text-homentor-ink mr-2 align-middle">
+              <span className="text-2xl font-heading font-bold text-hommentor-ink mr-2 align-middle">
                 {filteredMentors.length}
               </span>
               <span className="align-middle">{t('mentors.mentorsLabel')}</span>
               {activeFilterCount > 0 && (
-                <span className="ml-3 align-middle inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-homentor-blue text-xs font-semibold">
+                <span className="ml-3 align-middle inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-50 text-hommentor-blue text-xs font-semibold">
                   <Filter className="w-3 h-3" />
                   {activeFilterCount} {activeFilterCount === 1 ? t('mentors.filterOn') : t('mentors.filtersOn')}
                 </span>
@@ -780,7 +780,7 @@ const Mentors = () => {
             {activeFilterCount > 0 && (
               <button
                 onClick={resetFilters}
-                className="text-sm font-medium text-homentor-blue hover:text-homentor-darkBlue"
+                className="text-sm font-medium text-hommentor-blue hover:text-hommentor-darkBlue"
               >
                 {t('mentors.clearAll')}
               </button>
@@ -795,8 +795,8 @@ const Mentors = () => {
             <aside className="lg:col-span-3">
               <div className="lg:sticky lg:top-32 rounded-2xl bg-white border border-slate-200 shadow-sm p-5 space-y-5">
                 <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-                  <Filter className="w-4 h-4 text-homentor-blue" />
-                  <p className="font-heading font-semibold text-homentor-ink">{t('mentors.filtersHeading')}</p>
+                  <Filter className="w-4 h-4 text-hommentor-blue" />
+                  <p className="font-heading font-semibold text-hommentor-ink">{t('mentors.filtersHeading')}</p>
                 </div>
 
                 <FilterField label={t('mentors.filterClass')}>
@@ -846,7 +846,7 @@ const Mentors = () => {
                     <input
                       ref={inputRef}
                       placeholder={`Type to search in ${selectedCity}`}
-                      className="border border-slate-200 px-3 py-2 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-homentor-blue/30"
+                      className="border border-slate-200 px-3 py-2 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-hommentor-blue/30"
                     />
                     {selectedLocation && (
                       <p className="text-xs text-slate-500 mt-1.5">
@@ -893,7 +893,7 @@ const Mentors = () => {
                       <Award className="w-4 h-4 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
+                      <h2 className="text-xl sm:text-2xl font-heading font-bold text-hommentor-ink">
                         {t('mentors.goldMentor')}
                       </h2>
                       <p className="text-xs text-slate-500">{t('mentors.goldMentorsPremium')}</p>
@@ -911,11 +911,11 @@ const Mentors = () => {
               {/* All mentors */}
               <section>
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-homentor-blue to-indigo-600 flex items-center justify-center shadow-sm">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-hommentor-blue to-indigo-600 flex items-center justify-center shadow-sm">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-heading font-bold text-homentor-ink">
+                    <h2 className="text-xl sm:text-2xl font-heading font-bold text-hommentor-ink">
                       {t('mentors.allMentors')}
                     </h2>
                     <p className="text-xs text-slate-500">{t('mentors.verifiedAcrossArea')}</p>
@@ -943,30 +943,30 @@ const Mentors = () => {
                     ))}
                   </div>
                 ) : mentorsData.length === 0 ? (
-                  <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
-                    <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
+                  <div className="text-center py-16 rounded-3xl bg-hommentor-mist border border-slate-200">
+                    <h3 className="text-lg font-heading font-semibold text-hommentor-ink mb-2">
                       {t('mentors.unableToLoad')}
                     </h3>
                     <p className="text-slate-600 mb-4">
                       {t('mentors.checkConnection')}
                     </p>
                     <Button
-                      className="bg-homentor-blue hover:bg-homentor-darkBlue"
+                      className="bg-hommentor-blue hover:bg-hommentor-darkBlue"
                       onClick={fetchMentors}
                     >
                       {t('mentors.retry')}
                     </Button>
                   </div>
                 ) : (
-                  <div className="text-center py-16 rounded-3xl bg-homentor-mist border border-slate-200">
-                    <h3 className="text-lg font-heading font-semibold text-homentor-ink mb-2">
+                  <div className="text-center py-16 rounded-3xl bg-hommentor-mist border border-slate-200">
+                    <h3 className="text-lg font-heading font-semibold text-hommentor-ink mb-2">
                       {t('mentors.noMatchFilters')}
                     </h3>
                     <p className="text-slate-600 mb-4">
                       {t('mentors.tryWidening')}
                     </p>
                     <Button
-                      className="bg-homentor-blue hover:bg-homentor-darkBlue"
+                      className="bg-hommentor-blue hover:bg-hommentor-darkBlue"
                       onClick={resetFilters}
                     >
                       {t('mentors.clearFilters')}

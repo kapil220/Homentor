@@ -49,7 +49,7 @@ const FeaturedMentorsSection = () => {
   if (!loading && mentors.length === 0) return null;
 
   return (
-    <section className="py-24 bg-homentor-mist relative overflow-hidden">
+    <section className="py-24 bg-hommentor-mist relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -58,8 +58,8 @@ const FeaturedMentorsSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-14 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.featuredMentorsLabel')}</p>
-          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-homentor-ink tracking-tight leading-tight">
+          <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">{t('home.featuredMentorsLabel')}</p>
+          <h2 className="mt-2 text-3xl md:text-5xl font-heading font-bold text-hommentor-ink tracking-tight leading-tight">
             {t('home.featuredMentorsHeading')}
           </h2>
           <p className="mt-4 text-slate-600 text-lg">
@@ -95,7 +95,7 @@ const FeaturedMentorsSection = () => {
           <Link to="/mentors">
             <Button
               size="lg"
-              className="bg-homentor-ink hover:bg-slate-800 text-white rounded-xl shadow-xl h-12 px-7"
+              className="bg-hommentor-ink hover:bg-slate-800 text-white rounded-xl shadow-xl h-12 px-7"
             >
               {t('home.viewAllMentors')}
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -133,12 +133,12 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
             alt={mentor.fullName}
             className="w-16 h-16 rounded-full object-cover border border-slate-200"
           />
-          <div className="absolute -bottom-1 -right-1 bg-homentor-blue text-white rounded-full p-1">
+          <div className="absolute -bottom-1 -right-1 bg-hommentor-blue text-white rounded-full p-1">
             <BadgeCheck className="w-3 h-3" />
           </div>
         </div>
         <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-slate-900 truncate group-hover:text-homentor-blue transition-colors">
+          <h3 className="font-semibold text-slate-900 truncate group-hover:text-hommentor-blue transition-colors">
             {mentor.fullName}
           </h3>
           <div className="flex items-center gap-1 mt-0.5">
@@ -158,7 +158,7 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
           {subjects.map((s) => (
             <span
               key={s}
-              className="text-xs px-2 py-1 rounded-full bg-blue-50 text-homentor-blue border border-blue-100"
+              className="text-xs px-2 py-1 rounded-full bg-blue-50 text-hommentor-blue border border-blue-100"
             >
               {s}
             </span>
@@ -173,7 +173,7 @@ const MentorCard = ({ mentor }: { mentor: Mentor }) => {
           </span>{" "}
           <span className="text-slate-500 text-xs">/ month</span>
         </p>
-        <span className="text-sm text-homentor-blue font-medium group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
+        <span className="text-sm text-hommentor-blue font-medium group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1">
           View profile <ArrowRight className="w-3.5 h-3.5" />
         </span>
       </div>

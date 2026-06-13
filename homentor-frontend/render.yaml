@@ -1,7 +1,7 @@
 staticPublishPath: dist
 services:
   - type: web
-    name: homentor-frontend
+    name: hommentor-frontend
     env: static
     staticPublishPath: dist
     buildCommand: npm run build

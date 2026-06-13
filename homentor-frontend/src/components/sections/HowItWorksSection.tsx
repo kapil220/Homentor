@@ -14,7 +14,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-homentor-mist">
+    <section id="how-it-works" className="py-20 bg-hommentor-mist">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -23,8 +23,8 @@ const HowItWorksSection = () => {
           transition={{ duration: 0.4 }}
           className="text-center mb-12 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-semibold text-homentor-blue uppercase tracking-wider">{t('home.howItWorksLabel')}</p>
-          <h2 className="mt-2 text-3xl md:text-4xl font-heading font-bold text-homentor-ink tracking-tight">
+          <p className="text-sm font-semibold text-hommentor-blue uppercase tracking-wider">{t('home.howItWorksLabel')}</p>
+          <h2 className="mt-2 text-3xl md:text-4xl font-heading font-bold text-hommentor-ink tracking-tight">
             {t('home.howItWorksHeading')}
           </h2>
         </motion.div>
@@ -44,10 +44,10 @@ const HowItWorksSection = () => {
                 <span className="absolute top-5 right-5 text-5xl font-heading font-extrabold text-slate-100 leading-none select-none">
                   0{i + 1}
                 </span>
-                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-homentor-blue mb-4">
+                <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-blue-50 text-hommentor-blue mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="font-heading font-semibold text-lg text-homentor-ink">{s.title}</h3>
+                <h3 className="font-heading font-semibold text-lg text-hommentor-ink">{s.title}</h3>
                 <p className="text-slate-600 text-sm mt-2 leading-relaxed">{s.body}</p>
               </motion.div>
             );
@@ -63,7 +63,7 @@ const HowItWorksSection = () => {
         >
           <button
             onClick={() => navigate("/mentors")}
-            className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-homentor-blue hover:bg-homentor-darkBlue text-white font-semibold shadow-lg shadow-blue-600/20"
+            className="inline-flex items-center gap-2 h-12 px-6 rounded-xl bg-hommentor-blue hover:bg-hommentor-darkBlue text-white font-semibold shadow-lg shadow-blue-600/20"
           >
             {t('home.bookFreeDemo')}
             <ArrowRight className="w-4 h-4" />

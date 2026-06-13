@@ -29,7 +29,7 @@ const TutorApplicationPage: React.FC = () => {
               <section className="mb-12">
                 <Card className="bg-white shadow-xl border-blue-200">
                   <CardHeader>
-                    <CardTitle className="text-3xl text-blue-700">Why Join HOMENTOR?</CardTitle>
+                    <CardTitle className="text-3xl text-blue-700">Why Join hommentor?</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6 text-blue-700">
                     <div className="flex items-start space-x-3">
@@ -64,14 +64,14 @@ const TutorApplicationPage: React.FC = () => {
                   </CardHeader>
                   <CardContent className="space-y-4 text-blue-700">
                     <p>
-                      At HOMENTOR, we are committed to providing high-quality education and fostering a positive learning environment.
+                      At hommentor, we are committed to providing high-quality education and fostering a positive learning environment.
                       Our tutors are expected to uphold the highest standards of professionalism, integrity, and dedication to student success.
                     </p>
                     <ul className="list-disc list-inside space-y-2 pl-4">
                       <li>Maintain a professional and respectful demeanor at all times.</li>
                       <li>Prepare adequately for each tutoring session.</li>
                       <li>Provide constructive feedback and support to students.</li>
-                      <li>Adhere to HOMENTOR's code of conduct and privacy policies.</li>
+                      <li>Adhere to hommentor's code of conduct and privacy policies.</li>
                       <li>Commit to continuous improvement and professional development.</li>
                     </ul>
                     <p className="font-semibold">

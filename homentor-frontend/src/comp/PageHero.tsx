@@ -23,7 +23,7 @@ const PageHero = ({
       className={`relative isolate overflow-hidden ${
         isDark
           ? "bg-mesh-dark bg-mesh-animated noise-overlay text-white"
-          : "bg-mesh-light text-homentor-ink"
+          : "bg-mesh-light text-hommentor-ink"
       }`}
     >
       <div
@@ -41,7 +41,7 @@ const PageHero = ({
             {eyebrow && (
               <span
                 className={`inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full uppercase tracking-wider ${
-                  isDark ? "bg-white/10 text-white border border-white/15" : "bg-blue-50 text-homentor-blue border border-blue-100"
+                  isDark ? "bg-white/10 text-white border border-white/15" : "bg-blue-50 text-hommentor-blue border border-blue-100"
                 }`}
               >
                 {eyebrow}

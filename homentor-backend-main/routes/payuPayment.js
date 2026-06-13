@@ -55,9 +55,9 @@ router.post("/create-order", async (req, res) => {
 
         const txnid = `HMT${Date.now()}${uuidv4().slice(0, 6)}`;
         const amountStr = Number(amount).toFixed(2);
-        const productinfo = isDemo ? "Homentor Demo Session" : "Homentor Class Booking";
-        const firstname = (user.name || customerId || "Homentor").toString().slice(0, 60);
-        const email = user.email || `${customerPhone}@homentor.in`;
+        const productinfo = isDemo ? "Hommentor Demo Session" : "Hommentor Class Booking";
+        const firstname = (user.name || customerId || "Hommentor").toString().slice(0, 60);
+        const email = user.email || `${customerPhone}@hommentor.in`;
 
         const hashParams = {
             key, txnid, amount: amountStr, productinfo, firstname, email
@@ -78,7 +78,7 @@ router.post("/create-order", async (req, res) => {
             paymentProvider: "payu"
         });
 
-        const frontendBase = (process.env.FRONTEND_BASE_URL || "https://homentor.in").replace(/\/$/, "");
+        const frontendBase = (process.env.FRONTEND_BASE_URL || "https://hommentor.in").replace(/\/$/, "");
         const returnUrl = `${frontendBase}/payment-status?orderId=${txnid}`;
 
         res.status(200).json({

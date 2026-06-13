@@ -409,7 +409,7 @@ const TutorRegistrationForm = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "homentor"); // change this
+    formData.append("upload_preset", "hommentor"); // change this
     formData.append("cloud_name", "dpveehhtq"); // change this
 
     // setUploading(true);

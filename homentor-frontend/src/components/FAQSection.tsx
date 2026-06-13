@@ -36,7 +36,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     <section className="py-20 bg-white">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-homentor-blue border border-blue-100">
+          <span className="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-50 text-hommentor-blue border border-blue-100">
             FAQ
           </span>
           <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
@@ -59,9 +59,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                 </h3>
                 <div className="shrink-0 w-8 h-8 rounded-lg bg-slate-50 group-hover:bg-blue-50 flex items-center justify-center transition-colors">
                   {openItems[index] ? (
-                    <Minus className="h-4 w-4 text-homentor-blue" />
+                    <Minus className="h-4 w-4 text-hommentor-blue" />
                   ) : (
-                    <Plus className="h-4 w-4 text-slate-500 group-hover:text-homentor-blue" />
+                    <Plus className="h-4 w-4 text-slate-500 group-hover:text-hommentor-blue" />
                   )}
                 </div>
               </CollapsibleTrigger>

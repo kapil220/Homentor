@@ -79,13 +79,13 @@ const CallAdmin = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Dashboard Header */}
-      <div className="bg-homentor-blue text-white py-4 px-6 shadow-sm">
+      <div className="bg-hommentor-blue text-white py-4 px-6 shadow-sm">
         <div className="container-tight flex justify-between items-center">
           <div className="flex items-center">
             <Link to="/" className="mr-8">
               <img
                 src="/lovable-uploads/fd84ccc3-d993-4d2a-b179-a79cbae53518.png"
-                alt="Homentor Logo"
+                alt="hommentor Logo"
                 className="h-8"
               />
             </Link>

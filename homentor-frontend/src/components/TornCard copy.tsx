@@ -67,7 +67,7 @@ const TornCard = ({ mentor }) => {
     try {
       const data = await createOrder({
         amount: fees,
-        customerId: `homentor${Date.now()}`,
+        customerId: `hommentor${Date.now()}`,
         customerPhone: userNumber,
         mentorId: mentor._id,
       });
@@ -213,7 +213,7 @@ const TornCard = ({ mentor }) => {
       <div className="absolute z-[1000] lg:flex hidden gap-10 bottom-[10vh]">
         <Button
           onClick={() => handleChatClick()}
-          className="bg-gradient-to-r mentor-icons1  from-homentor-chat to-homentor-chatHover hover:from-homentor-chatHover hover:to-homentor-chat transition-all duration-300 flex items-center justify-center gap-1 group/icon overflow-hidden relative"
+          className="bg-gradient-to-r mentor-icons1  from-hommentor-chat to-hommentor-chatHover hover:from-hommentor-chatHover hover:to-hommentor-chat transition-all duration-300 flex items-center justify-center gap-1 group/icon overflow-hidden relative"
           title="Chat with mentor"
         >
           <MessageCircle className="lg:w-4 lg:h-4 h-2 w-2 transition-transform duration-300 group-hover/icon:scale-110" />
@@ -222,7 +222,7 @@ const TornCard = ({ mentor }) => {
         </Button>
 
         <Button
-          className="bg-gradient-to-r mentor-icons2 from-homentor-call to-homentor-callHover hover:from-homentor-callHover hover:to-homentor-call transition-all duration-300 flex items-center justify-center gap-1 group/icon overflow-hidden relative"
+          className="bg-gradient-to-r mentor-icons2 from-hommentor-call to-hommentor-callHover hover:from-hommentor-callHover hover:to-hommentor-call transition-all duration-300 flex items-center justify-center gap-1 group/icon overflow-hidden relative"
           title="Call mentor"
         >
           <PhoneCall className="lg:w-4 lg:h-4 h-2 w-2 transition-transform duration-300 group-hover/icon:scale-110" />
@@ -242,7 +242,7 @@ const TornCard = ({ mentor }) => {
       <div className="absolute z-[30] lg:hidden flex justify-between w-full items-center  gap-1 bottom-[1vh] px-2">
         <button
           onClick={() => handleChatClick()}
-          className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-homentor-chat to-homentor-chatHover hover:from-homentor-chatHover hover:to-homentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
+          className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-hommentor-chat to-hommentor-chatHover hover:from-hommentor-chatHover hover:to-hommentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
           title="Chat with mentor"
         >
           <span className="inline lg:text-md text-[11px]">Chat</span>
@@ -261,7 +261,7 @@ const TornCard = ({ mentor }) => {
         </button>
         <button
           onClick={() => initiateCall()}
-          className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-homentor-chat to-homentor-chatHover hover:from-homentor-chatHover hover:to-homentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
+          className="border bg-blue-opacity px-1 py-0.5 border-mentor-blue-500 rounded-[2px] bg-mentor-blue-500 text-white mentor-icons1-sm from-hommentor-chat to-hommentor-chatHover hover:from-hommentor-chatHover hover:to-hommentor-chat transition-all duration-300 flex items-center justify-center overflow-hidden "
           title="Chat with mentor"
         >
           <a
